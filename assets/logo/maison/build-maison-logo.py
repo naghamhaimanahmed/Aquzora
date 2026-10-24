@@ -81,59 +81,97 @@ def ring_text(text, size, radius, gold, font=CINZEL):
 def diamond(x, y, r, fill):
     return f'<path d="M{x} {y-r} L{x+r*0.7:.2f} {y} L{x} {y+r} L{x-r*0.7:.2f} {y} Z" fill="{fill}"/>'
 
+# ---------- picture of what the store sells: lipstick, perfume bottle, oud burner (centred on 0,0) ----------
+A_SM, A_SMW, A_SMB = text_path(BODONI, "A", 34)
+Q_SM, Q_SMW, Q_SMB = text_path(BODONI, "Q", 34)
+
+def label_monogram(gold, bg):
+    gap = f'stroke="{bg}" stroke-width="2" paint-order="stroke"'
+    ax = -(A_SMB[0] + A_SMB[2]) / 2 - 6; qx = -(Q_SMB[0] + Q_SMB[2]) / 2 + 6
+    return P(Q_SM, gold, qx, 12) + P(A_SM, gold, ax, 10, gap)
+
+def scene(gold, bg, uid):
+    line = f'fill="none" stroke="{gold}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"'
+    s = ""
+    # perfume bottle: faceted jewel stopper, neck, square-shouldered body, onyx label with AQ
+    s += f'<path d="M0 -84 L20 -66 L12 -48 H-12 L-20 -66 Z" fill="{gold}"/>'
+    s += f'<path d="M-20 -66 H20 M-8 -66 L0 -84 L8 -66 L0 -48 Z" fill="none" stroke="{bg}" stroke-width="1.4" opacity=".7"/>'
+    s += f'<rect x="-11" y="-48" width="22" height="14" fill="{gold}"/>'
+    s += f'<path d="M-30 -34 H30 Q48 -34 48 -16 V74 Q48 92 30 92 H-30 Q-48 92 -48 74 V-16 Q-48 -34 -30 -34 Z" fill="{gold}"/>'
+    s += f'<rect x="-31" y="2" width="62" height="56" rx="4" fill="{bg}"/>'
+    s += f'<rect x="-27" y="6" width="54" height="48" rx="2" fill="none" stroke="{gold}" stroke-width="1"/>'
+    s += f'<g transform="translate(0 30)">{label_monogram(gold, bg)}</g>'
+    s += f'<path d="M-38 -22 V-4" stroke="{bg}" stroke-width="3" stroke-linecap="round" opacity=".45"/>'
+    # lipstick (makeup), left
+    s += f'<g transform="translate(-96 0)">'
+    s += f'<path d="M-10 -14 V-44 Q-10 -52 0 -58 L10 -64 V-14 Z" fill="{gold}"/>'
+    s += f'<rect x="-14" y="-14" width="28" height="30" rx="2" fill="{gold}"/>'
+    s += f'<path d="M-14 -4 H14" stroke="{bg}" stroke-width="2"/>'
+    s += f'<rect x="-17" y="16" width="34" height="76" rx="3" fill="{gold}"/>'
+    s += f'<path d="M-17 30 H17" stroke="{bg}" stroke-width="2"/></g>'
+    # oud incense burner (mabkhara) with smoke, right
+    s += f'<g transform="translate(96 0)">'
+    s += f'<path d="M-30 30 H30 Q28 52 0 56 Q-28 52 -30 30 Z" fill="{gold}"/>'
+    s += f'<path d="M-8 56 V70 H8 V56" fill="{gold}"/><path d="M-22 92 L-14 70 H14 L22 92 Z" fill="{gold}"/>'
+    s += f'<path d="M-30 30 H30" stroke="{bg}" stroke-width="2"/>'
+    s += f'<path d="M-6 24 C-16 8 6 -2 -4 -18 C-12 -32 4 -40 -2 -56" {line}/>'
+    s += f'<path d="M8 22 C2 10 16 2 10 -10 C5 -20 14 -26 12 -36" {line.replace('stroke-width="3.2"', 'stroke-width="2.4"')} opacity=".85"/></g>'
+    return f'<g>{s}</g>'
+
 def crest(bg_fill, gold, bg_for_gap, uid="c"):
     """A 400 x 400 crest centred on 200,200."""
-    body = f'<g transform="translate(200 200)">'
+    body = '<g transform="translate(200 200)">'
     if bg_fill:
         body += f'<circle r="196" fill="{bg_fill}"/>'
     body += f'<circle r="188" fill="none" stroke="{gold}" stroke-width="3"/>'
     body += f'<circle r="181" fill="none" stroke="{gold}" stroke-width="0.8"/>'
-    body += ring_text("AQUZORA · MAISON DE PARFUM · PERFUMES · OUD · BEAUTY · ", 16.5, 159, gold)
+    ring = "AQUZORA · PERFUMES · OUD · MAKEUP · SKINCARE · "
+    adv = [text_path(CINZEL, c, 17)[1] for c in ring]
+    spare = (2 * math.pi * 159 - sum(adv)) / len(ring)
+    first = sum(adv[:7]) + spare * 6                      # width of "AQUZORA" as set on the ring
+    body += f'<g transform="rotate({-first / 2 / (2 * math.pi * 159) * 360:.3f})">{ring_text(ring, 17, 159, gold)}</g>'
     body += f'<circle r="148" fill="none" stroke="{gold}" stroke-width="0.8"/>'
     body += f'<circle r="141" fill="none" stroke="{gold}" stroke-width="2.2"/>'
-    for k in range(4):
-        a = math.radians(45 + k * 90)
-        body += diamond(141 * math.cos(a), 141 * math.sin(a), 6, gold)
-    body += monogram(gold, bg_for_gap, uid + "m")
+    body += f'<g transform="translate(0 -2) scale(.98)">{scene(gold, bg_for_gap, uid)}</g>'
     body += '</g>'
     return body
 
 WORD_D, WORD_W, _ = text_path(CINZEL, "AQUZORA", 58, 0.42)
-SUB_D, SUB_W, _ = text_path(BODONI_I, "Maison de Parfum", 25, 0.02)
+SUB_D, SUB_W, _ = text_path(BODONI_I, "Perfumes · Oud · Makeup · Skincare", 23, 0.01)
 AR_D, AR_W, _ = text_path(AMIRI, "أكوزورا", 38)
+ART_D, ART_W, _ = text_path(AMIRI, "عطور، عود، مكياج، عناية بالبشرة", 22)
 
 def stacked(bg, gold_id, ink_bg, deep=False):
-    W = max(WORD_W + 120, 470); cx = W / 2
-    defs = foil(gold_id, 0, 0, W, 640, deep)
+    W = max(WORD_W, SUB_W) + 120; cx = W / 2
+    defs = foil(gold_id, 0, 0, W, 700, deep)
     g = f"url(#{gold_id})"
     body = f'<rect width="100%" height="100%" fill="{bg}"/>' if bg else ""
     body += f'<g transform="translate({cx-200:.1f} 26)">{crest(None, g, ink_bg)}</g>'
     body += P(WORD_D, g, cx - WORD_W / 2, 512)
     body += f'<path d="M{cx-150:.1f} 540 H{cx-14:.1f} M{cx+14:.1f} 540 H{cx+150:.1f}" stroke="{g}" stroke-width="1"/>' + diamond(cx, 540, 5, g)
     body += P(SUB_D, g, cx - SUB_W / 2, 578)
-    body += P(AR_D, g, cx - AR_W / 2, 630)
-    return svg(W, 660, body, defs)
+    body += P(AR_D, g, cx - AR_W / 2, 636) + P(ART_D, g, cx - ART_W / 2, 676)
+    return svg(W, 704, body, defs)
 
 def horizontal(bg, gold_id, ink_bg, deep=False):
-    s = 0.42; cw = 400 * s
+    s = 0.46; cw = 400 * s
     tx = 22 + cw + 30
-    W = tx + WORD_W + 26; H = 210
+    W = tx + max(WORD_W, SUB_W) + 26; H = 230
     defs = foil(gold_id, 0, 0, W, H * 1.4, deep)
     g = f"url(#{gold_id})"
     body = f'<rect width="100%" height="100%" fill="{bg}"/>' if bg else ""
     body += f'<g transform="translate(22 {(H-cw)/2:.1f}) scale({s})">{crest(None, g, ink_bg)}</g>'
     body += P(WORD_D, g, tx, 112)
-    rule_y = 150
-    body += f'<path d="M{tx:.1f} {rule_y} H{tx + (WORD_W-SUB_W)/2 - 16:.1f} M{tx + (WORD_W+SUB_W)/2 + 16:.1f} {rule_y} H{tx+WORD_W:.1f}" stroke="{g}" stroke-width="1"/>'
-    body += P(SUB_D, g, tx + (WORD_W - SUB_W) / 2, 158)
+    body += f'<path d="M{tx:.1f} 134 H{tx+WORD_W:.1f}" stroke="{g}" stroke-width="1"/>'
+    body += P(SUB_D, g, tx + (WORD_W - SUB_W) / 2, 168)
     return svg(W, H, body, defs)
 
 def icon(bg, gold_id, ink_bg, deep=False):
     defs = foil(gold_id, 0, 0, 512, 512, deep)
     g = f"url(#{gold_id})"
     body = f'<rect width="512" height="512" rx="112" fill="{bg}"/>'
-    body += f'<g transform="translate(256 262) scale(1.3)">{monogram(g, ink_bg, "im")}</g>'
-    body += f'<rect x="34" y="34" width="444" height="444" rx="86" fill="none" stroke="{g}" stroke-width="2.5"/>'
+    body += f'<g transform="translate(256 258) scale(1.62)">{scene(g, ink_bg, "i")}</g>'
+    body += f'<rect x="30" y="30" width="452" height="452" rx="88" fill="none" stroke="{g}" stroke-width="2.5"/>'
     return svg(512, 512, body, defs)
 
 files = {
