@@ -138,20 +138,17 @@ def crest(bg_fill, gold, bg_for_gap, uid="c"):
 
 WORD_D, WORD_W, _ = text_path(CINZEL, "AQUZORA", 58, 0.42)
 SUB_D, SUB_W, _ = text_path(BODONI_I, "Perfumes · Oud · Makeup · Skincare", 23, 0.01)
-AR_D, AR_W, _ = text_path(AMIRI, "أكوزورا", 38)
-ART_D, ART_W, _ = text_path(AMIRI, "عطور، عود، مكياج، عناية بالبشرة", 22)
 
 def stacked(bg, gold_id, ink_bg, deep=False):
     W = max(WORD_W, SUB_W) + 120; cx = W / 2
-    defs = foil(gold_id, 0, 0, W, 700, deep)
+    defs = foil(gold_id, 0, 0, W, 620, deep)
     g = f"url(#{gold_id})"
     body = f'<rect width="100%" height="100%" fill="{bg}"/>' if bg else ""
     body += f'<g transform="translate({cx-200:.1f} 26)">{crest(None, g, ink_bg)}</g>'
     body += P(WORD_D, g, cx - WORD_W / 2, 512)
     body += f'<path d="M{cx-150:.1f} 540 H{cx-14:.1f} M{cx+14:.1f} 540 H{cx+150:.1f}" stroke="{g}" stroke-width="1"/>' + diamond(cx, 540, 5, g)
     body += P(SUB_D, g, cx - SUB_W / 2, 578)
-    body += P(AR_D, g, cx - AR_W / 2, 636) + P(ART_D, g, cx - ART_W / 2, 676)
-    return svg(W, 704, body, defs)
+    return svg(W, 612, body, defs)
 
 def horizontal(bg, gold_id, ink_bg, deep=False):
     s = 0.46; cw = 400 * s
