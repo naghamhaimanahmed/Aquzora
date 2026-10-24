@@ -15,6 +15,8 @@ A professional, bilingual (English / العربية) beauty store website. Open 
 - Mobile first: bottom navigation bar, bottom-sheet product views, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 ## Images
+Run `bash download-images.sh` once (on a computer with internet access) to save every photo into `assets/img/`. The site then uses those files, so photos also show offline and inside the published preview page.
+
 Product and banner photos are free Unsplash photos, loaded from Unsplash. If a photo cannot load, a drawn illustration is shown instead, so nothing ever looks broken.
 
 To use your own photos (recommended for real products), put them in `assets/img/` and change the `img` values in `assets/js/data.js`, for example `img: "assets/img/royal-oud.jpg"`.

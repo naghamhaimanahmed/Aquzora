@@ -50,16 +50,26 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7efe4"/><stop offset="1" stop-color="#ead9c3"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/>${shapes[cat] || shapes.perfume}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
-  window.__aqzImgFail = (img, cat) => { img.onerror = null; img.src = fallbackImg(cat); img.classList.add("is-fallback"); };
+  // Try the local photo first, then Unsplash, then the drawing.
+  window.__aqzImgFail = (img, cat) => {
+    if (img.dataset.remote) { img.src = img.dataset.remote; delete img.dataset.remote; return; }
+    img.onerror = null; img.src = fallbackImg(cat); img.classList.add("is-fallback");
+  };
 
-  function setBg(el, url, cat = "perfume") {
-    const probe = new Image();
-    probe.onload = () => { el.style.backgroundImage = `url("${url}")`; el.classList.add("is-loaded"); };
-    probe.onerror = () => { el.style.backgroundImage = `url("${fallbackImg(cat)}")`; el.classList.add("is-loaded", "is-fallback"); };
-    probe.src = url;
+  function setBg(el, photo, cat = "perfume") {
+    const sources = [photo.local, photo.remote];
+    const tryNext = () => {
+      const url = sources.shift();
+      if (!url) { el.style.backgroundImage = `url("${fallbackImg(cat)}")`; el.classList.add("is-loaded", "is-fallback"); return; }
+      const probe = new Image();
+      probe.onload = () => { el.style.backgroundImage = `url("${url}")`; el.classList.add("is-loaded"); };
+      probe.onerror = tryNext;
+      probe.src = url;
+    };
+    tryNext();
   }
   const imgTag = (p, cls = "") =>
-    `<img class="${cls}" src="${p.img}" alt="${esc(L(p).name)}" loading="lazy" decoding="async" onerror="__aqzImgFail(this,'${p.cat}')">`;
+    `<img class="${cls}" src="${p.img.local}" data-remote="${p.img.remote}" alt="${esc(L(p).name)}" loading="lazy" decoding="async" onerror="__aqzImgFail(this,'${p.cat}')">`;
 
   /* ---------- static text ---------- */
   function applyLang() {
