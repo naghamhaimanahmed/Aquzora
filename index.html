@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aquzora · Perfumes, Oud, Makeup &amp; Skincare</title>
+  <meta name="description" content="Aquzora: authentic Arabian perfumes, oud, bakhoor, makeup and skincare with fast delivery across the UAE.">
+  <meta name="theme-color" content="#1d1418">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&family=Tajawal:wght@400;500;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="skip" href="#shop" data-i18n="skip">Skip to products</a>
+
+  <div class="announce" role="note">
+    <span data-i18n="announce">Free delivery across the UAE on orders over AED 200 · Cash on delivery available</span>
+  </div>
+
+  <header class="header" id="top">
+    <div class="container header__row">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+
+      <a href="#top" class="logo" aria-label="Aquzora home">
+        <span class="logo__mark">A</span>
+        <span class="logo__text">Aquzora</span>
+      </a>
+
+      <nav class="nav" aria-label="Main">
+        <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
+        <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
+        <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
+        <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
+        <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+        <a href="#finder" data-i18n="nav.finder">Scent finder</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="lang-btn" id="langBtn" aria-label="Switch language">عربي</button>
+        <button class="icon-btn" id="searchOpen" aria-label="Search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="icon-btn" data-open="wishlist" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+          <span class="count" data-count="wish" hidden>0</span>
+        </button>
+        <button class="icon-btn" data-open="cart" aria-label="Cart">
+          <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="count" data-count="cart" hidden>0</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="mobile-nav" id="mobileNav" aria-label="Mobile" hidden>
+      <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
+      <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
+      <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
+      <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
+      <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+      <a href="#finder" data-i18n="nav.finder">Scent finder</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__bg" data-img="hero" role="img" aria-label="Perfume bottle"></div>
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow" data-i18n="hero.eyebrow">Arabian perfumery · Beauty · Care</p>
+          <h1 data-i18n="hero.title">Scents that tell your story</h1>
+          <p class="hero__lead" data-i18n="hero.lead">Authentic oud, rich perfumes, makeup and skincare, hand-picked and delivered to your door across the UAE.</p>
+          <div class="hero__cta">
+            <a href="#shop" class="btn btn--gold" data-i18n="hero.shop">Shop the collection</a>
+            <a href="#finder" class="btn btn--ghost" data-i18n="hero.finder">Find my scent</a>
+          </div>
+          <ul class="hero__trust">
+            <li><strong>100%</strong> <span data-i18n="hero.t1">authentic</span></li>
+            <li><strong>24h</strong> <span data-i18n="hero.t2">UAE delivery</span></li>
+            <li><strong>4.8★</strong> <span data-i18n="hero.t3">2,000+ reviews</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="cats.title">Shop by category</h2>
+          <p data-i18n="cats.sub">Everything you need to look and smell your best.</p>
+        </div>
+        <div class="cats" id="cats"></div>
+      </div>
+    </section>
+
+    <!-- Brands -->
+    <section class="brands" aria-labelledby="brandsTitle">
+      <div class="container">
+        <p class="brands__title" id="brandsTitle" data-i18n="brands.title">Inspired by the great houses of Arabian perfumery</p>
+        <div class="brands__track" id="brands"></div>
+      </div>
+    </section>
+
+    <!-- Shop -->
+    <section class="section" id="shop">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="shop.title">Our collection</h2>
+          <p data-i18n="shop.sub">Filter, compare and add to your bag in one tap.</p>
+        </div>
+
+        <div class="toolbar">
+          <label class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="search" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, lipstick…" aria-label="Search products">
+          </label>
+          <div class="chips" id="chips" role="tablist" aria-label="Categories"></div>
+          <div class="toolbar__right">
+            <label class="select">
+              <span class="sr" data-i18n="shop.sort">Sort</span>
+              <select id="sort" aria-label="Sort products">
+                <option value="featured" data-i18n="sort.featured">Featured</option>
+                <option value="low" data-i18n="sort.low">Price: low to high</option>
+                <option value="high" data-i18n="sort.high">Price: high to low</option>
+                <option value="rating" data-i18n="sort.rating">Top rated</option>
+              </select>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="onSale">
+              <span data-i18n="shop.sale">On sale</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="results" id="results" aria-live="polite"></p>
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty" hidden>
+          <p data-i18n="shop.empty">No products match your search.</p>
+          <button class="btn btn--line" id="clearFilters" data-i18n="shop.clear">Clear filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scent finder -->
+    <section class="finder" id="finder">
+      <div class="container finder__inner">
+        <div class="finder__copy">
+          <p class="eyebrow" data-i18n="finder.eyebrow">Not sure what to choose?</p>
+          <h2 data-i18n="finder.title">Find your perfect scent in 3 questions</h2>
+          <p data-i18n="finder.sub">Answer three quick questions and we will suggest the fragrances that suit you best.</p>
+        </div>
+        <div class="quiz" id="quiz" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Story / features -->
+    <section class="section">
+      <div class="container story">
+        <div class="story__img" data-img="story" role="img" aria-label="Perfume bottles"></div>
+        <div class="story__copy">
+          <p class="eyebrow" data-i18n="story.eyebrow">Why Aquzora</p>
+          <h2 data-i18n="story.title">Luxury you can trust, service you will love</h2>
+          <ul class="features">
+            <li>
+              <span class="features__icon"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></span>
+              <div><h3 data-i18n="f1.t">100% authentic</h3><p data-i18n="f1.d">Sourced directly from trusted makers. Every bottle is sealed and genuine.</p></div>
+            </li>
+            <li>
+              <span class="features__icon"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg></span>
+              <div><h3 data-i18n="f2.t">Fast delivery</h3><p data-i18n="f2.d">Next-day delivery in all seven emirates. Free on orders over AED 200.</p></div>
+            </li>
+            <li>
+              <span class="features__icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></span>
+              <div><h3 data-i18n="f3.t">Pay your way</h3><p data-i18n="f3.d">Cash on delivery, card, Apple Pay or order directly on WhatsApp.</p></div>
+            </li>
+            <li>
+              <span class="features__icon"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4v5h-5"/></svg></span>
+              <div><h3 data-i18n="f4.t">Easy returns</h3><p data-i18n="f4.d">Changed your mind? Return unopened items within 14 days.</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section section--soft">
+      <div class="container">
+        <div class="section__head">
+          <h2 data-i18n="reviews.title">Loved by our customers</h2>
+        </div>
+        <div class="reviews" id="reviews"></div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <div class="container newsletter__inner">
+        <div>
+          <h2 data-i18n="news.title">Get 10% off your first order</h2>
+          <p data-i18n="news.sub">Join our list for new arrivals, gift ideas and members-only offers.</p>
+        </div>
+        <form class="newsletter__form" id="newsForm" novalidate>
+          <label class="sr" for="newsEmail" data-i18n="news.label">Email address</label>
+          <input id="newsEmail" type="email" required data-i18n-ph="news.ph" placeholder="Your email address">
+          <button class="btn btn--gold" type="submit" data-i18n="news.btn">Subscribe</button>
+          <p class="form-msg" id="newsMsg" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contact">
+    <div class="container footer__grid">
+      <div>
+        <a href="#top" class="logo logo--light"><span class="logo__mark">A</span><span class="logo__text">Aquzora</span></a>
+        <p class="footer__about" data-i18n="footer.about">Perfumes, oud, makeup and skincare, chosen with care and delivered across the UAE.</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer.shop">Shop</h4>
+        <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
+        <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
+        <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
+        <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+      </div>
+      <div>
+        <h4 data-i18n="footer.help">Help</h4>
+        <a href="#finder" data-i18n="nav.finder">Scent finder</a>
+        <span data-i18n="footer.delivery">Delivery: 1–2 working days</span>
+        <span data-i18n="footer.returns">Returns within 14 days</span>
+      </div>
+      <div>
+        <h4 data-i18n="footer.contact">Contact us</h4>
+        <span data-i18n="footer.hours">Every day, 10am – 10pm</span>
+        <a href="mailto:hello@aquzora.com">hello@aquzora.com</a>
+        <button class="btn btn--wa" id="waContact"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg><span data-i18n="footer.wa">Chat on WhatsApp</span></button>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <span>© <span id="year"></span> Aquzora. <span data-i18n="footer.rights">All rights reserved.</span></span>
+      <span class="pay">VISA · Mastercard · Apple Pay · COD</span>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom bar -->
+  <nav class="bottom-bar" aria-label="Quick">
+    <a href="#top"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span data-i18n="bar.home">Home</span></a>
+    <a href="#shop"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span data-i18n="bar.shop">Shop</span></a>
+    <button data-open="wishlist"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span data-i18n="bar.wish">Wishlist</span><span class="count" data-count="wish" hidden>0</span></button>
+    <button data-open="cart"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span data-i18n="bar.cart">Bag</span><span class="count" data-count="cart" hidden>0</span></button>
+  </nav>
+
+  <!-- Drawers, modal, toast -->
+  <div class="overlay" id="overlay" hidden></div>
+
+  <aside class="drawer" id="cart" aria-labelledby="cartTitle" role="dialog" aria-modal="true" hidden>
+    <div class="drawer__head">
+      <h3 id="cartTitle" data-i18n="cart.title">Your bag</h3>
+      <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="ship-bar" id="shipBar"></div>
+    <div class="drawer__body" id="cartItems"></div>
+    <div class="drawer__foot" id="cartFoot"></div>
+  </aside>
+
+  <aside class="drawer" id="wishlist" aria-labelledby="wishTitle" role="dialog" aria-modal="true" hidden>
+    <div class="drawer__head">
+      <h3 id="wishTitle" data-i18n="wish.title">Your wishlist</h3>
+      <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="drawer__body" id="wishItems"></div>
+  </aside>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal__box">
+      <button class="icon-btn modal__close" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="modal__content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <div class="search-pop" id="searchPop" hidden>
+    <div class="container">
+      <label class="search search--big">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, lipstick…" aria-label="Search products">
+        <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      </label>
+      <div class="search-pop__results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
