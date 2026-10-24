@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Aquzora"><title>Aquzora</title><defs><linearGradient id="ch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1dcb2"/><stop offset=".6" stop-color="#d4b27a"/><stop offset="1" stop-color="#a9844c"/></linearGradient><linearGradient id="bl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d3cc"/><stop offset="1" stop-color="#d9958b"/></linearGradient></defs><mask id="m"><rect width="200" height="200" fill="#fff"/><circle cx="128" cy="80" r="62" fill="#000"/></mask>
+<circle cx="100" cy="104" r="76" fill="url(#ch)" mask="url(#m)"/>
+<path d="M118 70 C130 89 141 102 141 119 A23 23 0 0 1 95 119 C95 102 106 89 118 70 Z" fill="url(#bl)"/>
+<path d="M110 104 C107 110 106 115 107 120" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+<path d="M164 24 C165.5 36 168 38.5 180 40 C168 41.5 165.5 44 164 56 C162.5 44 160 41.5 148 40 C160 38.5 162.5 36 164 24 Z" fill="url(#ch)"/>
+<circle cx="182" cy="70" r="3.2" fill="url(#ch)"/></svg>
