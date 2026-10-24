@@ -50,7 +50,7 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7efe4"/><stop offset="1" stop-color="#ead9c3"/></linearGradient></defs><rect width="400" height="400" fill="url(#g)"/>${shapes[cat] || shapes.perfume}</svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
   }
-  // Try the local photo first, then Unsplash, then the drawing.
+  // Try the local photo first, then Pexels, then the drawing.
   window.__aqzImgFail = (img, cat) => {
     if (img.dataset.remote) { img.src = img.dataset.remote; delete img.dataset.remote; return; }
     img.onerror = null; img.src = fallbackImg(cat); img.classList.add("is-fallback");

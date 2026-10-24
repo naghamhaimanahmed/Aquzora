@@ -15,11 +15,9 @@ A professional, bilingual (English / العربية) beauty store website. Open 
 - Mobile first: bottom navigation bar, bottom-sheet product views, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 ## Images
-Run `bash download-images.sh` once (on a computer with internet access) to save every photo into `assets/img/`. The site then uses those files, so photos also show offline and inside the published preview page.
+All photos are free Pexels photos (free for commercial use, no credit required: https://www.pexels.com/license/), chosen to show unbranded bottles and products. They are saved in `assets/img/`, so they work offline. If a file is missing, the site loads it from Pexels, and if that fails it shows a drawn illustration, so nothing ever looks broken.
 
-Product and banner photos are free Unsplash photos, loaded from Unsplash. If a photo cannot load, a drawn illustration is shown instead, so nothing ever looks broken.
-
-To use your own photos (recommended for real products), put them in `assets/img/` and change the `img` values in `assets/js/data.js`, for example `img: "assets/img/royal-oud.jpg"`.
+To re-download the photos, run `bash download-images.sh`. To use your own product photos, put them in `assets/img/` with the same file names (for example `product-1.jpg`), or change the IDs in `assets/js/data.js`.
 
 Official photos and logos of brands such as Assaf or Ibrahim Al Qurashi are copyrighted, so they are not included. If you are an authorised seller, ask the brand for its media kit and add the photos the same way.
 
