@@ -22,15 +22,16 @@ To re-download the photos, run `bash download-images.sh`. To use your own produc
 Official photos and logos of brands such as Assaf or Ibrahim Al Qurashi are copyrighted, so they are not included. If you are an authorised seller, ask the brand for its media kit and add the photos the same way.
 
 ## Logo
-The logo files are in `assets/logo/`:
-- `aquzora-logo.svg` / `.png`: main logo for light backgrounds
-- `aquzora-logo-white.svg` / `.png`: for dark backgrounds
-- `aquzora-logo-stacked.svg` / `-dark.svg` (and `.png`): stacked version with the Arabic name, for packaging and social media
+The logo's Q is a round perfume bottle filled with gold, and its tail is a ribbon of scent ending in spray drops. The files are in `assets/logo/`:
+- `aquzora-logo.svg` / `.png`: main logo with tagline, for light backgrounds
+- `aquzora-logo-white.svg` / `.png`: the same for dark backgrounds
+- `aquzora-wordmark.svg` / `-white.svg` (and `.png`): the name alone, used in the website header and footer
+- `aquzora-logo-stacked.svg` / `-dark.svg` (and `.png`): with the Arabic name أكوزورا, for packaging and social media
 - `aquzora-icon.svg`, `aquzora-icon-512.png`, `aquzora-icon-gold-512.png`, `apple-touch-icon.png`: square icons for profile pictures and the browser tab
-- `aquzora-mark.svg`: the symbol on its own
-- `logo-sheet.png`: all versions on one page
+- `aquzora-mark.svg`: the perfume-bottle Q on its own
+- `logo-sheet.png`: all versions on one page; `logo-concepts.png`: the four concepts considered
 
-The symbol is an Arabian arch holding a perfume drop. The arch also reads as the letter A. Use the SVG files wherever possible, because they stay sharp at any size. `build-logo.py` regenerates the files.
+Use the SVG files wherever possible, because they stay sharp at any size. `build-logo.py` regenerates the SVG files.
 
 ## Editing content
 - Products, prices, categories, brands and reviews: `assets/js/data.js`

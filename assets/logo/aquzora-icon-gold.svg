@@ -1,3 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Aquzora"><title>Aquzora</title><rect width="512" height="512" rx="112" fill="#d6b07a"/><g transform="translate(131 96) scale(2.5)"><path d="M14 116 V60 C14 34 34 18 50 4 C66 18 86 34 86 60 V116" fill="none" stroke="#3b1d2a" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M50 44 C58 57 67 67 67 80 A17 17 0 0 1 33 80 C33 67 42 57 50 44 Z" fill="#3b1d2a"/>
-<path d="M4 116 H96" stroke="#3b1d2a" stroke-width="7.5" stroke-linecap="round"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Aquzora"><title>Aquzora</title><rect width="512" height="512" rx="112" fill="#d6b07a"/><g transform="translate(195.8 272.6)"><clipPath id="qi"><circle r="112.70"/></clipPath>
+<path clip-path="url(#qi)" d="M-128 23.04 C-51.20 2.56 51.20 43.52 128 17.92 V128 H-128 Z" fill="#f6ecdf"/>
+<circle r="119.50" fill="none" stroke="#3b1d2a" stroke-width="17"/>
+<rect x="-21.76" y="-167.68" width="43.52" height="35.84" rx="6.40" fill="#3b1d2a"/>
+<rect x="-37.12" y="-194.56" width="74.24" height="28.16" rx="8.96" fill="#3b1d2a"/>
+<path d="M70.40 96.00 C121.60 160.00 179.20 153.60 204.80 121.60" fill="none" stroke="#3b1d2a" stroke-width="15.13" stroke-linecap="round"/>
+<circle cx="222.72" cy="94.72" r="9.60" fill="#3b1d2a"/><circle cx="235.52" cy="71.68" r="7.04" fill="#3b1d2a"/><circle cx="243.20" cy="52.48" r="4.86" fill="#3b1d2a"/></g></svg>
