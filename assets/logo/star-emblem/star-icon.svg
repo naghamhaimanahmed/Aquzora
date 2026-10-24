@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Aquzora"><title>Aquzora</title><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0d6a6"/><stop offset=".5" stop-color="#c79a5c"/><stop offset="1" stop-color="#8e6535"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="#3b1d2a"/><g transform="translate(36 36) scale(2.2)"><polygon points="100.00,6.66 127.34,34.00 166.00,34.00 166.00,72.66 193.34,100.00 166.00,127.34 166.00,166.00 127.34,166.00 100.00,193.34 72.66,166.00 34.00,166.00 34.00,127.34 6.66,100.00 34.00,72.66 34.00,34.00 72.66,34.00" fill="#2a141d" stroke="#d6b07a" stroke-width="3" stroke-linejoin="miter"/>
+<polygon points="100.00,19.39 123.61,43.00 157.00,43.00 157.00,76.39 180.61,100.00 157.00,123.61 157.00,157.00 123.61,157.00 100.00,180.61 76.39,157.00 43.00,157.00 43.00,123.61 19.39,100.00 43.00,76.39 43.00,43.00 76.39,43.00" fill="none" stroke="#d6b07a" stroke-width="1" opacity=".7"/>
+<path d="M100 44 L112 58 L100 72 L88 58 Z" fill="url(#g1)"/>
+<path d="M100 44 L100 72 M88 58 L112 58" stroke="#3b1d2a" stroke-width="1" opacity=".55"/>
+<rect x="93" y="72" width="14" height="10" fill="url(#g1)"/>
+<path d="M80 82 H120 L132 98 V136 L120 152 H80 L68 136 V98 Z" fill="url(#g1)"/>
+<path d="M80 82 L88 98 H112 L120 82 M68 98 H88 V136 H68 M132 98 H112 V136 H132 M88 136 L80 152 M112 136 L120 152" fill="none" stroke="#3b1d2a" stroke-width="1.6" stroke-linejoin="round" opacity=".75"/>
+<path d="M100 104 C104 110 107 114 107 118 A7 7 0 0 1 93 118 C93 114 96 110 100 104 Z" fill="#3b1d2a"/>
+<circle cx="100" cy="21" r="3" fill="#d6b07a"/><circle cx="100" cy="179" r="3" fill="#d6b07a"/>
+<circle cx="21" cy="100" r="3" fill="#d6b07a"/><circle cx="179" cy="100" r="3" fill="#d6b07a"/></g></svg>
