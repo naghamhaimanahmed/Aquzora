@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aquzora · Perfumes, Oud &amp; Musk</title>
-  <meta name="description" content="Aquzora: authentic Arabian perfumes, oud, bakhoor and musk with fast delivery across the UAE.">
+  <meta name="description" content="Aquzora: authentic Arabian perfumes, musk and gift sets from Ibrahim Al Qurashi, Ibraq, Assaf, Lattafa and Rasasi, with fast delivery across the UAE.">
   <meta name="theme-color" content="#1d1418">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <a class="skip" href="#shop" data-i18n="skip">Skip to products</a>
+  <a class="skip" href="#collection" data-i18n="skip">Skip to the collection</a>
 
   <div class="announce" role="note">
     <span data-i18n="announce">Free delivery across the UAE on orders over AED 200 · Cash on delivery available</span>
@@ -31,37 +31,29 @@
       </a>
 
       <nav class="nav" aria-label="Main">
-        <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
-        <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
-        <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-        <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
-        <a href="#gallery" data-i18n="nav.gallery">In store</a>
-        <a href="#finder" data-i18n="nav.finder">Scent finder</a>
+        <a href="#collection" data-gal-link="all" data-i18n="nav.all">Collection</a>
+        <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">Perfumes</a>
+        <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">Musk</a>
+        <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">Gift sets</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
       </nav>
 
       <div class="header__actions">
         <button class="lang-btn" id="langBtn" aria-label="Switch language">عربي</button>
-        <button class="icon-btn" id="searchOpen" aria-label="Search">
+        <button class="icon-btn" data-search aria-label="Search">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </button>
-        <button class="icon-btn" data-open="wishlist" aria-label="Wishlist">
-          <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
-          <span class="count" data-count="wish" hidden>0</span>
-        </button>
-        <button class="icon-btn" data-open="cart" aria-label="Cart">
-          <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-          <span class="count" data-count="cart" hidden>0</span>
+        <button class="icon-btn header__wa" data-wa-contact aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>
         </button>
       </div>
     </div>
 
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile" hidden>
-      <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
-      <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
-      <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-      <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
-      <a href="#gallery" data-i18n="nav.gallery">In store</a>
-      <a href="#finder" data-i18n="nav.finder">Scent finder</a>
+      <a href="#collection" data-gal-link="all" data-i18n="nav.all">Collection</a>
+      <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">Perfumes</a>
+      <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">Musk</a>
+      <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">Gift sets</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
   </header>
@@ -76,8 +68,8 @@
           <h1 data-i18n="hero.title">Scents that tell your story</h1>
           <p class="hero__lead" data-i18n="hero.lead">Authentic perfumes, oud and musk from the great Arabian houses, hand-picked and delivered to your door across the UAE.</p>
           <div class="hero__cta">
-            <a href="#shop" class="btn btn--gold" data-i18n="hero.shop">Shop the collection</a>
-            <a href="#finder" class="btn btn--ghost" data-i18n="hero.finder">Find my scent</a>
+            <a href="#collection" class="btn btn--gold" data-i18n="hero.shop">Browse the collection</a>
+            <button class="btn btn--ghost" data-wa-contact data-i18n="hero.wa">Chat on WhatsApp</button>
           </div>
           <ul class="hero__trust">
             <li><strong>100%</strong> <span data-i18n="hero.t1">authentic</span></li>
@@ -93,7 +85,7 @@
       <div class="container">
         <div class="section__head">
           <h2 data-i18n="cats.title">Shop by category</h2>
-          <p data-i18n="cats.sub">Everything you need to look and smell your best.</p>
+          <p data-i18n="cats.sub">Find the scent that suits you, for every day and every occasion.</p>
         </div>
         <div class="cats" id="cats"></div>
       </div>
@@ -107,70 +99,18 @@
       </div>
     </section>
 
-    <!-- In store now: real stock photos -->
-    <section class="section section--soft" id="gallery">
+    <!-- The collection: real stock photos -->
+    <section class="section section--soft" id="collection">
       <div class="container">
         <div class="section__head">
           <p class="eyebrow" data-i18n="gal.eyebrow">Real photos from our shelves</p>
-          <h2 data-i18n="gal.title">In store now</h2>
+          <h2 data-i18n="gal.title">Our collection</h2>
           <p data-i18n="gal.sub">The perfumes, musks and gift sets we have in stock. Tap any photo to see it up close and ask us about it on WhatsApp.</p>
         </div>
-        <div class="chips gal-chips" id="galChips" role="tablist" aria-label="Filter photos"></div>
+        <div class="chips gal-chips" id="galChips" role="tablist" aria-label="Filter the collection"></div>
         <p class="results" id="galCount" aria-live="polite"></p>
         <div class="gal" id="gal"></div>
         <div class="gal-more"><button class="btn btn--line" id="galMore" hidden></button></div>
-      </div>
-    </section>
-
-    <!-- Shop -->
-    <section class="section" id="shop">
-      <div class="container">
-        <div class="section__head">
-          <h2 data-i18n="shop.title">Our collection</h2>
-          <p data-i18n="shop.sub">Filter, compare and add to your bag in one tap.</p>
-        </div>
-
-        <div class="toolbar">
-          <label class="search">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="search" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, musk…" aria-label="Search products">
-          </label>
-          <div class="chips" id="chips" role="tablist" aria-label="Categories"></div>
-          <div class="toolbar__right">
-            <label class="select">
-              <span class="sr" data-i18n="shop.sort">Sort</span>
-              <select id="sort" aria-label="Sort products">
-                <option value="featured" data-i18n="sort.featured">Featured</option>
-                <option value="low" data-i18n="sort.low">Price: low to high</option>
-                <option value="high" data-i18n="sort.high">Price: high to low</option>
-                <option value="rating" data-i18n="sort.rating">Top rated</option>
-              </select>
-            </label>
-            <label class="toggle">
-              <input type="checkbox" id="onSale">
-              <span data-i18n="shop.sale">On sale</span>
-            </label>
-          </div>
-        </div>
-
-        <p class="results" id="results" aria-live="polite"></p>
-        <div class="grid" id="grid"></div>
-        <div class="empty" id="empty" hidden>
-          <p data-i18n="shop.empty">No products match your search.</p>
-          <button class="btn btn--line" id="clearFilters" data-i18n="shop.clear">Clear filters</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Scent finder -->
-    <section class="finder" id="finder">
-      <div class="container finder__inner">
-        <div class="finder__copy">
-          <p class="eyebrow" data-i18n="finder.eyebrow">Not sure what to choose?</p>
-          <h2 data-i18n="finder.title">Find your perfect scent in 3 questions</h2>
-          <p data-i18n="finder.sub">Answer three quick questions and we will suggest the fragrances that suit you best.</p>
-        </div>
-        <div class="quiz" id="quiz" aria-live="polite"></div>
       </div>
     </section>
 
@@ -191,8 +131,8 @@
               <div><h3 data-i18n="f2.t">Fast delivery</h3><p data-i18n="f2.d">Next-day delivery in all seven emirates. Free on orders over AED 200.</p></div>
             </li>
             <li>
-              <span class="features__icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></span>
-              <div><h3 data-i18n="f3.t">Pay your way</h3><p data-i18n="f3.d">Cash on delivery, card, Apple Pay or order directly on WhatsApp.</p></div>
+              <span class="features__icon"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg></span>
+              <div><h3 data-i18n="f3.t">Easy ordering</h3><p data-i18n="f3.d">Order on WhatsApp in a few messages and pay cash or card on delivery.</p></div>
             </li>
             <li>
               <span class="features__icon"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2"/><path d="M20 4v5h-5"/></svg></span>
@@ -238,22 +178,22 @@
       </div>
       <div>
         <h4 data-i18n="footer.shop">Shop</h4>
-        <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
-        <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-        <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
-        <a href="#gallery" data-i18n="nav.gallery">In store</a>
+        <a href="#collection" data-gal-link="all" data-i18n="nav.all">Collection</a>
+        <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">Perfumes</a>
+        <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">Musk</a>
+        <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">Gift sets</a>
       </div>
       <div>
         <h4 data-i18n="footer.help">Help</h4>
-        <a href="#finder" data-i18n="nav.finder">Scent finder</a>
         <span data-i18n="footer.delivery">Delivery: 1–2 working days</span>
         <span data-i18n="footer.returns">Returns within 14 days</span>
       </div>
       <div>
         <h4 data-i18n="footer.contact">Contact us</h4>
         <span data-i18n="footer.hours">Every day, 10am – 10pm</span>
+        <a href="https://wa.me/201289555608" target="_blank" rel="noopener" dir="ltr" class="footer__phone">+20 128 955 5608</a>
         <a href="mailto:hello@aquzora.com">hello@aquzora.com</a>
-        <button class="btn btn--wa" id="waContact"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg><span data-i18n="footer.wa">Chat on WhatsApp</span></button>
+        <button class="btn btn--wa" data-wa-contact><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg><span data-i18n="footer.wa">Chat on WhatsApp</span></button>
       </div>
     </div>
     <div class="container footer__bottom">
@@ -265,31 +205,13 @@
   <!-- Mobile bottom bar -->
   <nav class="bottom-bar" aria-label="Quick">
     <a href="#top"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span data-i18n="bar.home">Home</span></a>
-    <a href="#shop"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span data-i18n="bar.shop">Shop</span></a>
-    <button data-open="wishlist"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span data-i18n="bar.wish">Wishlist</span><span class="count" data-count="wish" hidden>0</span></button>
-    <button data-open="cart"><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span data-i18n="bar.cart">Bag</span><span class="count" data-count="cart" hidden>0</span></button>
+    <a href="#collection" data-gal-link="all"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg><span data-i18n="bar.shop">Collection</span></a>
+    <button data-search><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span data-i18n="bar.search">Search</span></button>
+    <button data-wa-contact><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg><span data-i18n="bar.wa">WhatsApp</span></button>
   </nav>
 
-  <!-- Drawers, modal, toast -->
+  <!-- Overlay, photo viewer, search -->
   <div class="overlay" id="overlay" hidden></div>
-
-  <aside class="drawer" id="cart" aria-labelledby="cartTitle" role="dialog" aria-modal="true" hidden>
-    <div class="drawer__head">
-      <h3 id="cartTitle" data-i18n="cart.title">Your bag</h3>
-      <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    </div>
-    <div class="ship-bar" id="shipBar"></div>
-    <div class="drawer__body" id="cartItems"></div>
-    <div class="drawer__foot" id="cartFoot"></div>
-  </aside>
-
-  <aside class="drawer" id="wishlist" aria-labelledby="wishTitle" role="dialog" aria-modal="true" hidden>
-    <div class="drawer__head">
-      <h3 id="wishTitle" data-i18n="wish.title">Your wishlist</h3>
-      <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    </div>
-    <div class="drawer__body" id="wishItems"></div>
-  </aside>
 
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
     <div class="modal__box">
@@ -302,14 +224,12 @@
     <div class="container">
       <label class="search search--big">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, musk…" aria-label="Search products">
+        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="search.ph" placeholder="Search perfumes, musk, brands…" aria-label="Search the collection">
         <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </label>
       <div class="search-pop__results" id="searchResults"></div>
     </div>
   </div>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="assets/js/data.js"></script>
   <script src="assets/js/i18n.js"></script>

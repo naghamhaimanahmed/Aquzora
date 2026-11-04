@@ -1,88 +1,38 @@
-/* Aquzora store data.
-   To use your own photos: put them in assets/img/ and change the `img` value,
-   e.g. img: "assets/img/royal-oud.jpg". Any image that fails to load falls back
-   to a drawn bottle illustration, so the page never shows a broken image. */
+/* Aquzora store data: the photo catalogue, brands and reviews. */
 
 const STORE = {
   name: "Aquzora",
-  currency: { en: "AED", ar: "د.إ" },
-  freeShippingFrom: 200,
-  shippingFee: 20,
-  // Your WhatsApp number in international format without "+" (e.g. "9715XXXXXXXX").
-  // Left empty, the WhatsApp button opens the share sheet so the customer picks a chat.
-  whatsapp: ""
+  // WhatsApp number in international format without "+" or the leading 0
+  // (Egypt +20, mobile 01289555608).
+  whatsapp: "201289555608"
 };
 
-// Photos are free Pexels photos (pexels.com/license: free for commercial use, no credit needed).
+// Banner and "Why Aquzora" background photos: free Pexels photos
+// (pexels.com/license: free for commercial use, no credit needed), stored in
+// assets/img/ (run download-images.sh to fetch them again). If the local file is
+// missing, the site loads it from Pexels instead.
 const pexels = (id, w = 900) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
-
-// Each photo is stored in assets/img/ (run download-images.sh to fetch them again).
-// If the local file is missing, the site loads it from Pexels instead.
 const photo = (id, file, w = 900) => ({ local: `assets/img/${file}.jpg`, remote: pexels(id, w) });
 
 const IMAGES = {
   hero: photo("8361545", "hero", 1600),
-  story: photo("8166613", "story", 1200),
-  cat: {
-    perfume: photo("8361493", "cat-perfume", 800),
-    oud: photo("6954562", "cat-oud", 800),
-    // one of our own stock photos (no online copy, so no `remote`)
-    musk: { local: "assets/img/collection/d02.jpg" }
-  }
+  story: photo("8166613", "story", 1200)
 };
 
-const CATEGORIES = [
-  { id: "perfume", en: "Perfumes", ar: "العطور", tint: "#b98a4e" },
-  { id: "oud", en: "Oud & Bakhoor", ar: "العود والبخور", tint: "#6b3f2a" },
-  { id: "musk", en: "Musk", ar: "المسك", tint: "#a07c5a" }
-];
-
 // Brands shown in the "Brands we love" strip (text only, no logos).
-// Swap in the brands you are authorised to sell.
 const BRANDS = [
   "Assaf", "Ibrahim Al Qurashi", "Arabian Oud", "Ajmal",
   "Lattafa", "Rasasi", "Swiss Arabian", "Abdul Samad Al Qurashi"
 ];
 
-// family: used by the scent finder
-const PRODUCTS = [
-  { id: 1, cat: "perfume", img: photo("35825543", "product-1"), price: 295, old: 350, rating: 4.9, reviews: 212, badge: "best", family: ["oriental", "evening"],
-    en: { name: "Royal Amber Eau de Parfum", size: "100 ml", notes: "Amber · Saffron · Vanilla", desc: "A warm, long-lasting amber with a saffron opening and a soft vanilla trail. Made for evenings and special occasions." },
-    ar: { name: "عطر رويال أمبر", size: "١٠٠ مل", notes: "عنبر · زعفران · فانيلا", desc: "عنبر دافئ وثابت يبدأ بالزعفران وينتهي بلمسة فانيلا ناعمة. مثالي للمساء والمناسبات." } },
-  { id: 2, cat: "perfume", img: photo("1190829", "product-2"), price: 240, rating: 4.7, reviews: 148, badge: "new", family: ["floral", "day"],
-    en: { name: "Rose Taifi Eau de Parfum", size: "75 ml", notes: "Taif Rose · Musk · Peony", desc: "Fresh Taif rose layered over clean white musk. Light enough for the office, lovely all day." },
-    ar: { name: "عطر ورد طائفي", size: "٧٥ مل", notes: "ورد طائفي · مسك · فاوانيا", desc: "ورد طائفي منعش فوق المسك الأبيض النظيف. خفيف للدوام وجميل طوال اليوم." } },
-  { id: 3, cat: "perfume", img: photo("8361486", "product-3"), price: 180, rating: 4.6, reviews: 96, family: ["fresh", "day"],
-    en: { name: "Sea Breeze Eau de Toilette", size: "100 ml", notes: "Bergamot · Sea Salt · Cedar", desc: "A bright citrus and marine scent that keeps you fresh in the summer heat." },
-    ar: { name: "عطر نسيم البحر", size: "١٠٠ مل", notes: "برغموت · ملح البحر · أرز", desc: "رائحة حمضية بحرية منعشة تبقيك منتعشاً في حر الصيف." } },
-  { id: 4, cat: "perfume", img: photo("36779953", "product-4"), price: 320, rating: 4.8, reviews: 174, badge: "best", family: ["oriental", "woody", "evening"],
-    en: { name: "Black Musk Intense", size: "100 ml", notes: "Black Musk · Patchouli · Leather", desc: "Deep, bold and unforgettable. A dark musk with patchouli and a smooth leather base." },
-    ar: { name: "مسك أسود إنتنس", size: "١٠٠ مل", notes: "مسك أسود · باتشولي · جلد", desc: "عميق وجريء ولا يُنسى. مسك داكن مع الباتشولي وقاعدة جلدية ناعمة." } },
-  { id: 5, cat: "perfume", img: photo("8450248", "product-5"), price: 210, rating: 4.5, reviews: 63, family: ["floral", "fresh", "day"],
-    en: { name: "Jasmine Bloom", size: "50 ml", notes: "Jasmine · Pear · White Tea", desc: "Soft jasmine petals with juicy pear and a calm white tea finish." },
-    ar: { name: "عطر زهرة الياسمين", size: "٥٠ مل", notes: "ياسمين · كمثرى · شاي أبيض", desc: "بتلات ياسمين ناعمة مع الكمثرى ولمسة هادئة من الشاي الأبيض." } },
-  { id: 6, cat: "oud", img: photo("12402366", "product-6"), price: 450, old: 520, rating: 4.9, reviews: 301, badge: "best", family: ["woody", "oriental", "evening"],
-    en: { name: "Cambodian Oud Oil", size: "12 ml", notes: "Pure Oud · Rose · Sandalwood", desc: "Concentrated oud oil with a rich, smoky heart. A few drops last the whole day." },
-    ar: { name: "دهن عود كمبودي", size: "١٢ مل", notes: "عود خالص · ورد · صندل", desc: "دهن عود مركّز بقلب غني ودخاني. قطرات قليلة تدوم طوال اليوم." } },
-  { id: 7, cat: "oud", img: photo("7947731", "product-7"), price: 160, rating: 4.7, reviews: 122, family: ["woody", "oriental"],
-    en: { name: "Bakhoor Al Majlis", size: "60 g", notes: "Agarwood · Amber · Musk", desc: "Traditional bakhoor for the home and majlis. Fills the room with a warm, welcoming scent." },
-    ar: { name: "بخور المجلس", size: "٦٠ غ", notes: "عود · عنبر · مسك", desc: "بخور تقليدي للبيت والمجلس. يملأ المكان برائحة دافئة ومرحّبة." } },
-  { id: 8, cat: "oud", img: photo("34036480", "product-8"), price: 275, rating: 4.8, reviews: 88, badge: "new", family: ["woody", "evening"],
-    en: { name: "Oud Wood Eau de Parfum", size: "100 ml", notes: "Oud · Cardamom · Vetiver", desc: "A modern oud spray: smooth agarwood, a hint of cardamom and dry vetiver." },
-    ar: { name: "عطر خشب العود", size: "١٠٠ مل", notes: "عود · هيل · فيتيفر", desc: "عود عصري بخاخ: خشب عود ناعم مع لمسة هيل وفيتيفر جاف." } },
-  { id: 9, cat: "musk", img: photo("34154866", "product-9"), price: 135, rating: 4.6, reviews: 57, family: ["oriental", "floral"],
-    en: { name: "Musk Tahara Oil", size: "6 ml", notes: "White Musk · Rose · Powder", desc: "A clean, soft musk oil. Gentle on skin and perfect for everyday wear." },
-    ar: { name: "دهن مسك الطهارة", size: "٦ مل", notes: "مسك أبيض · ورد · بودرة", desc: "دهن مسك نظيف وناعم. لطيف على البشرة ومثالي للاستخدام اليومي." } }
-];
-
 const TESTIMONIALS = [
-  { name: "Mariam A.", city: { en: "Dubai", ar: "دبي" }, en: "Delivery was next day and the oud oil is beautiful. The scent finder helped me pick a gift in two minutes.", ar: "التوصيل كان في اليوم التالي ودهن العود رائع. اختبار العطر ساعدني أختار هدية في دقيقتين." },
+  { name: "Mariam A.", city: { en: "Dubai", ar: "دبي" }, en: "Delivery was next day and the musk is beautiful. I sent a photo on WhatsApp and they helped me pick a gift in two minutes.", ar: "التوصيل كان في اليوم التالي والمسك رائع. أرسلت صورة على واتساب وساعدوني أختار هدية في دقيقتين." },
   { name: "Khalid R.", city: { en: "Abu Dhabi", ar: "أبوظبي" }, en: "Easy to order, cash on delivery, and everything came well packed. Will order again.", ar: "الطلب سهل والدفع عند الاستلام وكل شي وصل مغلف بشكل ممتاز. أكيد بطلب مرة ثانية." },
-  { name: "Noura S.", city: { en: "Sharjah", ar: "الشارقة" }, en: "The Rose Taifi is my new everyday perfume! Switching the site to Arabic made browsing so easy for my mother.", ar: "عطر الورد الطائفي صار عطري اليومي! تحويل الموقع للعربي سهّل التصفح على والدتي كثيراً." }
+  { name: "Noura S.", city: { en: "Sharjah", ar: "الشارقة" }, en: "The Lady Collection gift set was perfect! Switching the site to Arabic made browsing so easy for my mother.", ar: "طقم هدايا ليدي كان مثالياً! تحويل الموقع للعربي سهّل التصفح على والدتي كثيراً." }
 ];
 
-/* ---------- "In store now" photo gallery ----------
+/* ---------- The collection: your product photos ----------
    Real photos of the products in stock, stored in assets/img/collection/
    (full size) and assets/img/collection/thumb/ (small, for the grid).
    Each item: code (the photo file name), brand, type, and an optional name.
@@ -102,9 +52,10 @@ const GALLERY_BRANDS = {
   other: { en: "", ar: "", group: "more" }
 };
 
-// Filter buttons above the gallery: by type (musk, gift sets) or by brand group.
+// Filter buttons above the collection: by type or by brand group.
 const GALLERY_FILTERS = [
   { id: "all", en: "All", ar: "الكل" },
+  { id: "perfume", type: "perfume", en: "Perfumes", ar: "العطور" },
   { id: "musk", type: "musk", en: "Musk", ar: "المسك" },
   { id: "sets", type: "set", en: "Gift sets", ar: "أطقم الهدايا" },
   { id: "iaq", group: "iaq", en: "Ibrahim Al Qurashi & Ibraq", ar: "إبراهيم القرشي وإبراق" },
@@ -112,6 +63,13 @@ const GALLERY_FILTERS = [
   { id: "lattafa", group: "lattafa", en: "Lattafa", ar: "لطافة" },
   { id: "rasasi", group: "rasasi", en: "Rasasi", ar: "الرصاصي" },
   { id: "more", group: "more", en: "More brands", ar: "ماركات أخرى" }
+];
+
+// "Shop by category" tiles: each opens the collection with that filter on.
+const GALLERY_TILES = [
+  { filter: "perfume", photo: "D24" },
+  { filter: "musk", photo: "D02" },
+  { filter: "sets", photo: "C09" }
 ];
 
 // type: "perfume" | "musk" | "set"
