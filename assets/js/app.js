@@ -13,8 +13,11 @@
   const GAL_PAGE = 12;
   const state = {
     lang: store.get("lang", "ar"), // Arabic first
-    gal: { f: "all", shown: GAL_PAGE, at: -1 }
+    gal: { f: "all", shown: GAL_PAGE, at: -1 },
+    cart: store.get("cart", {}) // { photo reference: quantity }
   };
+  const BAG_ICON = `<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>`;
+  const WA_ICON = `<svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>`;
 
   /* ---------- i18n helpers ---------- */
   function t(key, vars = {}) {
@@ -100,7 +103,7 @@
     $("#gal").innerHTML = shown.map((it, i) => `<button class="gal__item" data-gal="${i}" aria-label="${t("gal.view")}: ${esc(galTitle(it))}">
       ${it.type === "set" ? `<span class="ribbon">${t("gal.type.set")}</span>` : ""}
       <span class="gal__img"><img src="${galSrc(it, "thumb")}" alt="${esc(galTitle(it))}" width="480" height="480" loading="lazy" decoding="async" onerror="__aqzImgFail(this)"></span>
-      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small></span>
+      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small><span class="gal__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</span></span>
     </button>`).join("");
     $("#galCount").textContent = list.length === 1 ? t("gal.count1") : t("gal.count", { n: list.length });
     const left = list.length - shown.length;
@@ -125,8 +128,10 @@
         <p class="gv__cat">${esc(galSub(it))}</p>
         <h3 id="modalTitle">${esc(galTitle(it))}</h3>
         <p class="gv__ref">${t("gal.ref")} <bdi>${esc(it.code)}</bdi> · ${t("gal.pos", { a: i + 1, b: list.length })}</p>
-        <p class="qv__desc">${t("gal.note")}</p>
-        <a class="btn btn--wa btn--block" data-gal-ask href="${esc(waHref(waAskText(it)))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</a>
+        <p class="gv__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</p>
+        <p class="qv__desc">${t(SHOP.priceOf(it.code) === null ? "gal.note" : "gal.noteCart")}</p>
+        <button class="btn btn--dark btn--block" data-add-cart="${it.code}">${BAG_ICON}<span>${t("cart.add")}</span></button>
+        <a class="btn btn--line btn--block" data-gal-ask href="${esc(waHref(waAskText(it)))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</a>
         <div class="gv__nav">
           <button class="icon-btn" data-gal-step="-1" aria-label="${t("gal.prev")}">${chevron}</button>
           <button class="icon-btn gv__next" data-gal-step="1" aria-label="${t("gal.next")}">${chevron}</button>
@@ -150,6 +155,224 @@
   // Real links (not window.open), so they work in every browser and embedded view.
   const waHref = text => `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(text)}`;
   const waAskText = it => [t("wa.ask"), [galTitle(it), it.en ? galBrand(it) : ""].filter(Boolean).join(" – "), `${t("gal.ref")} ${it.code}`].join("\n");
+
+
+  /* ---------- prices & cart ---------- */
+  const money = n => state.lang === "ar" ? `${n.toLocaleString("ar-EG")} ج.م` : `EGP ${n.toLocaleString("en")}`;
+  const priceLabel = code => { const p = SHOP.priceOf(code); return p === null ? t("price.onRequest") : money(p); };
+  const cartLines = () => Object.entries(state.cart).filter(([c]) => byCode(c)).map(([code, qty]) => ({ code, qty, it: byCode(code) }));
+  const cartCount = () => cartLines().reduce((a, l) => a + l.qty, 0);
+  const saveCart = () => store.set("cart", state.cart);
+
+  function addToCart(code, btn) {
+    state.cart[code] = Math.min(20, (state.cart[code] || 0) + 1);
+    saveCart(); renderCart(); renderCounts();
+    toast(t("cart.added", { name: galTitle(byCode(code)) }));
+    $$("[data-count='cart']").forEach(el => { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); });
+    if (btn) { btn.classList.add("is-done"); btn.querySelector("span").textContent = "✓ " + t("cart.addedShort"); setTimeout(() => { btn.classList.remove("is-done"); btn.querySelector("span").textContent = t("cart.add"); }, 1400); }
+  }
+  function setQty(code, qty) {
+    if (qty <= 0) delete state.cart[code]; else state.cart[code] = Math.min(20, qty);
+    saveCart(); renderCart(); renderCounts();
+  }
+  function clearCart() { state.cart = {}; saveCart(); renderCart(); renderCounts(); }
+
+  function renderCounts() {
+    const n = cartCount();
+    $$("[data-count='cart']").forEach(el => { el.textContent = n; el.hidden = !n; });
+  }
+
+  function renderCart() {
+    const lines = cartLines(), q = SHOP.quote(lines, null), free = SHOP.DELIVERY.freeFrom;
+    $("#cartTitle").textContent = t("cart.title");
+    if (!lines.length) {
+      $("#shipBar").hidden = true;
+      $("#cartItems").innerHTML = `<div class="drawer__empty">${BAG_ICON}<p><strong>${t("cart.empty")}</strong></p><p>${t("cart.emptySub")}</p>
+        <a href="#collection" class="btn btn--dark" data-close>${t("cart.browse")}</a></div>`;
+      $("#cartFoot").innerHTML = "";
+      return;
+    }
+    $("#shipBar").hidden = q.unpriced;
+    if (!q.unpriced) {
+      const left = free - q.subtotal, pct = Math.min(100, (q.subtotal / free) * 100);
+      $("#shipBar").innerHTML = `<p>${left > 0 ? t("cart.toFree", { n: money(left) }) : "✓ " + t("cart.gotFree")}</p><div class="ship-bar__track"><span style="width:${pct}%"></span></div>`;
+    }
+    $("#cartItems").innerHTML = lines.map(({ code, qty, it }) => {
+      const p = SHOP.priceOf(code);
+      return `<div class="line">
+        <img class="line__img" src="${galSrc(it, "thumb")}" alt="" onerror="__aqzImgFail(this)">
+        <div class="line__info">
+          <p class="line__name">${esc(galTitle(it))}</p>
+          <p class="line__meta">${t("gal.ref")} <bdi>${esc(code)}</bdi> · ${priceLabel(code)}</p>
+          <div class="qty" role="group" aria-label="${t("cart.qty")}">
+            <button data-qty="${code}" data-d="-1" aria-label="−">−</button><span>${qty.toLocaleString(state.lang === "ar" ? "ar-EG" : "en")}</span><button data-qty="${code}" data-d="1" aria-label="+">+</button>
+          </div>
+        </div>
+        <div class="line__end"><strong>${p === null ? "—" : money(p * qty)}</strong><button class="link" data-remove="${code}">${t("cart.remove")}</button></div>
+      </div>`;
+    }).join("");
+    const delivery = !q.unpriced && q.subtotal >= free ? t("cart.free") : t("cart.atCheckout");
+    $("#cartFoot").innerHTML = `
+      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}${q.unpriced && q.subtotal ? " +" : ""}</span></div>
+      <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
+      ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
+      <button class="btn btn--gold btn--block" data-checkout>${t("cart.checkout")}</button>`;
+  }
+
+  /* ---------- checkout ---------- */
+  const PHONE_RE = /^(\+?20|0)?1[0125]\d{8}$/;
+  const makeRef = () => { const d = new Date(); const p = n => String(n).padStart(2, "0"); return `ATR-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${Math.floor(1000 + Math.random() * 9000)}`; };
+
+  // Why card payment is not offered right now ("" = it is available).
+  function cardBlock(q, gov) {
+    if (!SHOP.PAYMENT.cardEnabled) return "co.cardSoon";
+    if (q.unpriced) return "co.cardUnpriced";
+    if (gov && q.total === null) return "co.cardDelivery";
+    if (!gov && q.subtotal < SHOP.DELIVERY.freeFrom && SHOP.DELIVERY.cairo === null && SHOP.DELIVERY.other === null) return "co.cardDelivery";
+    return "";
+  }
+
+  function checkout() {
+    if (!cartLines().length) return;
+    const field = (name, label, input) => `<label class="field" data-field="${name}"><span>${label}</span>${input}</label>`;
+    $("#modalContent").innerHTML = `<form class="co" id="coForm" novalidate>
+      <h3 id="modalTitle">${t("co.title")}</h3>
+      <div class="co__grid">
+        <div class="co__fields">
+          ${field("name", t("co.name"), `<input id="coName" name="name" autocomplete="name" required>`)}
+          ${field("phone", t("co.phone"), `<input id="coPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01X XXXX XXXX" dir="ltr" required>`)}
+          ${field("gov", t("co.gov"), `<select id="coGov" name="gov" required><option value="">${t("co.govPick")}</option>${SHOP.GOVERNORATES.map(g => `<option value="${g.id}">${esc(L(g))}</option>`).join("")}</select>`)}
+          ${field("address", t("co.address"), `<textarea id="coAddress" name="address" rows="2" autocomplete="street-address" required></textarea>`)}
+          <fieldset class="field">
+            <legend>${t("co.pay")}</legend>
+            <div class="pay-opts">
+              <label class="pay-opt" id="payCard"><input type="radio" name="pay" value="card"><span><strong>${t("co.card")}</strong><small id="payCardNote">${t("co.cardNote")}</small></span><span class="pay-opt__logos" aria-hidden="true">VISA · Mastercard</span></label>
+              <label class="pay-opt"><input type="radio" name="pay" value="whatsapp"><span><strong>${t("co.wa")}</strong><small>${t("co.waNote")}</small></span>${WA_ICON}</label>
+            </div>
+          </fieldset>
+          <div id="coEmailWrap" hidden>${field("email", t("co.email"), `<input id="coEmail" name="email" type="email" autocomplete="email" dir="ltr">`)}</div>
+        </div>
+        <aside class="co__summary">
+          <h4>${t("co.summary")}</h4>
+          <div id="coSummary"></div>
+          <button class="btn btn--gold btn--block" type="submit" id="coSubmit"></button>
+          <p class="co__msg" id="coMsg" role="alert"></p>
+        </aside>
+      </div></form>`;
+    openLayer($("#modal"));
+    updateCheckout();
+  }
+
+  function updateCheckout() {
+    const form = $("#coForm"); if (!form) return;
+    const lines = cartLines(), gov = form.elements.namedItem("gov").value, q = SHOP.quote(lines, gov);
+    const block = cardBlock(q, gov), card = form.querySelector("[value=card]"), wa = form.querySelector("[value=whatsapp]");
+    card.disabled = !!block;
+    $("#payCard").classList.toggle("is-off", !!block);
+    $("#payCardNote").textContent = t(block || "co.cardNote");
+    if (!card.checked && !wa.checked) (block ? wa : card).checked = true;
+    if (block && card.checked) wa.checked = true;
+    const method = card.checked ? "card" : "whatsapp";
+    $("#coEmailWrap").hidden = method !== "card";
+    $("#coEmail").required = method === "card";
+
+    const deliveryText = !gov ? (q.delivery === 0 ? t("cart.free") : t("cart.atCheckout"))
+      : q.delivery === null ? t("cart.onWa") : q.delivery === 0 ? t("cart.free") : money(q.delivery);
+    const totalText = q.total !== null && (gov || q.delivery === 0) ? money(q.total) : (q.unpriced || gov ? t("cart.onWa") : t("cart.atCheckout"));
+    $("#coSummary").innerHTML = `<ul>${lines.map(({ code, qty, it }) => {
+      const p = SHOP.priceOf(code);
+      return `<li><span>${esc(galTitle(it))} × ${qty.toLocaleString(state.lang === "ar" ? "ar-EG" : "en")}</span><span>${p === null ? t("price.onRequest") : money(p * qty)}</span></li>`;
+    }).join("")}</ul>
+      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}</span></div>
+      <div class="sum"><span>${t("cart.delivery")}</span><span>${deliveryText}</span></div>
+      <div class="sum sum--total"><span>${t("cart.total")}</span><span>${totalText}</span></div>`;
+    $("#coSubmit").textContent = method === "card"
+      ? (q.total !== null && gov ? t("co.submitCard", { total: money(q.total) }) : t("co.card"))
+      : t("co.submitWa");
+  }
+
+  function waOrderText(ref, c) {
+    const lines = cartLines(), q = SHOP.quote(lines, c.gov);
+    const gov = SHOP.GOVERNORATES.find(g => g.id === c.gov);
+    const rows = lines.map(({ code, qty, it }) => { const p = SHOP.priceOf(code); return `• ${galTitle(it)} (${code}) × ${qty}${p === null ? "" : ` = ${money(p * qty)}`}`; });
+    const out = [t("wa.order"), ...rows, ""];
+    if (q.subtotal) out.push(`${t("cart.subtotal")}: ${money(q.subtotal)}${q.unpriced ? " + " + t("price.onRequest") : ""}`);
+    out.push(`${t("cart.delivery")}: ${q.delivery === null ? t("cart.onWa") : q.delivery === 0 ? t("cart.free") : money(q.delivery)}`);
+    if (q.total !== null) out.push(`${t("cart.total")}: ${money(q.total)}`);
+    out.push("", `${t("wa.orderRef")}: ${ref}`, `${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
+    return out.join("\n");
+  }
+
+  async function submitCheckout(form) {
+    $$(".field__err", form).forEach(e => e.remove());
+    $("#coMsg").textContent = "";
+    let ok = true;
+    $$("[required]", form).forEach(inp => {
+      const v = inp.value.trim();
+      let msg = !v ? t("co.required")
+        : inp.name === "phone" && !PHONE_RE.test(v.replace(/[\s-]/g, "")) ? t("co.phoneBad")
+        : inp.name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? t("co.emailBad") : "";
+      inp.setAttribute("aria-invalid", !!msg);
+      if (msg) { ok = false; inp.insertAdjacentHTML("afterend", `<small class="field__err">${msg}</small>`); }
+    });
+    if (!ok) { $("[aria-invalid=true]", form).focus(); return; }
+    const c = { name: form.elements.namedItem("name").value.trim(), phone: form.elements.namedItem("phone").value.trim(), gov: form.elements.namedItem("gov").value, address: form.elements.namedItem("address").value.trim(), email: form.elements.namedItem("email").value.trim() };
+    const ref = makeRef();
+
+    if (form.elements.namedItem("pay").value === "whatsapp") {
+      $("#modalContent").innerHTML = `<div class="done">
+        <div class="done__icon">${WA_ICON}</div>
+        <h3 id="modalTitle">${t("co.readyTitle")}</h3>
+        <p>${t("co.readySub", { ref: `<bdi>${ref}</bdi>` })}</p>
+        <a class="btn btn--wa" data-wa-order href="${esc(waHref(waOrderText(ref, c)))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+        <button class="link" data-close>${t("co.continue")}</button></div>`;
+      return;
+    }
+
+    // card: the server works out the amount from shop.js and returns Paymob's secure page
+    const btn = $("#coSubmit");
+    btn.disabled = true; btn.textContent = t("co.paying");
+    try {
+      const res = await fetch(SHOP.PAYMENT.checkoutEndpoint, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ref, customer: c, lines: cartLines().map(({ code, qty, it }) => ({ code, qty, name: it.en || galBrand(it) || code })) })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) throw new Error(data.error || res.status);
+      store.set("pendingRef", ref);
+      location.href = data.url;
+    } catch {
+      btn.disabled = false; updateCheckout();
+      $("#coMsg").textContent = t("co.payFail");
+    }
+  }
+
+  // Back from Paymob: confirm the result on the server before saying anything.
+  async function handlePaymentReturn() {
+    const params = new URLSearchParams(location.search);
+    if (!params.has("hmac")) return;
+    history.replaceState(null, "", location.pathname + location.hash);
+    let r = null;
+    try { const res = await fetch(SHOP.PAYMENT.verifyEndpoint + "?" + params.toString()); if (res.ok) r = await res.json(); } catch { /* checked below */ }
+    const ref = store.get("pendingRef", "");
+    let title, sub, icon = "✓";
+    if (r && r.paid) { title = t("pay.okTitle"); sub = t("pay.okSub", { amount: money(r.amount), ref: `<bdi>${esc(ref)}</bdi>` }); clearCart(); store.set("pendingRef", ""); }
+    else if (!r || r.pending) { title = t("pay.pendingTitle"); sub = t("pay.pendingSub"); icon = "…"; }
+    else { title = t("pay.failTitle"); sub = t("pay.failSub"); icon = "!"; }
+    $("#modalContent").innerHTML = `<div class="done">
+      <div class="done__icon ${r && r.paid ? "" : "done__icon--muted"}">${icon}</div>
+      <h3 id="modalTitle">${title}</h3><p>${sub}</p>
+      <a class="btn btn--wa" href="${esc(waHref(t("wa.contact") + (ref ? ` (${ref})` : "")))}" target="_blank" rel="noopener">${WA_ICON}${t("pay.ask")}</a>
+      <button class="link" data-close>${t("co.continue")}</button></div>`;
+    openLayer($("#modal"));
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg; el.classList.add("is-on");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("is-on"), 2200);
+  }
 
   /* ---------- overlays (photo viewer / search) ---------- */
   let lastFocus = null, openEl = null;
@@ -207,6 +430,8 @@
     $$(".hero__alt").forEach(el => { el.lang = state.lang === "ar" ? "en" : "ar"; el.dir = state.lang === "ar" ? "ltr" : "rtl"; });
     $("#langBtn").setAttribute("aria-label", state.lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
     renderHero(); renderCats(); renderBrands(); renderGalChips(); renderGallery(); renderReviews();
+    renderCart(); renderCounts();
+    if (openEl && openEl.id === "modal" && $("#coForm")) checkout();
     if (galOpen()) galView(state.gal.at);
     if (openEl && openEl.id === "searchPop") renderSearch($("#searchBig").value);
   }
@@ -217,7 +442,7 @@
     if (!el) { if (e.target.id === "modal") closeLayer(); return; }
     const d = el.dataset;
 
-    if ("close" in d) { closeLayer(); return; }
+    if ("close" in d) { if (el.tagName === "A") closeLayer(true); else closeLayer(); return; }
     if (d.galLink) { setGalFilter(d.galLink); closeMenu(); if (el.tagName !== "A") $("#collection").scrollIntoView({ behavior: "smooth" }); return; }
     if (d.galF) { setGalFilter(d.galF); return; }
     if (d.gal) { galView(+d.gal); openLayer($("#modal")); return; }
@@ -229,6 +454,12 @@
     }
     if (d.galStep) { galView(state.gal.at + +d.galStep); el.focus(); return; }
     if ("search" in d) { closeMenu(); openLayer($("#searchPop")); renderSearch($("#searchBig").value); return; }
+    if (d.addCart) { addToCart(d.addCart, el); return; }
+    if ("cartOpen" in d) { closeMenu(); renderCart(); openLayer($("#cart")); return; }
+    if (d.qty) { setQty(d.qty, (state.cart[d.qty] || 0) + +d.d); return; }
+    if (d.remove) { setQty(d.remove, 0); return; }
+    if ("checkout" in d) { checkout(); return; }
+    if ("waOrder" in d) { clearCart(); setTimeout(() => closeLayer(), 300); return; } // the link itself opens WhatsApp
     if ("waContact" in d || "galAsk" in d) return; // plain links to WhatsApp
   });
 
@@ -243,6 +474,14 @@
       e.preventDefault(); openLayer($("#searchPop")); renderSearch($("#searchBig").value);
     }
   });
+
+  document.addEventListener("change", e => { if (e.target.closest("#coForm")) updateCheckout(); });
+  document.addEventListener("input", e => {
+    if (!e.target.closest("#coForm") || e.target.getAttribute("aria-invalid") !== "true") return;
+    e.target.removeAttribute("aria-invalid");
+    const err = e.target.parentElement.querySelector(".field__err"); if (err) err.remove();
+  });
+  document.addEventListener("submit", e => { if (e.target.id === "coForm") { e.preventDefault(); submitCheckout(e.target); } });
 
   $("#langBtn").addEventListener("click", () => {
     state.lang = state.lang === "en" ? "ar" : "en";
@@ -277,4 +516,5 @@
   /* ---------- init ---------- */
   $("#year").textContent = new Date().getFullYear();
   applyLang();
+  handlePaymentReturn();
 })();

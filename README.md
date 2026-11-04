@@ -12,7 +12,29 @@ A bilingual (العربية / English) perfume store website for customers in Eg
 - Brands strip, reviews, newsletter sign-up, footer with contact details.
 - Mobile first: bottom navigation bar, bottom-sheet photo viewer, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
-There is no bag or online checkout: customers order on WhatsApp.
+- **Cart**: add products from the photo viewer, change quantities, see the free-delivery progress (free over EGP 2,000). The cart is saved in the customer's browser.
+- **Checkout** with name, Egyptian mobile number, governorate (all 27) and address, and two ways to pay:
+  - **Card (Visa / Mastercard) through Paymob**: the customer pays on Paymob's secure page; card details never touch this site.
+  - **Order on WhatsApp**: the full order (items, references, prices, delivery, customer details and an order number such as `ATR-261104-2180`) is sent to the store's WhatsApp to agree payment and delivery.
+
+## Prices and delivery
+Prices and delivery fees live in `assets/js/shop.js`, which is read by both the website and the payment server, so a customer cannot change a price in the browser.
+- `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `B03: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
+- `DELIVERY`: `freeFrom` (2000), `cairo` and `other` fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
+
+## Card payments with Paymob
+Card payment needs a Paymob merchant account and a small server function (already written in `netlify/functions/`), because the Paymob secret key must never be inside the website. Until it is set up, the card option shows "Card payment is coming soon" and WhatsApp ordering works on its own.
+
+1. **Paymob account**: sign up at paymob.com and complete verification (commercial register, tax card, bank account). Start in **test mode**.
+2. **Keys** (Paymob dashboard): the **Secret key**, **Public key** and **HMAC secret** (Settings → Account info), and the **Integration ID** of your card payment integration (Developers → Payment integrations).
+3. **Hosting on Netlify** (free plan is enough): New site → Import from GitHub → this repository and branch. `netlify.toml` already sets everything; no build command is needed.
+4. **Environment variables** (Netlify → Site configuration → Environment variables): `PAYMOB_SECRET_KEY`, `PAYMOB_PUBLIC_KEY`, `PAYMOB_INTEGRATION_ID`, `PAYMOB_HMAC_SECRET`, and `SITE_URL` (your site address, e.g. `https://atr-perfume.netlify.app`). Redeploy after adding them.
+5. **Turn it on**: in `assets/js/shop.js` set `PAYMENT.cardEnabled: true`, fill in `PRICES` and the `DELIVERY` fees, and push.
+6. **Test** with Paymob's test cards while in test mode, then replace the keys with the live ones.
+
+How it works: the checkout sends only product references and quantities to `paymob-checkout`, which prices the order from `shop.js`, creates the payment with Paymob and sends the customer to Paymob's secure page. Paymob then returns the customer to the site, and `paymob-verify` checks Paymob's signature before the site says "Payment received". Every payment, with the order number and the customer's address, is listed in your Paymob dashboard.
+
+Card payment works only on the real hosted site (Netlify). The private claude.ai preview link and a locally opened `index.html` cannot reach the payment server, so there the card option stays off.
 
 ## Images
 ### Product photos (the collection)
@@ -37,6 +59,7 @@ The older Aquzora logo files are still in `assets/logo/` (outside `atr/`) but no
 
 ## Editing content
 - Product photos, brands, filters and reviews: `assets/js/data.js`
+- Prices, delivery fees and payment settings: `assets/js/shop.js`
 - All interface text in both languages: `assets/js/i18n.js`
 - WhatsApp number: `STORE.whatsapp` in `assets/js/data.js`, in international format without `+` or the leading 0 (now `201289555608`, i.e. +20 128 955 5608). The number shown in the footer is in `index.html`.
 - Colours and fonts: the `:root` brand tokens at the top of `assets/css/style.css`
