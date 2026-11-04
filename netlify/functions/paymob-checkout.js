@@ -7,7 +7,18 @@
      PAYMOB_INTEGRATION_ID  Paymob dashboard → Developers → Payment integrations → the card integration ID
      SITE_URL               Your site address, e.g. https://atr-perfume.netlify.app
 */
-const SHOP = require("../../assets/js/shop.js");
+const SHOP = require("../../public/assets/js/shop.js");
+
+// Simple per-visitor limit: at most 6 payment attempts per 10 minutes. It is kept in the
+// function's memory, so it resets when Netlify starts a fresh copy; it still stops a single
+// visitor or bot from firing many payments in a row.
+const WINDOW_MS = 10 * 60 * 1000, MAX_TRIES = 6, tries = new Map();
+function rateLimited(ip) {
+  const now = Date.now(), list = (tries.get(ip) || []).filter(t => now - t < WINDOW_MS);
+  list.push(now); tries.set(ip, list);
+  if (tries.size > 5000) tries.clear();
+  return list.length > MAX_TRIES;
+}
 
 const json = (statusCode, body) => ({ statusCode, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 const clean = (v, max = 120) => String(v || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, max);
@@ -16,6 +27,15 @@ exports.handler = async event => {
   if (event.httpMethod !== "POST") return json(405, { error: "method" });
   const { PAYMOB_SECRET_KEY, PAYMOB_PUBLIC_KEY, PAYMOB_INTEGRATION_ID, SITE_URL } = process.env;
   if (!PAYMOB_SECRET_KEY || !PAYMOB_PUBLIC_KEY || !PAYMOB_INTEGRATION_ID || !SITE_URL) return json(503, { error: "not_configured" });
+
+  // Only the shop's own pages may start a payment.
+  const site = new URL(SITE_URL).origin;
+  const headers = Object.fromEntries(Object.entries(event.headers || {}).map(([k, v]) => [k.toLowerCase(), v]));
+  if (headers.origin !== site) return json(403, { error: "origin" });
+  if (!/^application\/json/.test(headers["content-type"] || "")) return json(415, { error: "type" });
+  if ((event.body || "").length > 10000) return json(413, { error: "too_large" });
+  const ip = headers["x-nf-client-connection-ip"] || headers["x-forwarded-for"] || "unknown";
+  if (rateLimited(ip)) return json(429, { error: "too_many" });
 
   let body;
   try { body = JSON.parse(event.body || "{}"); } catch { return json(400, { error: "bad_json" }); }
@@ -58,7 +78,9 @@ exports.handler = async event => {
       },
       special_reference: ref,
       extras: { ref, governorate: gov.en, address: customer.address },
-      redirection_url: `${SITE_URL.replace(/\/$/, "")}/?paid=1`
+      redirection_url: `${site}/?paid=1`,
+      // Paymob also tells the server directly when a payment completes (see paymob-webhook.js)
+      notification_url: `${site}/.netlify/functions/paymob-webhook`
     })
   });
   const data = await res.json().catch(() => ({}));
