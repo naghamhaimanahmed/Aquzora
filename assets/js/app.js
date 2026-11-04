@@ -12,7 +12,7 @@
 
   const GAL_PAGE = 12;
   const state = {
-    lang: store.get("lang", "en"),
+    lang: store.get("lang", "ar"), // Arabic first
     gal: { f: "all", shown: GAL_PAGE, at: -1 }
   };
 
@@ -72,6 +72,17 @@
     $$("[data-tile]").forEach(el => setBg(el, [galSrc(byCode(el.dataset.tile))]));
   }
 
+  function renderHero() {
+    const it = byCode(HERO_PHOTO);
+    if (!it) { $(".hero__art").hidden = true; return; }
+    const img = $("#heroImg");
+    if (!img.getAttribute("src")) { img.src = galSrc(it); img.onerror = () => __aqzImgFail(img); }
+    img.alt = galTitle(it);
+    $("#heroArch").setAttribute("aria-label", `${t("hero.view")}: ${galTitle(it)}`);
+    $("#heroName").textContent = galTitle(it);
+    $("#heroBrand").textContent = galSub(it);
+  }
+
   function renderBrands() {
     const items = BRANDS.map(b => `<span class="brand">${esc(b)}</span>`).join("");
     $("#brands").innerHTML = `<div class="brands__row">${items}${items}</div>`;
@@ -87,6 +98,7 @@
   function renderGallery() {
     const list = galList(), shown = list.slice(0, state.gal.shown);
     $("#gal").innerHTML = shown.map((it, i) => `<button class="gal__item" data-gal="${i}" aria-label="${t("gal.view")}: ${esc(galTitle(it))}">
+      ${it.type === "set" ? `<span class="ribbon">${t("gal.type.set")}</span>` : ""}
       <span class="gal__img"><img src="${galSrc(it, "thumb")}" alt="${esc(galTitle(it))}" width="480" height="480" loading="lazy" decoding="async" onerror="__aqzImgFail(this)"></span>
       <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small></span>
     </button>`).join("");
@@ -189,8 +201,11 @@
     $("#searchBig").setAttribute("aria-label", t("search.label"));
     $$("[data-wa-contact]").forEach(a => { a.href = waHref(t("wa.contact")); });
     $("#langBtn").textContent = state.lang === "ar" ? "English" : "عربي";
+    $("#langBtn").lang = state.lang === "ar" ? "en" : "ar";
+    // the tagline is always shown in both languages
+    $$(".hero__alt").forEach(el => { el.lang = state.lang === "ar" ? "en" : "ar"; el.dir = state.lang === "ar" ? "ltr" : "rtl"; });
     $("#langBtn").setAttribute("aria-label", state.lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
-    renderCats(); renderBrands(); renderGalChips(); renderGallery(); renderReviews();
+    renderHero(); renderCats(); renderBrands(); renderGalChips(); renderGallery(); renderReviews();
     if (galOpen()) galView(state.gal.at);
     if (openEl && openEl.id === "searchPop") renderSearch($("#searchBig").value);
   }
@@ -205,6 +220,7 @@
     if (d.galLink) { setGalFilter(d.galLink); closeMenu(); if (el.tagName !== "A") $("#collection").scrollIntoView({ behavior: "smooth" }); return; }
     if (d.galF) { setGalFilter(d.galF); return; }
     if (d.gal) { galView(+d.gal); openLayer($("#modal")); return; }
+    if (el.id === "heroArch") { d.galCode = HERO_PHOTO; }
     if (d.galCode) {
       setGalFilter("all");
       galView(GALLERY.findIndex(it => it.code === d.galCode));
@@ -259,6 +275,5 @@
 
   /* ---------- init ---------- */
   $("#year").textContent = new Date().getFullYear();
-  $$("[data-img]").forEach(el => setBg(el, [IMAGES[el.dataset.img].local, IMAGES[el.dataset.img].remote]));
   applyLang();
 })();

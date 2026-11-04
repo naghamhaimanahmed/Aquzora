@@ -1,24 +1,14 @@
-/* Aquzora store data: the photo catalogue, brands and reviews. */
+/* Atr — Maison de Parfum: the photo catalogue, brands and reviews. */
 
 const STORE = {
-  name: "Aquzora",
+  name: "Atr",
   // WhatsApp number in international format without "+" or the leading 0
   // (Egypt +20, mobile 01289555608).
   whatsapp: "201289555608"
 };
 
-// Banner and "Why Aquzora" background photos: free Pexels photos
-// (pexels.com/license: free for commercial use, no credit needed), stored in
-// assets/img/ (run download-images.sh to fetch them again). If the local file is
-// missing, the site loads it from Pexels instead.
-const pexels = (id, w = 900) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
-const photo = (id, file, w = 900) => ({ local: `assets/img/${file}.jpg`, remote: pexels(id, w) });
-
-const IMAGES = {
-  hero: photo("8361545", "hero", 1600),
-  story: photo("8166613", "story", 1200)
-};
+// The product shown in the arch at the top of the page (a code from GALLERY below).
+const HERO_PHOTO = "B03";
 
 // Brands shown in the "Brands we love" strip (text only, no logos).
 const BRANDS = [
