@@ -228,7 +228,7 @@
     if (!SHOP.PAYMENT.cardEnabled) return "co.cardSoon";
     if (q.unpriced) return "co.cardUnpriced";
     if (gov && q.total === null) return "co.cardDelivery";
-    if (!gov && q.subtotal < SHOP.DELIVERY.freeFrom && SHOP.DELIVERY.cairo === null && SHOP.DELIVERY.other === null) return "co.cardDelivery";
+    if (!gov && q.subtotal < SHOP.DELIVERY.freeFrom && SHOP.DELIVERY.aswan === null && SHOP.DELIVERY.other === null) return "co.cardDelivery";
     return "";
   }
 

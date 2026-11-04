@@ -18,7 +18,7 @@ const SHOP = {
   // and card payment is not offered.
   DELIVERY: {
     freeFrom: 2000,
-    cairo: null,   // delivery inside Cairo (1–2 working days)
+    aswan: null,   // delivery inside Aswan, where the store is (1–2 working days)
     other: null    // all other governorates (2–4 days)
   },
 
@@ -30,9 +30,10 @@ const SHOP = {
     verifyEndpoint: "/.netlify/functions/paymob-verify"
   },
 
-  // The 27 governorates of Egypt. "cairo" decides the delivery fee.
+  // The 27 governorates of Egypt, Aswan (home, "local" delivery fee) first.
   GOVERNORATES: [
-    { id: "cairo", en: "Cairo", ar: "القاهرة", cairo: true },
+    { id: "aswan", en: "Aswan", ar: "أسوان", local: true },
+    { id: "cairo", en: "Cairo", ar: "القاهرة" },
     { id: "giza", en: "Giza", ar: "الجيزة" },
     { id: "alexandria", en: "Alexandria", ar: "الإسكندرية" },
     { id: "qalyubia", en: "Qalyubia", ar: "القليوبية" },
@@ -53,7 +54,6 @@ const SHOP = {
     { id: "sohag", en: "Sohag", ar: "سوهاج" },
     { id: "qena", en: "Qena", ar: "قنا" },
     { id: "luxor", en: "Luxor", ar: "الأقصر" },
-    { id: "aswan", en: "Aswan", ar: "أسوان" },
     { id: "red-sea", en: "Red Sea", ar: "البحر الأحمر" },
     { id: "new-valley", en: "New Valley", ar: "الوادي الجديد" },
     { id: "matrouh", en: "Matrouh", ar: "مطروح" },
@@ -72,7 +72,7 @@ SHOP.quote = (lines, governorateId) => {
   const gov = SHOP.GOVERNORATES.find(g => g.id === governorateId);
   let delivery = null;
   if (subtotal >= SHOP.DELIVERY.freeFrom && !unpriced) delivery = 0;
-  else if (gov) delivery = gov.cairo ? SHOP.DELIVERY.cairo : SHOP.DELIVERY.other;
+  else if (gov) delivery = gov.local ? SHOP.DELIVERY.aswan : SHOP.DELIVERY.other;
   return { subtotal, unpriced, delivery, total: delivery === null ? null : subtotal + delivery };
 };
 

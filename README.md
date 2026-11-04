@@ -1,6 +1,6 @@
 # Atr · Maison de Parfum
 
-A bilingual (العربية / English) perfume store website for customers in Egypt (prices in EGP), built on the Atr brand identity: "Heritage in every drop. · إرثٌ في كل قطرة". Open `index.html` in any browser; no install or build step.
+A bilingual (العربية / English) perfume store website, based in Aswan and delivering across Egypt (prices in EGP), built on the Atr brand identity: "Heritage in every drop. · إرثٌ في كل قطرة". Open `index.html` in any browser; no install or build step.
 
 ## Features
 - **Arabic first, always bilingual**: the site opens in Arabic (right to left) and switches to English; the choice is remembered. The tagline is always shown in both languages.
@@ -20,7 +20,7 @@ A bilingual (العربية / English) perfume store website for customers in Eg
 ## Prices and delivery
 Prices and delivery fees live in `assets/js/shop.js`, which is read by both the website and the payment server, so a customer cannot change a price in the browser.
 - `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `B03: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
-- `DELIVERY`: `freeFrom` (2000), `cairo` and `other` fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
+- `DELIVERY`: `freeFrom` (2000), `aswan` (local, 1–2 working days) and `other` (2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
 
 ## Card payments with Paymob
 Card payment needs a Paymob merchant account and a small server function (already written in `netlify/functions/`), because the Paymob secret key must never be inside the website. Until it is set up, the card option shows "Card payment is coming soon" and WhatsApp ordering works on its own.
