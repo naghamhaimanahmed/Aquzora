@@ -1,10 +1,11 @@
-# Aquzora · Perfumes, Oud, Makeup & Skincare
+# Aquzora · Perfumes, Oud & Musk
 
-A professional, bilingual (English / العربية) beauty store website. Open `index.html` in any browser; no install or build step.
+A professional, bilingual (English / العربية) perfume store website. Open `index.html` in any browser; no install or build step.
 
 ## Features
 - **English ⇄ Arabic** with full right-to-left layout; the choice is remembered.
-- **Shop by category**: Perfumes, Oud & Bakhoor, Makeup, Skincare.
+- **Shop by category**: Perfumes, Oud & Bakhoor, Musk.
+- **In store now**: a gallery of real photos of the perfumes, musks and gift sets in stock, filterable by brand, musk or gift sets. Tap a photo to see it full size, move through the photos, and ask about it on WhatsApp (the message includes the photo reference).
 - **Live search** (header search, press `/`), category chips, sort by price or rating, and an "On sale" filter.
 - **Quick view** for every product: notes, size, rating, quantity, add to bag or buy now.
 - **Bag drawer**: quantity controls, free-delivery progress bar (free over AED 200), totals, and **Order on WhatsApp**.
@@ -15,7 +16,17 @@ A professional, bilingual (English / العربية) beauty store website. Open 
 - Mobile first: bottom navigation bar, bottom-sheet product views, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 ## Images
-All photos are free Pexels photos (free for commercial use, no credit required: https://www.pexels.com/license/), chosen to show unbranded bottles and products. They are saved in `assets/img/`, so they work offline. If a file is missing, the site loads it from Pexels, and if that fails it shows a drawn illustration, so nothing ever looks broken.
+### Your stock photos ("In store now")
+The real product photos are in `assets/img/collection/` (1000 px, used in the photo viewer) and `assets/img/collection/thumb/` (480 px, used in the grid). Their names, brands and types are listed in `GALLERY` at the bottom of `assets/js/data.js`; each line uses the photo's file name as its reference (for example `B04`). To add a photo, save both sizes with a new reference name and add a line, for example:
+
+```js
+g("E01", "assaf", "perfume", "Arrogate Pink", "أروغيت بينك"),
+```
+
+The type is `perfume`, `musk` or `set`. Leave the name out if you do not know it, and the brand is shown instead.
+
+### Shop and banner photos
+The other photos are free Pexels photos (free for commercial use, no credit required: https://www.pexels.com/license/), chosen to show unbranded bottles and products. They are saved in `assets/img/`, so they work offline. If a file is missing, the site loads it from Pexels, and if that fails it shows a drawn illustration, so nothing ever looks broken.
 
 To re-download the photos, run `bash download-images.sh`. To use your own product photos, put them in `assets/img/` with the same file names (for example `product-1.jpg`), or change the IDs in `assets/js/data.js`.
 

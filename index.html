@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aquzora · Perfumes, Oud, Makeup &amp; Skincare</title>
-  <meta name="description" content="Aquzora: authentic Arabian perfumes, oud, bakhoor, makeup and skincare with fast delivery across the UAE.">
+  <title>Aquzora · Perfumes, Oud &amp; Musk</title>
+  <meta name="description" content="Aquzora: authentic Arabian perfumes, oud, bakhoor and musk with fast delivery across the UAE.">
   <meta name="theme-color" content="#1d1418">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,8 +34,8 @@
         <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
         <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
         <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-        <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
-        <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+        <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
+        <a href="#gallery" data-i18n="nav.gallery">In store</a>
         <a href="#finder" data-i18n="nav.finder">Scent finder</a>
       </nav>
 
@@ -59,8 +59,8 @@
       <a href="#shop" data-cat-link="all" data-i18n="nav.shop">Shop all</a>
       <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
       <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-      <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
-      <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+      <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
+      <a href="#gallery" data-i18n="nav.gallery">In store</a>
       <a href="#finder" data-i18n="nav.finder">Scent finder</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
@@ -72,9 +72,9 @@
       <div class="hero__bg" data-img="hero" role="img" aria-label="Perfume bottle"></div>
       <div class="container hero__inner">
         <div class="hero__copy">
-          <p class="eyebrow" data-i18n="hero.eyebrow">Arabian perfumery · Beauty · Care</p>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Arabian perfumery · Oud · Musk</p>
           <h1 data-i18n="hero.title">Scents that tell your story</h1>
-          <p class="hero__lead" data-i18n="hero.lead">Authentic oud, rich perfumes, makeup and skincare, hand-picked and delivered to your door across the UAE.</p>
+          <p class="hero__lead" data-i18n="hero.lead">Authentic perfumes, oud and musk from the great Arabian houses, hand-picked and delivered to your door across the UAE.</p>
           <div class="hero__cta">
             <a href="#shop" class="btn btn--gold" data-i18n="hero.shop">Shop the collection</a>
             <a href="#finder" class="btn btn--ghost" data-i18n="hero.finder">Find my scent</a>
@@ -107,6 +107,21 @@
       </div>
     </section>
 
+    <!-- In store now: real stock photos -->
+    <section class="section section--soft" id="gallery">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow" data-i18n="gal.eyebrow">Real photos from our shelves</p>
+          <h2 data-i18n="gal.title">In store now</h2>
+          <p data-i18n="gal.sub">The perfumes, musks and gift sets we have in stock. Tap any photo to see it up close and ask us about it on WhatsApp.</p>
+        </div>
+        <div class="chips gal-chips" id="galChips" role="tablist" aria-label="Filter photos"></div>
+        <p class="results" id="galCount" aria-live="polite"></p>
+        <div class="gal" id="gal"></div>
+        <div class="gal-more"><button class="btn btn--line" id="galMore" hidden></button></div>
+      </div>
+    </section>
+
     <!-- Shop -->
     <section class="section" id="shop">
       <div class="container">
@@ -118,7 +133,7 @@
         <div class="toolbar">
           <label class="search">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input id="search" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, lipstick…" aria-label="Search products">
+            <input id="search" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, musk…" aria-label="Search products">
           </label>
           <div class="chips" id="chips" role="tablist" aria-label="Categories"></div>
           <div class="toolbar__right">
@@ -219,14 +234,14 @@
     <div class="container footer__grid">
       <div>
         <a href="#top" class="logo logo--light" aria-label="Aquzora home"><img class="logo__img logo__img--footer" src="assets/logo/aquzora-wordmark-white.svg" alt="Aquzora" width="244" height="56"></a>
-        <p class="footer__about" data-i18n="footer.about">Perfumes, oud, makeup and skincare, chosen with care and delivered across the UAE.</p>
+        <p class="footer__about" data-i18n="footer.about">Perfumes, oud and musk, chosen with care and delivered across the UAE.</p>
       </div>
       <div>
         <h4 data-i18n="footer.shop">Shop</h4>
         <a href="#shop" data-cat-link="perfume" data-i18n="cat.perfume">Perfumes</a>
         <a href="#shop" data-cat-link="oud" data-i18n="cat.oud">Oud &amp; Bakhoor</a>
-        <a href="#shop" data-cat-link="makeup" data-i18n="cat.makeup">Makeup</a>
-        <a href="#shop" data-cat-link="skincare" data-i18n="cat.skincare">Skincare</a>
+        <a href="#shop" data-cat-link="musk" data-i18n="cat.musk">Musk</a>
+        <a href="#gallery" data-i18n="nav.gallery">In store</a>
       </div>
       <div>
         <h4 data-i18n="footer.help">Help</h4>
@@ -287,7 +302,7 @@
     <div class="container">
       <label class="search search--big">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, lipstick…" aria-label="Search products">
+        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="shop.search" placeholder="Search perfumes, oud, musk…" aria-label="Search products">
         <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </label>
       <div class="search-pop__results" id="searchResults"></div>

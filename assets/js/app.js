@@ -18,8 +18,10 @@
     sale: false,
     cart: store.get("cart", {}),
     wish: new Set(store.get("wish", [])),
-    quiz: { step: 0, answers: [] }
+    quiz: { step: 0, answers: [] },
+    gal: { f: "all", shown: 12, at: -1 }
   };
+  const GAL_PAGE = 12;
   // drop items that no longer exist in the catalogue
   Object.keys(state.cart).forEach(id => { if (!byId(+id)) delete state.cart[id]; });
 
@@ -89,7 +91,7 @@
       const n = PRODUCTS.filter(p => p.cat === c.id).length;
       return `<button class="cat" data-cat="${c.id}">
         <span class="cat__img" data-cat-img="${c.id}"></span>
-        <span class="cat__label"><strong>${esc(L(c))}</strong><small>${t("cats.items", { n })}</small></span>
+        <span class="cat__label"><strong>${esc(L(c))}</strong><small>${n === 1 ? t("cats.item1") : t("cats.items", { n })}</small></span>
       </button>`;
     }).join("");
     $$("[data-cat-img]").forEach(el => setBg(el, IMAGES.cat[el.dataset.catImg], el.dataset.catImg));
@@ -175,6 +177,66 @@
       <figcaption><span class="avatar">${esc(r.name[0])}</span><span><strong>${esc(r.name)}</strong><small>${esc(L(r.city))}</small></span></figcaption>
     </figure>`).join("");
   }
+
+  /* ---------- "In store now" gallery ---------- */
+  const galBrand = it => L(GALLERY_BRANDS[it.brand]);
+  const galType = it => t("gal.type." + it.type);
+  // Title: the product name if known, otherwise the brand.
+  const galTitle = it => (state.lang === "ar" ? it.ar || it.en : it.en) || galBrand(it) || galType(it);
+  const galSub = it => (it.en ? [galBrand(it), galType(it)] : [galType(it)]).filter(Boolean).join(" · ");
+  const galSrc = (it, size) => `assets/img/collection/${size === "thumb" ? "thumb/" : ""}${it.code.toLowerCase()}.jpg`;
+
+  function galList() {
+    const f = GALLERY_FILTERS.find(x => x.id === state.gal.f) || GALLERY_FILTERS[0];
+    return GALLERY.filter(it => (!f.type || it.type === f.type) && (!f.group || GALLERY_BRANDS[it.brand].group === f.group));
+  }
+
+  function renderGalChips() {
+    $("#galChips").innerHTML = GALLERY_FILTERS.map(f =>
+      `<button class="chip ${state.gal.f === f.id ? "is-on" : ""}" role="tab" aria-selected="${state.gal.f === f.id}" data-gal-f="${f.id}">${esc(L(f))}</button>`
+    ).join("");
+  }
+
+  function renderGallery() {
+    const list = galList(), shown = list.slice(0, state.gal.shown);
+    $("#gal").innerHTML = shown.map((it, i) => `<button class="gal__item" data-gal="${i}" aria-label="${t("gal.view")}: ${esc(galTitle(it))}">
+      <span class="gal__img"><img src="${galSrc(it, "thumb")}" alt="${esc(galTitle(it))}" width="480" height="480" loading="lazy" decoding="async" onerror="__aqzImgFail(this,'perfume')"></span>
+      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small></span>
+    </button>`).join("");
+    $("#galCount").textContent = list.length === 1 ? t("gal.count1") : t("gal.count", { n: list.length });
+    const left = list.length - shown.length;
+    $("#galMore").hidden = left <= 0;
+    $("#galMore").textContent = t("gal.more", { n: left });
+  }
+
+  function setGalFilter(id) {
+    Object.assign(state.gal, { f: id, shown: GAL_PAGE });
+    renderGalChips(); renderGallery();
+  }
+
+  const chevron = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>`;
+  function galView(i) {
+    const list = galList();
+    i = (i + list.length) % list.length;
+    state.gal.at = i;
+    const it = list[i];
+    $("#modalContent").innerHTML = `<div class="qv gv">
+      <div class="gv__img"><img src="${galSrc(it)}" alt="${esc(galTitle(it))}" onerror="__aqzImgFail(this,'perfume')"></div>
+      <div class="qv__info">
+        <p class="card__cat">${esc(galSub(it))}</p>
+        <h3 id="modalTitle">${esc(galTitle(it))}</h3>
+        <p class="gv__ref">${t("gal.ref")} <bdi>${esc(it.code)}</bdi> · ${t("gal.pos", { a: i + 1, b: list.length })}</p>
+        <p class="qv__desc">${t("gal.note")}</p>
+        <button class="btn btn--wa btn--block" data-gal-ask="${i}"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</button>
+        <div class="gv__nav">
+          <button class="icon-btn" data-gal-step="-1" aria-label="${t("gal.prev")}">${chevron}</button>
+          <button class="icon-btn gv__next" data-gal-step="1" aria-label="${t("gal.next")}">${chevron}</button>
+        </div>
+      </div></div>`;
+    // keep the photo in the grid when the viewer moves past the loaded ones
+    if (i >= state.gal.shown) { state.gal.shown = Math.ceil((i + 1) / GAL_PAGE) * GAL_PAGE; renderGallery(); }
+  }
+  const galOpen = () => openEl && openEl.id === "modal" && $("#modalContent .gv");
 
   /* ---------- cart ---------- */
   const cartCount = () => Object.values(state.cart).reduce((a, b) => a + b, 0);
@@ -446,7 +508,8 @@
   }
 
   function renderAll() {
-    renderCats(); renderBrands(); renderChips(); renderGrid(); renderReviews();
+    renderCats(); renderBrands(); renderGalChips(); renderGallery(); renderChips(); renderGrid(); renderReviews();
+    if (galOpen()) galView(state.gal.at);
     renderCart(); renderWish(); renderCounts(); renderQuiz();
     if (openEl && openEl.id === "searchPop") renderSearch($("#searchBig").value);
   }
@@ -461,6 +524,14 @@
     if (d.add) { addToCart(+d.add, 1, el); return; }
     if (d.wish) { toggleWish(+d.wish); return; }
     if (d.quick) { quickView(+d.quick); return; }
+    if (d.galF) { setGalFilter(d.galF); return; }
+    if (d.gal) { galView(+d.gal); openLayer($("#modal")); return; }
+    if (d.galStep) { galView(state.gal.at + +d.galStep); el.focus(); return; }
+    if (d.galAsk) {
+      const it = galList()[+d.galAsk];
+      const text = [t("wa.ask"), [galTitle(it), it.en ? galBrand(it) : ""].filter(Boolean).join(" – "), `${t("gal.ref")} ${it.code}`].join("\n");
+      window.open(waLink(text), "_blank", "noopener"); return;
+    }
     if (d.open) { openLayer($("#" + d.open)); return; }
     if (d.cat) { setCat(d.cat, true); return; }
     if (d.catLink) { setCat(d.catLink); closeMenu(); return; }
@@ -483,6 +554,10 @@
   $("#overlay").addEventListener("click", () => closeLayer());
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closeLayer(); closeMenu(); }
+    if (galOpen() && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+      const fwd = (e.key === "ArrowRight") !== (state.lang === "ar");
+      galView(state.gal.at + (fwd ? 1 : -1));
+    }
     if (e.key === "/" && !/input|textarea|select/i.test(document.activeElement.tagName)) { e.preventDefault(); $("#searchOpen").click(); }
   });
   document.addEventListener("submit", e => {
@@ -533,6 +608,8 @@
     inp.setAttribute("aria-invalid", !ok);
     if (ok) inp.value = "";
   });
+
+  $("#galMore").addEventListener("click", () => { state.gal.shown += GAL_PAGE; renderGallery(); });
 
   $("#waContact").addEventListener("click", () => window.open(waLink(t("wa.contact")), "_blank", "noopener"));
 

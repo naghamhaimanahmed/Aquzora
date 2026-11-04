@@ -119,7 +119,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
 
 /* categories */
-.cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .cat { position: relative; aspect-ratio: 3 / 4; border-radius: var(--radius); overflow: hidden; text-align: start; background: var(--soft); box-shadow: var(--shadow); }
 .cat__img { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform .6s var(--ease), opacity .6s; opacity: 0; }
 .cat__img.is-loaded { opacity: 1; }
@@ -357,6 +357,31 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .s-item span { display: flex; flex-direction: column; }
 .s-item small { color: var(--ink-2); font-size: 12px; }
 
+/* "In store now" gallery */
+.gal-chips { justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+#galCount { text-align: center; }
+.gal { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.gal__item { display: flex; flex-direction: column; text-align: start; background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 0 var(--line); transition: box-shadow .3s, transform .3s var(--ease); animation: fade .5s var(--ease) both; }
+.gal__item:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+.gal__img { display: block; aspect-ratio: 1; background: #fff; overflow: hidden; }
+.gal__img img { width: 100%; height: 100%; object-fit: contain; transition: transform .6s var(--ease); }
+.gal__item:hover .gal__img img { transform: scale(1.05); }
+.gal__cap { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 16px; border-top: 1px solid var(--line); }
+.gal__cap strong { font: 700 19px/1.2 var(--f-head); }
+.gal__cap small { font-size: 12px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.gal-more { display: flex; justify-content: center; margin-top: 28px; }
+.gal-more .btn[hidden] { display: none; }
+.gv__img { position: relative; background: #fff; display: grid; place-items: center; }
+.gv__img img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
+.gv .qv__info { justify-content: center; gap: 4px; }
+.gv__ref { font-size: 13px; color: var(--ink-2); margin-bottom: 14px; }
+.gv .qv__desc { margin-bottom: 18px; }
+.gv__nav { display: flex; justify-content: space-between; margin-top: 18px; }
+.gv__nav .icon-btn { border: 1.5px solid var(--line); border-radius: 999px; }
+.gv__nav .icon-btn:hover { border-color: var(--gold); }
+.gv__next svg, [dir="rtl"] .gv__nav .icon-btn:not(.gv__next) svg { transform: scaleX(-1); }
+[dir="rtl"] .gv__next svg { transform: none; }
+
 /* toast */
 .toast { position: fixed; left: 50%; bottom: 28px; z-index: 90; transform: translate(-50%, 30px); opacity: 0; background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow-lg); transition: all .3s var(--ease); pointer-events: none; max-width: calc(100% - 32px); text-align: center; }
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
@@ -367,7 +392,7 @@ img.is-fallback { object-fit: contain !important; }
 @media (max-width: 1080px) {
   .nav { display: none; }
   .menu-btn { display: grid; }
-  .grid { grid-template-columns: repeat(3, 1fr); }
+  .grid, .gal { grid-template-columns: repeat(3, 1fr); }
   .finder__inner, .story { grid-template-columns: 1fr; gap: 36px; }
   .story__img { aspect-ratio: 16 / 10; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
@@ -383,6 +408,12 @@ img.is-fallback { object-fit: contain !important; }
   .hero__inner { padding-block: 60px; align-self: flex-end; }
   .hero__cta .btn { flex: 1 1 100%; }
   .cats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .cats .cat:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+  .gal-chips { flex-wrap: nowrap; justify-content: flex-start; margin-inline: -20px; padding-inline: 20px; }
+  .gal { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .gal__cap { padding: 10px 12px 12px; }
+  .gal__cap strong { font-size: 16px; }
+  .gal__cap small { font-size: 11px; }
   .cat__label strong { font-size: 21px; }
   .toolbar { gap: 10px; }
   .search { max-width: none; flex-basis: 100%; }
