@@ -18,8 +18,8 @@ const SHOP = {
   // and card payment is not offered.
   DELIVERY: {
     freeFrom: 2000,
-    aswan: null,   // delivery inside Aswan, where the store is (1–2 working days)
-    other: null    // all other governorates (2–4 days)
+    aswan: 50,     // delivery inside Aswan, where the store is (1–2 working days)
+    other: 100     // all other governorates (2–4 days)
   },
 
   // Card payments through Paymob (see README → "Card payments with Paymob").
@@ -73,7 +73,8 @@ SHOP.quote = (lines, governorateId) => {
   let delivery = null;
   if (subtotal >= SHOP.DELIVERY.freeFrom && !unpriced) delivery = 0;
   else if (gov) delivery = gov.local ? SHOP.DELIVERY.aswan : SHOP.DELIVERY.other;
-  return { subtotal, unpriced, delivery, total: delivery === null ? null : subtotal + delivery };
+  // no total while any item has no price: it is agreed on WhatsApp
+  return { subtotal, unpriced, delivery, total: unpriced || delivery === null ? null : subtotal + delivery };
 };
 
 if (typeof module !== "undefined") module.exports = SHOP;

@@ -20,7 +20,7 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 ## Prices and delivery
 Prices and delivery fees live in `assets/js/shop.js`, which is read by both the website and the payment server, so a customer cannot change a price in the browser.
 - `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `B03: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
-- `DELIVERY`: `freeFrom` (2000), `aswan` (local, 1–2 working days) and `other` (2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
+- `DELIVERY`: `freeFrom` (2000), `aswan` (EGP 50, local, 1–2 working days) and `other` (EGP 100, 2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
 
 ## Card payments with Paymob
 Card payment needs a Paymob merchant account and a small server function (already written in `netlify/functions/`), because the Paymob secret key must never be inside the website. Until it is set up, the card option shows "Card payment is coming soon" and WhatsApp ordering works on its own.
