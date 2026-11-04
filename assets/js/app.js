@@ -114,7 +114,7 @@
         <h3 id="modalTitle">${esc(galTitle(it))}</h3>
         <p class="gv__ref">${t("gal.ref")} <bdi>${esc(it.code)}</bdi> · ${t("gal.pos", { a: i + 1, b: list.length })}</p>
         <p class="qv__desc">${t("gal.note")}</p>
-        <button class="btn btn--wa btn--block" data-gal-ask="${i}"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</button>
+        <a class="btn btn--wa btn--block" data-gal-ask href="${esc(waHref(waAskText(it)))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</a>
         <div class="gv__nav">
           <button class="icon-btn" data-gal-step="-1" aria-label="${t("gal.prev")}">${chevron}</button>
           <button class="icon-btn gv__next" data-gal-step="1" aria-label="${t("gal.next")}">${chevron}</button>
@@ -135,7 +135,9 @@
   }
 
   /* ---------- WhatsApp ---------- */
-  const openWa = text => window.open(`https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+  // Real links (not window.open), so they work in every browser and embedded view.
+  const waHref = text => `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(text)}`;
+  const waAskText = it => [t("wa.ask"), [galTitle(it), it.en ? galBrand(it) : ""].filter(Boolean).join(" – "), `${t("gal.ref")} ${it.code}`].join("\n");
 
   /* ---------- overlays (photo viewer / search) ---------- */
   let lastFocus = null, openEl = null;
@@ -185,6 +187,7 @@
     $$("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
     $$("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
     $("#searchBig").setAttribute("aria-label", t("search.label"));
+    $$("[data-wa-contact]").forEach(a => { a.href = waHref(t("wa.contact")); });
     $("#langBtn").textContent = state.lang === "ar" ? "English" : "عربي";
     $("#langBtn").setAttribute("aria-label", state.lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
     renderCats(); renderBrands(); renderGalChips(); renderGallery(); renderReviews();
@@ -208,13 +211,8 @@
       openLayer($("#modal")); return;
     }
     if (d.galStep) { galView(state.gal.at + +d.galStep); el.focus(); return; }
-    if (d.galAsk) {
-      const it = galList()[+d.galAsk];
-      openWa([t("wa.ask"), [galTitle(it), it.en ? galBrand(it) : ""].filter(Boolean).join(" – "), `${t("gal.ref")} ${it.code}`].join("\n"));
-      return;
-    }
     if ("search" in d) { closeMenu(); openLayer($("#searchPop")); renderSearch($("#searchBig").value); return; }
-    if ("waContact" in d) { openWa(t("wa.contact")); return; }
+    if ("waContact" in d || "galAsk" in d) return; // plain links to WhatsApp
   });
 
   $("#overlay").addEventListener("click", () => closeLayer());
