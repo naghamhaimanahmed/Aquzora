@@ -153,6 +153,8 @@
   const galOpen = () => openEl && openEl.id === "modal" && $("#modalContent .gv");
 
   function renderReviews() {
+    $("#reviewsSection").hidden = !TESTIMONIALS.length;
+    $("#statCount").textContent = GALLERY.length;
     const stars = `<span class="stars" aria-label="5 / 5"><span></span></span>`;
     $("#reviews").innerHTML = TESTIMONIALS.map(r => `<figure class="review">
       ${stars}
@@ -262,12 +264,14 @@
             </div>
           </fieldset>
           <div id="coEmailWrap" hidden>${field("email", t("co.email"), `<input id="coEmail" name="email" type="email" autocomplete="email" dir="ltr">`)}</div>
+          <div id="coCodeWrap">${field("code", t("co.code"), `<input id="coCode" name="code" autocomplete="off" dir="ltr" maxlength="20">`)}</div>
         </div>
         <aside class="co__summary">
           <h4>${t("co.summary")}</h4>
           <div id="coSummary"></div>
           <button class="btn btn--gold btn--block" type="submit" id="coSubmit"></button>
           <p class="co__msg" id="coMsg" role="alert"></p>
+          <p class="co__agree">${t("co.agree", { terms: `<a href="terms.html" target="_blank" rel="noopener">${t("footer.terms")}</a>`, privacy: `<a href="privacy.html" target="_blank" rel="noopener">${t("footer.privacy")}</a>` })}</p>
         </aside>
       </div></form>`;
     openLayer($("#modal"));
@@ -285,6 +289,7 @@
     if (block && card.checked) wa.checked = true;
     const method = card.checked ? "card" : "whatsapp";
     $("#coEmailWrap").hidden = method !== "card";
+    $("#coCodeWrap").hidden = method !== "whatsapp"; // discount codes are honoured on WhatsApp orders
     $("#coEmail").required = method === "card";
 
     const deliveryText = !gov ? (q.delivery === 0 ? t("cart.free") : t("cart.atCheckout"))
@@ -310,6 +315,7 @@
     if (q.subtotal) out.push(`${t("cart.subtotal")}: ${money(q.subtotal)}${q.unpriced ? " + " + t("price.onRequest") : ""}`);
     out.push(`${t("cart.delivery")}: ${q.delivery === null ? t("cart.onWa") : q.delivery === 0 ? t("cart.free") : money(q.delivery)}`);
     if (q.total !== null) out.push(`${t("cart.total")}: ${money(q.total)}`);
+    if (c.code) out.push(`${t("wa.code")}: ${c.code}`);
     out.push("", `${t("wa.orderRef")}: ${ref}`, `${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
     return out.join("\n");
   }
@@ -327,7 +333,7 @@
       if (msg) { ok = false; inp.insertAdjacentHTML("afterend", `<small class="field__err">${msg}</small>`); }
     });
     if (!ok) { $("[aria-invalid=true]", form).focus(); return; }
-    const c = { name: form.elements.namedItem("name").value.trim(), phone: form.elements.namedItem("phone").value.trim(), gov: form.elements.namedItem("gov").value, address: form.elements.namedItem("address").value.trim(), email: form.elements.namedItem("email").value.trim() };
+    const c = { name: form.elements.namedItem("name").value.trim(), phone: form.elements.namedItem("phone").value.trim(), gov: form.elements.namedItem("gov").value, address: form.elements.namedItem("address").value.trim(), email: form.elements.namedItem("email").value.trim(), code: form.elements.namedItem("code").value.trim().toUpperCase() };
     const ref = makeRef();
 
     if (form.elements.namedItem("pay").value === "whatsapp") {
@@ -510,14 +516,21 @@
     mobileNav.hidden = !open; menuBtn.setAttribute("aria-expanded", String(open));
   });
 
-  $("#newsForm").addEventListener("submit", e => {
+  $("#newsForm").addEventListener("submit", async e => {
     e.preventDefault();
-    const inp = $("#newsEmail"), msg = $("#newsMsg");
+    const form = e.target, inp = $("#newsEmail"), msg = $("#newsMsg"), btn = form.querySelector("button");
+    const show = (key, good) => { msg.textContent = t(key); msg.className = "form-msg " + (good ? "is-ok" : "is-bad"); };
     const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim());
-    msg.textContent = ok ? t("news.ok") : t("news.bad");
-    msg.className = "form-msg " + (ok ? "is-ok" : "is-bad");
     inp.setAttribute("aria-invalid", !ok);
-    if (ok) inp.value = "";
+    if (!ok) return show("news.bad", false);
+    btn.disabled = true;
+    try {
+      // Netlify Forms stores the email; it appears under Forms → newsletter in the Netlify dashboard
+      const res = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
+      if (!res.ok) throw new Error(res.status);
+      inp.value = ""; show("news.ok", true);
+    } catch { show("news.fail", false); }
+    btn.disabled = false;
   });
 
   // header shadow on scroll

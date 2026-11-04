@@ -9,7 +9,10 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 - **Shop by category** tiles (Perfumes, Musk, Gift sets) that open the collection with that filter on.
 - **Search** (header or bottom bar, press `/`) by product name, brand or type, in English or Arabic.
 - **WhatsApp** buttons in the header, banner, footer and mobile bottom bar.
-- Brands strip, reviews, newsletter sign-up, footer with contact details.
+- **Newsletter** saved with Netlify Forms (with a spam trap); after signing up the customer sees the code **WELCOME10** (10% off the first WhatsApp order), which they can enter in the checkout's discount-code box.
+- **Reviews** section, shown only once real reviews are added to `TESTIMONIALS` in `public/assets/js/data.js`.
+- **Terms of sale** (`public/terms.html`) and **Privacy policy** (`public/privacy.html`), Arabic first with English below, linked from the footer and checkout.
+- Brands strip and a footer with contact details.
 - Mobile first: bottom navigation bar, bottom-sheet photo viewer, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 - **Cart**: add products from the photo viewer, change quantities, see the free-delivery progress (free over EGP 2,000). The cart is saved in the customer's browser.
@@ -71,3 +74,13 @@ The older Aquzora logo sets are kept in `brand-archive/aquzora-logos/`; they are
 - **Images**: WebP with JPG fallback, lazy loading, 480 px thumbnails for the grid and tiles, and the hero photo marked as the first thing to load.
 - **Caching**: fonts are cached for a year, photos and logos for a week.
 - **Accounts**: turn on two-step login for GitHub, Netlify and Paymob, and keep Paymob keys only in Netlify's environment variables.
+
+## Publish on Netlify
+1. **Merge the work into `main`** on GitHub (pull request from `ccr-61478cd7-y9m2yh`).
+2. **Create the site**: sign up at netlify.com (free) with your GitHub account → **Add new site → Import an existing project → GitHub** → choose this repository → branch `main`. Leave the build command empty; `netlify.toml` sets the publish folder (`public`) and the functions folder. Click **Deploy**.
+3. **Name the site**: Site configuration → Change site name, e.g. `atr-perfume` → `https://atr-perfume.netlify.app`. Later you can add your own domain (Domain management → Add a domain); Netlify gives free HTTPS.
+4. **Newsletter**: Forms → **Enable form detection**, then redeploy (Deploys → Trigger deploy). Sign-ups then appear under Forms → newsletter. For an email per sign-up: Site configuration → Notifications → Emails and webhooks → Form submission notifications → Add notification → Email.
+5. **Card payments** (when ready): add the environment variables from "Card payments with Paymob" above, set `cardEnabled: true` in `public/assets/js/shop.js`, and push.
+6. **Check**: open the site on your phone, switch languages, add to cart, send a test WhatsApp order to yourself, and sign up to the newsletter once to see it arrive in Forms.
+
+Every push to `main` publishes the site again automatically.

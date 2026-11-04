@@ -81,7 +81,7 @@
           <ul class="hero__trust">
             <li><strong>100%</strong> <span data-i18n="hero.t1">أصلي</span></li>
             <li><strong>27</strong> <span data-i18n="hero.t2">محافظة</span></li>
-            <li><strong>4.8★</strong> <span data-i18n="hero.t3">أكثر من ٢٠٠٠ تقييم</span></li>
+            <li><strong id="statCount">83</strong> <span data-i18n="hero.t3">منتج متوفر</span></li>
           </ul>
         </div>
         <figure class="hero__art">
@@ -157,8 +157,8 @@
       </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="section section--raised">
+    <!-- Reviews: shown only when TESTIMONIALS in data.js has real reviews -->
+    <section class="section section--raised" id="reviewsSection" hidden>
       <div class="container">
         <div class="section__head">
           <p class="eyebrow" data-i18n="reviews.eyebrow">آراء عملائنا</p>
@@ -175,9 +175,11 @@
           <h2 data-i18n="news.title">احصل على خصم ١٠٪ على أول طلب</h2>
           <p data-i18n="news.sub">اشترك لتصلك أحدث المنتجات وأفكار الهدايا والعروض الخاصة.</p>
         </div>
-        <form class="newsletter__form" id="newsForm" novalidate>
+        <form class="newsletter__form" id="newsForm" name="newsletter" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="newsletter">
+          <p class="sr" aria-hidden="true"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <label class="sr" for="newsEmail" data-i18n="news.label">البريد الإلكتروني</label>
-          <input id="newsEmail" type="email" required data-i18n-ph="news.ph" placeholder="بريدك الإلكتروني">
+          <input id="newsEmail" name="email" type="email" autocomplete="email" required data-i18n-ph="news.ph" placeholder="بريدك الإلكتروني">
           <button class="btn btn--gold" type="submit" data-i18n="news.btn">اشترك</button>
           <p class="form-msg" id="newsMsg" role="status"></p>
         </form>
@@ -206,6 +208,8 @@
       <div>
         <h4 data-i18n="footer.help">مساعدة</h4>
         <span data-i18n="footer.delivery">التوصيل: ١–٢ يوم عمل داخل أسوان، ٢–٤ أيام لباقي المحافظات</span>
+        <a href="terms.html" data-i18n="footer.terms">الشروط والأحكام</a>
+        <a href="privacy.html" data-i18n="footer.privacy">سياسة الخصوصية</a>
       </div>
       <div>
         <h4 data-i18n="footer.contact">تواصل معنا</h4>
@@ -217,7 +221,7 @@
     </div>
     <div class="container footer__bottom">
       <span>© <span id="year"></span> Atr · Maison de Parfum. <span data-i18n="footer.rights">جميع الحقوق محفوظة.</span></span>
-      <span class="pay">VISA · Mastercard · Apple Pay · COD</span>
+      <span class="pay">VISA · Mastercard · COD</span>
     </div>
   </footer>
 

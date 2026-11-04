@@ -16,11 +16,9 @@ const BRANDS = [
   "Lattafa", "Rasasi", "Swiss Arabian", "Abdul Samad Al Qurashi"
 ];
 
-const TESTIMONIALS = [
-  { name: "Mariam A.", city: { en: "Aswan", ar: "أسوان" }, en: "Delivery was next day and the musk is beautiful. I sent a photo on WhatsApp and they helped me pick a gift in two minutes.", ar: "التوصيل كان في اليوم التالي والمسك رائع. أرسلت صورة على واتساب وساعدوني أختار هدية في دقيقتين." },
-  { name: "Khalid R.", city: { en: "Alexandria", ar: "الإسكندرية" }, en: "Easy to order, cash on delivery, and everything came well packed. Will order again.", ar: "الطلب سهل والدفع عند الاستلام وكل شي وصل مغلف بشكل ممتاز. أكيد بطلب مرة ثانية." },
-  { name: "Noura S.", city: { en: "Giza", ar: "الجيزة" }, en: "The Lady Collection gift set was perfect! Switching the site to Arabic made browsing so easy for my mother.", ar: "طقم هدايا ليدي كان مثالياً! تحويل الموقع للعربي سهّل التصفح على والدتي كثيراً." }
-];
+// Real customer reviews only. The reviews section stays hidden while this list is empty.
+// Example: { name: "Mariam A.", city: { en: "Aswan", ar: "أسوان" }, en: "…", ar: "…" },
+const TESTIMONIALS = [];
 
 /* ---------- The collection: your product photos ----------
    Real photos of the products in stock, stored in assets/img/collection/
