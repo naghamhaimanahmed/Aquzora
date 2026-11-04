@@ -1,6 +1,6 @@
 # Aquzora · Perfumes, Oud & Musk
 
-A professional, bilingual (English / العربية) perfume store website. Open `index.html` in any browser; no install or build step.
+A professional, bilingual (English / العربية) perfume store website for customers in Egypt (prices in EGP). Open `index.html` in any browser; no install or build step.
 
 ## Features
 - **English ⇄ Arabic** with full right-to-left layout; the choice is remembered.
