@@ -200,6 +200,7 @@
     $$("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
     $("#searchBig").setAttribute("aria-label", t("search.label"));
     $$("[data-wa-contact]").forEach(a => { a.href = waHref(t("wa.contact")); });
+    $$("[data-i18n-label]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nLabel)));
     $("#langBtn").textContent = state.lang === "ar" ? "English" : "عربي";
     $("#langBtn").lang = state.lang === "ar" ? "en" : "ar";
     // the tagline is always shown in both languages

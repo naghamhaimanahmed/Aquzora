@@ -36,7 +36,7 @@ const I18N = {
     "footer.delivery": "التوصيل: ١–٢ يوم داخل القاهرة، ٢–٤ أيام خارجها", "footer.returns": "الإرجاع خلال ١٤ يوماً",
     "footer.hours": "يومياً من ١٠ صباحاً حتى ١٠ مساءً", "footer.wa": "راسلنا على واتساب", "footer.rights": "جميع الحقوق محفوظة.",
     "bar.home": "الرئيسية", "bar.shop": "المجموعة", "bar.search": "بحث", "bar.wa": "واتساب",
-    "wa.ask": "مرحباً عطر، أنا مهتم بهذا المنتج:", "wa.contact": "مرحباً عطر، لدي استفسار.",
+    "wa.float": "تواصل معنا عبر واتساب", "wa.ask": "مرحباً عطر، أنا مهتم بهذا المنتج:", "wa.contact": "مرحباً عطر، لدي استفسار.",
     "search.label": "ابحث في المجموعة", "search.ph": "ابحث عن عطر، مسك، ماركة…",
     "search.none": "لا توجد نتائج. جرّب «مسك» أو «دايموند» أو «عساف».", "search.hint": "الأكثر بحثاً: مسك، دايموند، توباكو، روز، طقم هدايا"
   },
@@ -75,7 +75,7 @@ const I18N = {
     "footer.delivery": "Delivery: 1–2 days in Cairo, 2–4 days elsewhere", "footer.returns": "Returns within 14 days",
     "footer.hours": "Every day, 10am – 10pm", "footer.wa": "Chat on WhatsApp", "footer.rights": "All rights reserved.",
     "bar.home": "Home", "bar.shop": "Collection", "bar.search": "Search", "bar.wa": "WhatsApp",
-    "wa.ask": "Hello Atr, I am interested in this item:", "wa.contact": "Hello Atr, I have a question.",
+    "wa.float": "Chat with us on WhatsApp", "wa.ask": "Hello Atr, I am interested in this item:", "wa.contact": "Hello Atr, I have a question.",
     "search.label": "Search the collection", "search.ph": "Search perfumes, musk, brands…",
     "search.none": "No results. Try “musk”, “diamond” or “Assaf”.", "search.hint": "Popular: musk, diamond, tobacco, rose, gift set"
   }
