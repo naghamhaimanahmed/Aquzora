@@ -183,6 +183,7 @@
 
 
   /* ---------- prices & cart ---------- */
+  const num = n => n.toLocaleString(state.lang === "ar" ? "ar-EG" : "en");
   const money = n => state.lang === "ar" ? `${n.toLocaleString("ar-EG")} ج.م` : `EGP ${n.toLocaleString("en")}`;
   const priceLabel = code => { const p = SHOP.priceOf(code); return p === null ? t("price.onRequest") : money(p); };
   const cartLines = () => Object.entries(state.cart).filter(([c]) => byCode(c)).map(([code, qty]) => ({ code, qty, it: byCode(code) }));
@@ -328,20 +329,17 @@
     const lines = cartLines(), q = SHOP.quote(lines, c ? c.gov : null);
     const gov = c && SHOP.GOVERNORATES.find(g => g.id === c.gov);
     const brand = it => { const b = galBrand(it); return b && it.en ? ` – ${b}` : ""; };
-    const rows = lines.map(({ code, qty, it }) => { const p = SHOP.priceOf(code); return `• ${galTitle(it)}${brand(it)} (${code}) × ${qty}${p === null ? ` – ${t("price.onRequest")}` : ` = ${money(p * qty)}`}`; });
+    const rows = lines.map(({ code, qty, it }) => { const p = SHOP.priceOf(code); return `• ${galTitle(it)}${brand(it)} (${code}) × ${num(qty)}${p === null ? ` – ${t("price.onRequest")}` : ` = ${money(p * qty)}`}`; });
     const count = lines.reduce((a, l) => a + l.qty, 0);
-    const out = [t("wa.order"), "", ...rows, "", `${t("wa.items")}: ${count}`];
+    const out = [t("wa.order"), "", ...rows, "", `${t("wa.items")}: ${num(count)}`];
     if (q.subtotal) out.push(`${t("cart.subtotal")}: ${money(q.subtotal)}${q.unpriced ? " + " + t("price.onRequest") : ""}`);
-    const deliveryText = q.delivery === 0 ? t("cart.free")
-      : q.delivery !== null ? money(q.delivery)
-      : gov ? t("cart.onWa")
-      : t("wa.deliveryRule", { a: money(SHOP.DELIVERY.aswan), b: money(SHOP.DELIVERY.other), f: money(SHOP.DELIVERY.freeFrom) });
-    out.push(`${t("cart.delivery")}: ${deliveryText}`);
+    // From the cart button (no details yet) the message stays short: the store's quick replies
+    // ask for name and address (/2) and give the delivery fees (/3). Free delivery is still shown.
+    if (c || q.delivery === 0) out.push(`${t("cart.delivery")}: ${q.delivery === 0 ? t("cart.free") : q.delivery !== null ? money(q.delivery) : t("cart.onWa")}`);
     if (q.total !== null) out.push(`${t("cart.total")}: ${money(q.total)}`);
     if (c && c.code) out.push(`${t("wa.code")}: ${c.code}`);
     out.push("", `${t("wa.orderRef")}: ${ref}`);
     if (c) out.push(`${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
-    else out.push("", t("wa.fillIn"), `${t("wa.name")}: `, `${t("wa.gov")}: `, `${t("wa.address")}: `);
     return out.join("\n");
   }
 
