@@ -4,9 +4,9 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 
 ## Features
 - **Arabic first, always bilingual**: the site opens in Arabic (right to left) and switches to English; the choice is remembered. The tagline is always shown in both languages.
-- **Our collection**: real photos of the perfumes, musks and gift sets in stock, filterable by type (perfumes, musk, gift sets) or brand, 12 at a time with "Show more".
+- **Our collection**: studio photos of the 56 perfumes and gift sets in stock (Assaf, Laverne, Reef, Dkhoon AlEmiratia, Osma), filterable by type (perfumes, gift sets) or brand, 12 at a time with "Show more".
 - **Photo viewer**: tap a photo to see it full size, move through the photos (buttons or arrow keys), and **ask about it on WhatsApp**. The message includes the product name and photo reference so you know which item the customer means.
-- **Shop by category** tiles (Perfumes, Musk, Gift sets) that open the collection with that filter on.
+- **Shop by house** tiles (Assaf, Laverne, Reef) that open the collection filtered to that brand.
 - **Search** (header or bottom bar, press `/`) by product name, brand or type, in English or Arabic.
 - **WhatsApp** buttons in the header, banner, footer and mobile bottom bar.
 - **Newsletter** saved with Netlify Forms (with a spam trap); after signing up the customer sees the code **WELCOME10** (10% off the first WhatsApp order), which they can enter in the checkout's discount-code box.
@@ -22,7 +22,7 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 
 ## Prices and delivery
 Prices and delivery fees live in `public/assets/js/shop.js`, which is read by both the website and the payment server, so a customer cannot change a price in the browser.
-- `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `B03: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
+- `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `AS01: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
 - `DELIVERY`: `freeFrom` (2000), `aswan` (EGP 50, local, 1–2 working days) and `other` (EGP 100, 2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
 
 ## Card payments with Paymob
@@ -42,7 +42,7 @@ Card payment works only on the real hosted site (Netlify). The private claude.ai
 
 ## Images
 ### Product photos (the collection)
-The product photos are in `public/assets/img/collection/` (1000 px, used in the photo viewer) and `public/assets/img/collection/thumb/` (480 px, used in the grid and category tiles), each as WebP (shown by modern browsers, about half the size) and JPG (fallback for old browsers). Their names, brands and types are listed in `GALLERY` at the bottom of `public/assets/js/data.js`; each line uses the photo's file name as its reference (for example `B04`). To add a photo, save both sizes as `.jpg` and `.webp` with a new reference name and add a line, for example:
+The product photos are in `public/assets/img/collection/` (1000 px, used in the photo viewer) and `public/assets/img/collection/thumb/` (480 px, used in the grid and category tiles), each as WebP (shown by modern browsers, about half the size) and JPG (fallback for old browsers). Their names, brands and types are listed in `GALLERY` at the bottom of `public/assets/js/data.js`; each line uses the photo's file name as its reference (for example `AS01`). To add a photo, save both sizes as `.jpg` and `.webp` with a new reference name and add a line, for example:
 
 ```js
 g("E01", "assaf", "perfume", "Arrogate Pink", "أروغيت بينك"),
@@ -50,9 +50,9 @@ g("E01", "assaf", "perfume", "Arrogate Pink", "أروغيت بينك"),
 
 Products with codes like `AS01` (Assaf), `LV01` (Laverne), `RF01` (Reef), `DK01` (Dkhoon AlEmiratia) and `OS01` (Osma) use studio photos taken from the brands' own online stores (3saf.com, assaf.ae, laverne.com / laverne.co, reefperfumes.com, dkhoonemirates.com, osmaperfumes.com), or from a retailer where the brand store no longer lists the product (Noon, BrandVIP, Justmylook, Salam Occasions, Xmart, My Royal Musk, Soghaat, eBay). These photos belong to the brands or those shops: as a seller of the genuine products you can usually ask the brand for its official media kit, and replacing retailer photos with the brand's own or your own is the safest choice.
 
-The type is `perfume`, `musk` or `set`. Leave the name out if you do not know it, and the brand is shown instead. The photos used on the category tiles are set in `GALLERY_TILES`.
+The type is `perfume`, `musk` or `set` (a "Musk" filter can be added back in `GALLERY_FILTERS` when musks are in stock). Leave the name out if you do not know it, and the brand is shown instead. The photos used on the category tiles are set in `GALLERY_TILES`.
 
-The product in the arch at the top of the page is set by `HERO_PHOTO` in `public/assets/js/data.js` (now `B03`, Purple Heart Diamond). If a photo is missing, the site shows a drawn bottle instead of a broken image.
+The product in the arch at the top of the page is set by `HERO_PHOTO` in `public/assets/js/data.js` (now `OS01`, Osma Rouge). If a photo is missing, the site shows a drawn bottle instead of a broken image.
 
 ## Brand
 The design follows the Atr brand identity sheet:

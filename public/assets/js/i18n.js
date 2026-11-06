@@ -12,11 +12,11 @@ const I18N = {
     "hero.shop": "تصفّح المجموعة", "hero.wa": "راسلنا على واتساب",
     "hero.t1": "أصلي", "hero.t2": "محافظة", "hero.t3": "منتج متوفر",
     "hero.view": "عرض الصورة",
-    "cats.eyebrow": "الأقسام", "cats.title": "تسوّق حسب القسم", "cats.sub": "اختر العطر الذي يناسبك، لكل يوم ولكل مناسبة.",
+    "cats.eyebrow": "دور العطور", "cats.title": "تسوّق حسب الدار", "cats.sub": "اختر من دور العطور التي نقدّمها، لكل يوم ولكل مناسبة.",
     "cats.items": "{n} منتج", "cats.item1": "منتج واحد",
     "brands.title": "من أعرق دور العطور العربية",
     "gal.eyebrow": "صور حقيقية من رفوفنا", "gal.title": "مجموعتنا",
-    "gal.sub": "العطور والمسك وأطقم الهدايا المتوفرة لدينا. اضغط على أي صورة لمشاهدتها عن قرب واسألنا عنها عبر واتساب.",
+    "gal.sub": "العطور وأطقم الهدايا المتوفرة لدينا. اضغط على أي صورة لمشاهدتها عن قرب واسألنا عنها عبر واتساب.",
     "gal.filters": "تصفية المجموعة",
     "gal.count": "{n} منتج", "gal.count1": "منتج واحد", "gal.more": "عرض المزيد ({n})",
     "gal.type.perfume": "عطر", "gal.type.musk": "مسك", "gal.type.set": "طقم هدايا",
@@ -30,7 +30,7 @@ const I18N = {
     "news.title": "احصل على خصم ١٠٪ على أول طلب", "news.sub": "اشترك لتصلك أحدث المنتجات وأفكار الهدايا، واحصل على كود خصم ١٠٪ لأول طلب عبر واتساب.",
     "news.label": "البريد الإلكتروني", "news.ph": "بريدك الإلكتروني", "news.btn": "اشترك",
     "news.ok": "شكراً لاشتراكك! كود خصمك: WELCOME10. اكتبه في خانة كود الخصم عند طلبك الأول عبر واتساب.", "news.fail": "تعذّر الاشتراك الآن. جرّب مرة أخرى بعد قليل.", "news.bad": "يرجى إدخال بريد إلكتروني صحيح.",
-    "footer.about": "من أسوان: عطور وعود ومسك، مختارة بحب وتصلك في كل مصر.", "footer.place": "أسوان، مصر",
+    "footer.about": "من أسوان: عطور وأطقم هدايا أصلية، مختارة بحب وتصلك في كل مصر.", "footer.place": "أسوان، مصر",
     "footer.shop": "تسوّق", "footer.help": "مساعدة", "footer.contact": "تواصل معنا",
     "footer.delivery": "التوصيل: ١–٢ يوم عمل داخل أسوان، ٢–٤ أيام لباقي المحافظات",
     "footer.hours": "يومياً من ١٠ صباحاً حتى ١٠ مساءً", "footer.wa": "راسلنا على واتساب", "footer.rights": "جميع الحقوق محفوظة.", "footer.terms": "الشروط والأحكام", "footer.privacy": "سياسة الخصوصية",
@@ -60,8 +60,8 @@ const I18N = {
     "pay.failTitle": "لم يكتمل الدفع", "pay.failSub": "سلتك ما زالت محفوظة. جرّب مرة أخرى، أو اطلب عبر واتساب.", "pay.ask": "راسلنا على واتساب",
     "wa.order": "مرحباً عطر، أريد طلب:", "wa.orderRef": "رقم الطلب", "wa.code": "كود الخصم", "wa.name": "الاسم", "wa.phone": "الموبايل", "wa.gov": "المحافظة", "wa.address": "العنوان",
     "bar.cart": "السلة", "wa.ask": "مرحباً عطر، أنا مهتم بهذا المنتج:", "wa.contact": "مرحباً عطر، لدي استفسار.",
-    "search.label": "ابحث في المجموعة", "search.ph": "ابحث عن عطر، مسك، ماركة…",
-    "search.none": "لا توجد نتائج. جرّب «مسك» أو «دايموند» أو «عساف».", "search.hint": "الأكثر بحثاً: مسك، دايموند، توباكو، روز، طقم هدايا"
+    "search.label": "ابحث في المجموعة", "search.ph": "ابحث عن عطر، ماركة، طقم هدايا…",
+    "search.none": "لا توجد نتائج. جرّب «عساف» أو «لافيرن» أو «روز».", "search.hint": "الأكثر بحثاً: لافيرن، فرانكل، ريف، روز، طقم هدايا"
   },
   en: {
     skip: "Skip to the collection",
@@ -74,11 +74,11 @@ const I18N = {
     "hero.shop": "Browse the collection", "hero.wa": "Chat on WhatsApp",
     "hero.t1": "authentic", "hero.t2": "governorates", "hero.t3": "products in stock",
     "hero.view": "View photo",
-    "cats.eyebrow": "The house", "cats.title": "Shop by category", "cats.sub": "Find the scent that suits you, for every day and every occasion.",
+    "cats.eyebrow": "The houses", "cats.title": "Shop by house", "cats.sub": "Choose from the perfume houses we carry, for every day and every occasion.",
     "cats.items": "{n} items", "cats.item1": "1 item",
     "brands.title": "From the great houses of Arabian perfumery",
     "gal.eyebrow": "Real photos from our shelves", "gal.title": "Our collection",
-    "gal.sub": "The perfumes, musks and gift sets we have in stock. Tap any photo to see it up close and ask us about it on WhatsApp.",
+    "gal.sub": "The perfumes and gift sets we have in stock. Tap any photo to see it up close and ask us about it on WhatsApp.",
     "gal.filters": "Filter the collection",
     "gal.count": "{n} items", "gal.count1": "1 item", "gal.more": "Show more ({n})",
     "gal.type.perfume": "Perfume", "gal.type.musk": "Musk", "gal.type.set": "Gift set",
@@ -92,7 +92,7 @@ const I18N = {
     "news.title": "Get 10% off your first order", "news.sub": "Join our list for new arrivals and gift ideas, and get a 10% code for your first WhatsApp order.",
     "news.label": "Email address", "news.ph": "Your email address", "news.btn": "Subscribe",
     "news.ok": "Thank you for subscribing! Your code: WELCOME10. Enter it in the discount code box on your first WhatsApp order.", "news.fail": "We couldn't subscribe you right now. Please try again shortly.", "news.bad": "Please enter a valid email address.",
-    "footer.about": "From Aswan: perfumes, oud and musk, chosen with care and delivered across Egypt.", "footer.place": "Aswan, Egypt",
+    "footer.about": "From Aswan: authentic perfumes and gift sets, chosen with care and delivered across Egypt.", "footer.place": "Aswan, Egypt",
     "footer.shop": "Shop", "footer.help": "Help", "footer.contact": "Contact us",
     "footer.delivery": "Delivery: 1–2 working days in Aswan, 2–4 days elsewhere",
     "footer.hours": "Every day, 10am – 10pm", "footer.wa": "Chat on WhatsApp", "footer.rights": "All rights reserved.", "footer.terms": "Terms of sale", "footer.privacy": "Privacy policy",
@@ -122,7 +122,7 @@ const I18N = {
     "pay.failTitle": "The payment didn't go through", "pay.failSub": "Your cart is still saved. Try again, or order on WhatsApp.", "pay.ask": "Message us on WhatsApp",
     "wa.order": "Hello Atr, I would like to order:", "wa.orderRef": "Order", "wa.code": "Discount code", "wa.name": "Name", "wa.phone": "Mobile", "wa.gov": "Governorate", "wa.address": "Address",
     "bar.cart": "Cart", "wa.ask": "Hello Atr, I am interested in this item:", "wa.contact": "Hello Atr, I have a question.",
-    "search.label": "Search the collection", "search.ph": "Search perfumes, musk, brands…",
-    "search.none": "No results. Try “musk”, “diamond” or “Assaf”.", "search.hint": "Popular: musk, diamond, tobacco, rose, gift set"
+    "search.label": "Search the collection", "search.ph": "Search perfumes, brands, gift sets…",
+    "search.none": "No results. Try “Assaf”, “Laverne” or “rose”.", "search.hint": "Popular: Laverne, Frankel, Reef, rose, gift set"
   }
 };

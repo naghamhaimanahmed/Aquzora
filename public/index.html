@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Atr · Maison de Parfum</title>
-  <meta name="description" content="عطر، دار عطور: عطور ومسك وأطقم هدايا أصلية من إبراهيم القرشي وإبراق وعساف ولطافة والرصاصي، من أسوان مع توصيل لكل مصر. Atr, Maison de Parfum: authentic perfumes, musk and gift sets from Aswan, delivered across Egypt.">
+  <meta name="description" content="عطر، دار عطور: عطور وأطقم هدايا أصلية من عساف ولافيرن وريف ودخون الإماراتية وأوسما، من أسوان مع توصيل لكل مصر. Atr, Maison de Parfum: authentic perfumes and gift sets from Assaf, Laverne, Reef, Dkhoon AlEmiratia and Osma, from Aswan, delivered across Egypt.">
   <meta name="theme-color" content="#15110E">
   <!-- brand fonts are self-hosted; the ones needed for the first screen load first -->
   <link rel="preload" href="assets/fonts/amiri-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
@@ -37,7 +37,6 @@
       <nav class="nav" aria-label="Main">
         <a href="#collection" data-gal-link="all" data-i18n="nav.all">المجموعة</a>
         <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">العطور</a>
-        <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">المسك</a>
         <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">أطقم الهدايا</a>
         <a href="#contact" data-i18n="nav.contact">تواصل معنا</a>
       </nav>
@@ -59,7 +58,6 @@
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile" hidden>
       <a href="#collection" data-gal-link="all" data-i18n="nav.all">المجموعة</a>
       <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">العطور</a>
-      <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">المسك</a>
       <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">أطقم الهدايا</a>
       <a href="#contact" data-i18n="nav.contact">تواصل معنا</a>
     </nav>
@@ -85,7 +83,7 @@
           </ul>
         </div>
         <figure class="hero__art">
-          <button class="arch" id="heroArch"><picture><source id="heroWebp" type="image/webp" srcset="assets/img/collection/b03.webp"><img id="heroImg" data-code="B03" src="assets/img/collection/b03.jpg" alt="Purple Heart Diamond" width="1000" height="1000" fetchpriority="high" decoding="async"></picture></button>
+          <button class="arch" id="heroArch"><picture><source id="heroWebp" type="image/webp" srcset="assets/img/collection/os01.webp"><img id="heroImg" data-code="OS01" src="assets/img/collection/os01.jpg" alt="Rouge" width="1000" height="1000" fetchpriority="high" decoding="async"></picture></button>
           <figcaption><strong id="heroName"></strong><small id="heroBrand"></small></figcaption>
         </figure>
       </div>
@@ -96,9 +94,9 @@
     <section class="section">
       <div class="container">
         <div class="section__head">
-          <p class="eyebrow" data-i18n="cats.eyebrow">الأقسام</p>
-          <h2 data-i18n="cats.title">تسوّق حسب القسم</h2>
-          <p data-i18n="cats.sub">اختر العطر الذي يناسبك، لكل يوم ولكل مناسبة.</p>
+          <p class="eyebrow" data-i18n="cats.eyebrow">دور العطور</p>
+          <h2 data-i18n="cats.title">تسوّق حسب الدار</h2>
+          <p data-i18n="cats.sub">اختر من دور العطور التي نقدّمها، لكل يوم ولكل مناسبة.</p>
         </div>
         <div class="cats" id="cats"></div>
       </div>
@@ -120,7 +118,7 @@
         <div class="section__head">
           <p class="eyebrow" data-i18n="gal.eyebrow">صور حقيقية من رفوفنا</p>
           <h2 data-i18n="gal.title">مجموعتنا</h2>
-          <p data-i18n="gal.sub">العطور والمسك وأطقم الهدايا المتوفرة لدينا. اضغط على أي صورة لمشاهدتها عن قرب واسألنا عنها عبر واتساب.</p>
+          <p data-i18n="gal.sub">العطور وأطقم الهدايا المتوفرة لدينا. اضغط على أي صورة لمشاهدتها عن قرب واسألنا عنها عبر واتساب.</p>
         </div>
         <div class="chips gal-chips" id="galChips" role="tablist" aria-label="Filter the collection"></div>
         <p class="results" id="galCount" aria-live="polite"></p>
@@ -196,13 +194,12 @@
           <span class="logo__word" aria-hidden="true"><span class="logo__name">ATR</span><span class="logo__sub">Maison de Parfum</span></span>
         </a>
         <p class="footer__tag" lang="ar">إرثٌ في كل قطرة</p>
-        <p class="footer__about" data-i18n="footer.about">من أسوان: عطور وعود ومسك، مختارة بحب وتصلك في كل مصر.</p>
+        <p class="footer__about" data-i18n="footer.about">من أسوان: عطور وأطقم هدايا أصلية، مختارة بحب وتصلك في كل مصر.</p>
       </div>
       <div>
         <h4 data-i18n="footer.shop">تسوّق</h4>
         <a href="#collection" data-gal-link="all" data-i18n="nav.all">المجموعة</a>
         <a href="#collection" data-gal-link="perfume" data-i18n="nav.perfume">العطور</a>
-        <a href="#collection" data-gal-link="musk" data-i18n="nav.musk">المسك</a>
         <a href="#collection" data-gal-link="sets" data-i18n="nav.sets">أطقم الهدايا</a>
       </div>
       <div>
@@ -264,7 +261,7 @@
     <div class="container">
       <label class="search search--big">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="search.ph" placeholder="ابحث عن عطر، مسك، ماركة…" aria-label="ابحث في المجموعة">
+        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="search.ph" placeholder="ابحث عن عطر، ماركة، طقم هدايا…" aria-label="ابحث في المجموعة">
         <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </label>
       <div class="search-pop__results" id="searchResults"></div>
