@@ -23,6 +23,11 @@ Products, texts and timings are at the top of the `<script>` in `source/scene.ht
 - `atr-cinematic-silent.mp4`: the same picture without sound, for adding a licensed track in Instagram or TikTok (pick one around 80 or 160 BPM)
 - `atr-cinematic-cover.jpg`: end-card cover
 
+30-second version: `atr-cinematic-30s.mp4`, `atr-cinematic-30s-silent.mp4` and `atr-cinematic-30s-cover.jpg`. It adds
+Laverne Queen Rose (12–15 s) and Osma Noir (15–18 s, entering on a whip pan) and a longer end card (24–30 s); the cuts
+fall at 3, 6, 9, 12, 15, 18, 18.75, 19.5, 20.25, 21 and 24 s. Built from `scene30.html` (`SCENE=scene30.html node render.js …`)
+and `music30.py`.
+
 Source in `cinematic-source/`: `cutout.py` cuts the bottles out of the site photos (rembg), `tex.py` makes the smoke and grain
 textures, `scene.html` is the animated scene (served over http so masks load), `render.js` renders it frame by frame with
 Playwright, and `music.py` composes the score (numpy/scipy).
