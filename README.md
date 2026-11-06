@@ -87,6 +87,8 @@ The design follows the Atr brand identity sheet:
 - **Pattern**: the diamond lattice from souk screens runs along the edges of the dark bands (`.lattice`).
 - **Logo rules**: the calligraphy is gold on dark or black on ivory, never other colours. On the site the logo is live text in the brand fonts; ready-made files are in `public/assets/logo/atr/`: `atr-logo-dark.png`, `atr-logo-ivory.png`, `atr-logo-gold-transparent.png`, `atr-icon-512.png`, `atr-icon-ivory-512.png`, `apple-touch-icon.png` and the favicons.
 
+WhatsApp profile pictures (1080 × 1080, everything inside the circle WhatsApp shows) are in `brand/whatsapp-profile/`: `1-gold-on-black` (recommended, clearest at small size), `2-with-atr`, `3-black-on-ivory` and `4-lattice`, each as PNG and JPG.
+
 The older Aquzora logo sets are kept in `brand-archive/aquzora-logos/`; they are not published and can be deleted if no longer needed.
 
 ## Editing content
