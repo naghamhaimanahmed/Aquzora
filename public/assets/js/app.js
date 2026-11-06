@@ -250,6 +250,15 @@
 
   /* ---------- checkout ---------- */
   const PHONE_RE = /^(\+?20|0)?1[0125]\d{8}$/;
+  // Accept Arabic (٠١٢…) and Persian (۰۱۲…) digits, spaces, dashes, brackets and +20 / 0020;
+  // returns the number as 01XXXXXXXXX, or "" if it is not an Egyptian mobile number.
+  function normalizePhone(v) {
+    let d = String(v || "").replace(/[٠-٩]/g, c => c.charCodeAt(0) - 0x660).replace(/[۰-۹]/g, c => c.charCodeAt(0) - 0x6f0)
+      .replace(/[\s\-().\u200e\u200f\u202a-\u202e]/g, "").replace(/^00/, "+");
+    if (!PHONE_RE.test(d)) return "";
+    d = d.replace(/^\+?20/, "");
+    return d.startsWith("0") ? d : "0" + d;
+  }
   const makeRef = () => { const d = new Date(); const p = n => String(n).padStart(2, "0"); return `ATR-${String(d.getFullYear()).slice(2)}${p(d.getMonth() + 1)}${p(d.getDate())}-${Math.floor(1000 + Math.random() * 9000)}`; };
 
   // Why card payment is not offered right now ("" = it is available).
@@ -407,14 +416,14 @@
     $$("[required]", form).forEach(inp => {
       const v = inp.value.trim();
       let msg = !v ? t("co.required")
-        : inp.name === "phone" && !PHONE_RE.test(v.replace(/[\s-]/g, "")) ? t("co.phoneBad")
+        : inp.name === "phone" && !normalizePhone(v) ? t("co.phoneBad")
         : inp.name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? t("co.emailBad") : "";
       inp.setAttribute("aria-invalid", !!msg);
       if (msg) { ok = false; inp.insertAdjacentHTML("afterend", `<small class="field__err">${msg}</small>`); }
     });
     if (!ok) { $("[aria-invalid=true]", form).focus(); return; }
     const v = n => form.elements.namedItem(n).value;
-    const c = { name: cleanText(v("name"), 80), phone: cleanText(v("phone"), 20), gov: SHOP.GOVERNORATES.some(g => g.id === v("gov")) ? v("gov") : "",
+    const c = { name: cleanText(v("name"), 80), phone: normalizePhone(v("phone")), gov: SHOP.GOVERNORATES.some(g => g.id === v("gov")) ? v("gov") : "",
       address: cleanText(v("address"), 200), email: cleanText(v("email"), 80), code: cleanText(v("code"), 20).toUpperCase().replace(/[^A-Z0-9-]/g, "") };
     const ref = makeRef();
 

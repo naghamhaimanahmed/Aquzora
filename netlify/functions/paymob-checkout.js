@@ -48,7 +48,10 @@ exports.handler = async event => {
 
   const c = body.customer || {};
   const customer = { name: clean(c.name, 80), phone: clean(c.phone, 20), email: clean(c.email, 80), gov: clean(c.gov, 30), address: clean(c.address, 200) };
-  if (!customer.name || !/^(\+?20|0)?1[0125]\d{8}$/.test(customer.phone.replace(/[\s-]/g, "")) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email) || !customer.address)
+  // Arabic/Persian digits and +20 are accepted; the number is stored as 01XXXXXXXXX
+  customer.phone = customer.phone.replace(/[٠-٩]/g, c => c.charCodeAt(0) - 0x660).replace(/[۰-۹]/g, c => c.charCodeAt(0) - 0x6f0).replace(/[\s\-().]/g, "").replace(/^00/, "+");
+  if (/^(\+?20|0)?1[0125]\d{8}$/.test(customer.phone)) { customer.phone = customer.phone.replace(/^\+?20/, ""); if (!customer.phone.startsWith("0")) customer.phone = "0" + customer.phone; }
+  if (!customer.name || !/^01[0125]\d{8}$/.test(customer.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email) || !customer.address)
     return json(400, { error: "customer" });
   const gov = SHOP.GOVERNORATES.find(g => g.id === customer.gov);
   if (!gov) return json(400, { error: "governorate" });
