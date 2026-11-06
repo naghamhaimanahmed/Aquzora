@@ -12,8 +12,8 @@ const HERO_PHOTO = "B03";
 
 // Brands shown in the "Brands we love" strip (text only, no logos).
 const BRANDS = [
-  "Assaf", "Ibrahim Al Qurashi", "Arabian Oud", "Ajmal",
-  "Lattafa", "Rasasi", "Swiss Arabian", "Abdul Samad Al Qurashi"
+  "Ibrahim Al Qurashi", "Ibraq", "Assaf", "Laverne", "Reef",
+  "Lattafa", "Rasasi", "Osma", "Dkhoon AlEmiratia", "Thnyan"
 ];
 
 // Real customer reviews only. The reviews section stays hidden while this list is empty.
@@ -34,7 +34,10 @@ const GALLERY_BRANDS = {
   assaf: { en: "Assaf", ar: "عساف", group: "assaf" },
   lattafa: { en: "Lattafa", ar: "لطافة", group: "lattafa" },
   rasasi: { en: "Rasasi", ar: "الرصاصي", group: "rasasi" },
-  laverne: { en: "Laverne", ar: "لافيرن", group: "more" },
+  laverne: { en: "Laverne", ar: "لافيرن", group: "laverne" },
+  reef: { en: "Reef", ar: "ريف", group: "reef" },
+  osma: { en: "Osma", ar: "أوسما", group: "more" },
+  dkhoon: { en: "Dkhoon AlEmiratia", ar: "دخون الإماراتية", group: "more" },
   thnyan: { en: "Thnyan", ar: "ثنيان", group: "more" },
   vivarea: { en: "Vivarea", ar: "فيفاريا", group: "more" },
   other: { en: "", ar: "", group: "more" }
@@ -49,6 +52,8 @@ const GALLERY_FILTERS = [
   { id: "iaq", group: "iaq", en: "Ibrahim Al Qurashi & Ibraq", ar: "إبراهيم القرشي وإبراق" },
   { id: "assaf", group: "assaf", en: "Assaf", ar: "عساف" },
   { id: "lattafa", group: "lattafa", en: "Lattafa", ar: "لطافة" },
+  { id: "laverne", group: "laverne", en: "Laverne", ar: "لافيرن" },
+  { id: "reef", group: "reef", en: "Reef", ar: "ريف" },
   { id: "rasasi", group: "rasasi", en: "Rasasi", ar: "الرصاصي" },
   { id: "more", group: "more", en: "More brands", ar: "ماركات أخرى" }
 ];
@@ -147,7 +152,61 @@ const GALLERY = [
   g("B05", "vivarea", "perfume", "Step Pour Homme", "ستيب للرجال"),
   g("C12", "other", "perfume", "Zayed", "زايد"),
   g("C02", "other", "perfume", "Angham", "أنغام"),
-  g("D17", "other", "perfume", "Dikhoon Rose", "دخون روز"),
+  g("D17", "dkhoon", "perfume", "Dikhoon Rose", "دخون روز"),
   g("WA0122", "other", "perfume", "Al Wisam", "الوسام"),
-  g("WA0124", "other", "perfume", "Signature Gold", "سيغنتشر غولد")
+  g("WA0124", "dkhoon", "perfume", "Signature Gold", "سيغنتشر غولد"),
+
+  // Studio photos from the brands' own stores (and a few retailers), matched to your boxes
+  g("AS01", "assaf", "set", "Pegasus Collection", "مجموعة بيغاسوس"),
+  g("AS02", "assaf", "perfume", "Aura Black", "أورا بلاك"),
+  g("AS03", "assaf", "perfume", "Frankel Black Out", "فرانكل بلاك أوت"),
+  g("AS04", "assaf", "perfume", "Frankel Blue Elixir", "فرانكل بلو إليكسير"),
+  g("AS05", "assaf", "perfume", "Frankel Battle", "فرانكل باتل"),
+  g("AS06", "assaf", "perfume", "Addict Blue", "أديكت بلو"),
+  g("AS07", "assaf", "perfume", "Wild Pegasus", "وايلد بيغاسوس"),
+  g("AS08", "assaf", "perfume", "No Comment", "نو كومنت"),
+  g("AS09", "assaf", "perfume", "Gris Erik", "غريس إريك"),
+  g("AS10", "assaf", "perfume", "Dangerous Arrogate", "دينجرس أروغيت"),
+  g("AS11", "assaf", "perfume", "Arrogate Comete", "أروغيت كوميت"),
+  g("AS12", "assaf", "perfume", "Arrogate Pink Diva", "أروغيت بينك ديفا"),
+  g("AS13", "assaf", "perfume", "Boom Blue", "بوم بلو"),
+  g("AS14", "assaf", "perfume", "Baby Girl", "بيبي جيرل"),
+  g("AS15", "assaf", "perfume", "Feeling", "فيلينغ"),
+  g("AS16", "assaf", "perfume", "Rose", "روز"),
+  g("LV01", "laverne", "perfume", "Champion", "تشامبيون"),
+  g("LV02", "laverne", "perfume", "Tyrant", "تايرنت"),
+  g("LV03", "laverne", "perfume", "Last Chance", "لاست تشانس"),
+  g("LV04", "laverne", "perfume", "Into the Sea", "إنتو ذا سي"),
+  g("LV05", "laverne", "perfume", "Fearless", "فيرليس"),
+  g("LV06", "laverne", "perfume", "La'Dor Bakhur", "لادور بخور"),
+  g("LV07", "laverne", "perfume", "La'Dor Bakhur Valley", "لادور بخور فالي"),
+  g("LV08", "laverne", "perfume", "La'Dor Santorini", "لادور سانتوريني"),
+  g("LV09", "laverne", "perfume", "Atlantis Homme", "أتلانتس أوم"),
+  g("LV10", "laverne", "perfume", "Bella", "بيلا"),
+  g("LV11", "laverne", "perfume", "Lady Rose Bloom 200 ml", "ليدي روز بلوم ٢٠٠ مل"),
+  g("LV12", "laverne", "perfume", "Lady Rose Bloom 100 ml", "ليدي روز بلوم ١٠٠ مل"),
+  g("LV13", "laverne", "perfume", "Orchid Valley", "أوركيد فالي"),
+  g("LV14", "laverne", "perfume", "Queen Rose", "كوين روز"),
+  g("RF01", "reef", "set", "Princess Reef", "برنسيس ريف"),
+  g("RF02", "reef", "perfume", "Pesca", "بيسكا"),
+  g("RF03", "reef", "perfume", "Reef 11", "ريف 11"),
+  g("RF04", "reef", "perfume", "Reef 42", "ريف 42"),
+  g("RF05", "reef", "perfume", "Diriyah", "الدرعية"),
+  g("RF06", "reef", "perfume", "Summer Yellow", "سمر الأصفر"),
+  g("RF07", "reef", "perfume", "Bluest", "بلوست"),
+  g("RF08", "reef", "perfume", "Reef 10", "ريف 10"),
+  g("RF09", "reef", "perfume", "Reef 19", "ريف 19"),
+  g("RF10", "reef", "perfume", "Reef 31", "ريف 31"),
+  g("DK01", "dkhoon", "set", "Special Edition Collection", "مجموعة الإصدار الخاص"),
+  g("DK02", "dkhoon", "perfume", "Musk Toffee", "مسك توفي"),
+  g("DK03", "dkhoon", "perfume", "Crown Black", "كراون بلاك"),
+  g("DK04", "dkhoon", "perfume", "No One", "نو ون"),
+  g("DK05", "dkhoon", "perfume", "Gold Tears", "قولد تيرز"),
+  g("DK06", "dkhoon", "perfume", "Kahilan", "كحيلان"),
+  g("DK07", "dkhoon", "perfume", "Dkhoon Desert", "دخون ديزرت"),
+  g("OS01", "osma", "perfume", "Rouge", "روج"),
+  g("OS02", "osma", "perfume", "Noir", "نوار"),
+  g("OS03", "osma", "perfume", "Bonsoir", "بونسوار"),
+  g("OS04", "osma", "perfume", "Positano", "بوزيتانو"),
+  g("OS05", "osma", "perfume", "Bonjour", "بونجور")
 ];

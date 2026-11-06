@@ -48,6 +48,8 @@ The product photos are in `public/assets/img/collection/` (1000 px, used in the 
 g("E01", "assaf", "perfume", "Arrogate Pink", "أروغيت بينك"),
 ```
 
+Products with codes like `AS01` (Assaf), `LV01` (Laverne), `RF01` (Reef), `DK01` (Dkhoon AlEmiratia) and `OS01` (Osma) use studio photos taken from the brands' own online stores (3saf.com, assaf.ae, laverne.com / laverne.co, reefperfumes.com, dkhoonemirates.com, osmaperfumes.com), or from a retailer where the brand store no longer lists the product (Noon, BrandVIP, Justmylook, Salam Occasions, Xmart, My Royal Musk, Soghaat, eBay). These photos belong to the brands or those shops: as a seller of the genuine products you can usually ask the brand for its official media kit, and replacing retailer photos with the brand's own or your own is the safest choice.
+
 The type is `perfume`, `musk` or `set`. Leave the name out if you do not know it, and the brand is shown instead. The photos used on the category tiles are set in `GALLERY_TILES`.
 
 The product in the arch at the top of the page is set by `HERO_PHOTO` in `public/assets/js/data.js` (now `B03`, Purple Heart Diamond). If a photo is missing, the site shows a drawn bottle instead of a broken image.
