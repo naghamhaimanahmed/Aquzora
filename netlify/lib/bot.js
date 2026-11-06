@@ -26,9 +26,12 @@ const T = {
     phoneBad: "الرقم غير صحيح. اكتب رقم موبايل مصري من ١١ رقماً يبدأ بـ 01.",
     summaryTitle: "📋 مراجعة طلبك رقم {ref}",
     summaryAsk: "هل كل البيانات صحيحة؟",
-    bFinal: "✅ تأكيد نهائي", bEditDetails: "✏️ تعديل البيانات",
+    bFinal: "✅ تأكيد ثم الدفع", bEditDetails: "✏️ تعديل البيانات",
+    payAsk: "💳 لإتمام تأكيد طلبك رقم {ref}:\n1. حوّل {amount} عبر إنستاباي إلى:\n{target}\n2. أرسل هنا صورة (سكرين شوت) التحويل 📸",
+    payTotalLater: "الإجمالي الذي سنؤكده لك هنا", payTargetLater: "سنرسل لك بيانات التحويل في رسالة الآن", payName: "باسم",
+    payWaiting: "في انتظار صورة (سكرين شوت) تحويل إنستاباي 📸 لتأكيد طلبك {ref}.",
     aswan: "أسوان",
-    done: "✅ تم تأكيد طلبك رقم {ref}!\nسنتصل بك على {phone} قبل التوصيل. المدة المتوقعة: {eta}.\nالدفع عند الاستلام.\nشكراً لاختيارك عطر 🌹",
+    done: "✅ استلمنا صورة التحويل لطلبك رقم {ref}!\nسنتحقق من الدفع ونؤكد لك، ثم نتصل بك على {phone} قبل التوصيل. المدة المتوقعة: {eta}.\nشكراً لاختيارك عطر 🌹",
     etaAswan: "١–٢ يوم عمل", etaOther: "٢–٤ أيام",
     cancelled: "تم إلغاء الطلب {ref}. يسعدنا خدمتك في أي وقت: {site}",
     editOrder: "لتعديل المنتجات، عدّل سلتك على الموقع ثم اضغط «اطلب عبر واتساب» من جديد:\n{site}",
@@ -59,9 +62,12 @@ const T = {
     phoneBad: "That number doesn't look right. Type an 11-digit Egyptian mobile number starting with 01.",
     summaryTitle: "📋 Please check your order {ref}",
     summaryAsk: "Is everything correct?",
-    bFinal: "✅ Confirm", bEditDetails: "✏️ Edit details",
+    bFinal: "✅ Confirm & pay", bEditDetails: "✏️ Edit details",
+    payAsk: "💳 To complete your order {ref}:\n1. Transfer {amount} by InstaPay to:\n{target}\n2. Send the transfer screenshot here 📸",
+    payTotalLater: "the total we confirm here", payTargetLater: "we will send you the transfer details in a moment", payName: "Name",
+    payWaiting: "Waiting for your InstaPay transfer screenshot 📸 to confirm order {ref}.",
     aswan: "Aswan",
-    done: "✅ Your order {ref} is confirmed!\nWe will call you on {phone} before delivery. Expected time: {eta}.\nPayment on delivery.\nThank you for choosing Atr 🌹",
+    done: "✅ We received the transfer screenshot for order {ref}!\nWe will check the payment and confirm, then call you on {phone} before delivery. Expected time: {eta}.\nThank you for choosing Atr 🌹",
     etaAswan: "1–2 working days", etaOther: "2–4 days",
     cancelled: "Order {ref} is cancelled. We are happy to help any time: {site}",
     editOrder: "To change the products, edit your cart on the website and tap \"Order on WhatsApp\" again:\n{site}",
@@ -119,9 +125,19 @@ function summary(s, order, t, lang) {
     [["final", t.bFinal], ["edit_details", t.bEditDetails]]);
 }
 
-function ownerAlert(s, order) {
+const customerOf = s => ({ name: s.name, gov: s.gov, govName: s.govName, address: s.address, phone: s.phone, waId: s.waId });
+
+// InstaPay instructions with the total (or a note that it will be confirmed) and the transfer target.
+function payAsk(s, order, t) {
+  const lang = s.lang, q = SHOP.quote(order.lines, s.gov);
+  const ip = SHOP.INSTAPAY || {};
+  const target = ip.address ? `${ip.address}${ip.accountName ? `\n(${t.payName}: ${ip.accountName})` : ""}` : t.payTargetLater;
+  return fill(t.payAsk, { ref: s.ref, amount: q.total !== null ? money(q.total, lang) : t.payTotalLater, target });
+}
+
+function ownerAlert(s, order, title = "🛍️ طلب جديد مؤكد عبر واتساب") {
   const block = orderBlock(order, "ar", s.gov);
-  return ["🛍️ طلب جديد مؤكد عبر واتساب", `رقم الطلب: ${s.ref}`, "", block.text, "",
+  return [title, `رقم الطلب: ${s.ref}`, "", block.text, "",
     `الاسم: ${s.name}`, `المحافظة: ${s.gov === "aswan" ? "أسوان" : s.govName}`, `العنوان: ${s.address}`,
     `موبايل التوصيل: ${s.phone}`, `واتساب العميل: +${s.waId}`].join("\n");
 }
@@ -209,15 +225,27 @@ function handle(session, msg, ctx) {
     case "final":
       if (id === "edit_details") return { session: { ...s, step: "name" }, replies: [text(t.askName)] };
       if (yes) {
+        const next = { ...s, step: "payment" };
+        return {
+          session: next,
+          replies: [text(payAsk(next, order, t))],
+          alert: ownerAlert(next, order, "🕒 طلب بانتظار تحويل إنستاباي"),
+          orderUpdate: { status: "awaiting_payment", customer: customerOf(s), detailsAt: ctx.now }
+        };
+      }
+      return { session: s, replies: [text(t.pickButton), summary(s, order, t, s.lang)] };
+
+    case "payment":
+      if (msg.image) {
         const done = { ...s, step: "done" };
         return {
           session: done,
           replies: [text(fill(t.done, { ref: s.ref, phone: s.phone, eta: s.gov === "aswan" ? t.etaAswan : t.etaOther }))],
-          alert: ownerAlert(done, order),
-          orderUpdate: { status: "confirmed", customer: { name: s.name, gov: s.gov, govName: s.govName, address: s.address, phone: s.phone, waId: s.waId }, confirmedAt: ctx.now }
+          alert: ownerAlert(done, order, "💳 وصلت صورة تحويل إنستاباي — راجع وصول المبلغ في تطبيق إنستاباي ثم أكّد للعميل"),
+          orderUpdate: { status: "payment_sent", customer: customerOf(s), paymentScreenshot: { mediaId: msg.mediaId || "", at: ctx.now } }
         };
       }
-      return { session: s, replies: [text(t.pickButton), summary(s, order, t, s.lang)] };
+      return { session: s, replies: [text(fill(t.payWaiting, { ref: s.ref })), text(payAsk(s, order, t))] };
 
     case "done":
     default: // order confirmed: say so once, then just pass messages on to the owner

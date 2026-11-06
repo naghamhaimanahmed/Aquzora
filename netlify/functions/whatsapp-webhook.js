@@ -34,6 +34,8 @@ function readMessage(m) {
     return { buttonId: r.id, text: r.title };
   }
   if (m.type === "button" && m.button) return { text: m.button.text };
+  if (m.type === "image" && m.image) return { image: true, mediaId: m.image.id, text: m.image.caption || "" }; // e.g. the InstaPay screenshot
+  if (m.type === "document" && m.document && /^image\//.test(m.document.mime_type || "")) return { image: true, mediaId: m.document.id, text: m.document.caption || "" };
   return { text: "" }; // images, voice notes, stickers…
 }
 

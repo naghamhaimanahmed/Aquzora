@@ -24,6 +24,15 @@ const SHOP = {
 
   // Card payments through Paymob (see README → "Card payments with Paymob").
   // Turn on only after the Paymob keys are set on the server.
+  // InstaPay: how customers pay. An order is confirmed once the customer sends the transfer
+  // screenshot in WhatsApp. Put your InstaPay address (e.g. "atr@instapay") or the mobile
+  // number linked to InstaPay, and optionally the account holder's name as InstaPay shows it.
+  // While address is empty, customers are told the details will be sent in the WhatsApp chat.
+  INSTAPAY: {
+    address: "",
+    accountName: ""
+  },
+
   // The automatic WhatsApp assistant (see README → "WhatsApp order assistant").
   // Turn on only after it is connected to the WhatsApp Business Platform.
   WHATSAPP_BOT: {

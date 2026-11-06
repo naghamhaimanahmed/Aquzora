@@ -244,7 +244,7 @@
       <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
       ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
       <button class="btn btn--wa btn--block cart-wa" data-cart-wa>${WA_ICON}${t("cart.waOrder")}</button>
-      <p class="cart-wa-note">${t(SHOP.WHATSAPP_BOT.enabled ? "cart.waNoteBot" : "cart.waNote")}</p>
+      <p class="cart-wa-note">${t(SHOP.WHATSAPP_BOT.enabled ? "cart.waNoteBot" : "cart.waNote")}<br>💳 ${t("cart.payNote")}</p>
       <button class="btn btn--line btn--block" data-checkout>${t("cart.checkoutDetails")}</button>`;
   }
 
@@ -338,7 +338,7 @@
     if (c || q.delivery === 0) out.push(`${t("cart.delivery")}: ${q.delivery === 0 ? t("cart.free") : q.delivery !== null ? money(q.delivery) : t("cart.onWa")}`);
     if (q.total !== null) out.push(`${t("cart.total")}: ${money(q.total)}`);
     if (c && c.code) out.push(`${t("wa.code")}: ${c.code}`);
-    out.push("", `${t("wa.orderRef")}: ${ref}`);
+    out.push(t("wa.pay"), "", `${t("wa.orderRef")}: ${ref}`);
     if (c) out.push(`${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
     return out.join("\n");
   }
@@ -373,9 +373,21 @@
     if (tab) orderSentScreen(ref, text);
     else $("#modalContent").innerHTML = `<div class="done"><div class="done__icon">${WA_ICON}</div>
       <h3 id="modalTitle">${t("co.readyTitle")}</h3><p>${t("co.readySub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
-      <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+      ${instapayBox()}
+          <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
       <button class="link" data-close>${t("co.continue")}</button></div>`;
     openLayer($("#modal"));
+  }
+
+  // How to pay by InstaPay, shown after the order is sent (address and name from shop.js)
+  function instapayBox() {
+    const ip = SHOP.INSTAPAY || {};
+    const addr = cleanText(ip.address, 80), name = cleanText(ip.accountName, 80);
+    const target = addr
+      ? `${t("ip.step2")}<span class="ip__addr"><bdi dir="ltr">${esc(addr)}</bdi><button class="ip__copy" data-copy="${esc(addr)}">${t("ip.copy")}</button></span>${name ? `<small>${t("ip.name")}: ${esc(name)}</small>` : ""}`
+      : t("ip.step2Later");
+    return `<div class="ip"><p class="ip__title">💳 ${t("ip.title")}</p>
+      <ol><li>${t("ip.step1")}</li><li>${target}</li><li>${t("ip.step3")}</li></ol></div>`;
   }
 
   function orderSentScreen(ref, text) {
@@ -383,6 +395,7 @@
       <div class="done__icon">${WA_ICON}</div>
       <h3 id="modalTitle">${t("wa.sentTitle")}</h3>
       <p>${t("wa.sentSub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
+      ${instapayBox()}
       <a class="btn btn--wa" href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("wa.openAgain")}</a>
       <button class="link" data-close>${t("co.continue")}</button></div>`;
   }
@@ -412,7 +425,8 @@
         <div class="done__icon">${WA_ICON}</div>
         <h3 id="modalTitle">${t("co.readyTitle")}</h3>
         <p>${t("co.readySub", { ref: `<bdi>${ref}</bdi>` })}</p>
-        <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+        ${instapayBox()}
+          <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
         <button class="link" data-close>${t("co.continue")}</button></div>`;
       return;
     }
@@ -555,10 +569,16 @@
       else { // the browser blocked the new tab: show a link the customer taps
         $("#modalContent").innerHTML = `<div class="done"><div class="done__icon">${WA_ICON}</div>
           <h3 id="modalTitle">${t("co.readyTitle")}</h3><p>${t("co.readySub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
+          ${instapayBox()}
           <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
           <button class="link" data-close>${t("co.continue")}</button></div>`;
         openLayer($("#modal"));
       }
+      return;
+    }
+    if (d.copy) { // copy the InstaPay address
+      const done = () => { el.textContent = t("ip.copied"); setTimeout(() => { el.textContent = t("ip.copy"); }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(d.copy).then(done, () => {});
       return;
     }
     if ("waOrder" in d) { clearCart(); setTimeout(() => closeLayer(), 300); return; } // the link itself opens WhatsApp

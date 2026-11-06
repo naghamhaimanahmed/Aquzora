@@ -16,7 +16,7 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 - Mobile first: bottom navigation bar, bottom-sheet photo viewer, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 - **Cart**: add products from the photo viewer, change quantities, see the free-delivery progress (free over EGP 2,000). The cart is saved in the customer's browser.
-- **One-tap WhatsApp order from the cart**: "Order on WhatsApp" opens a chat with the store's number with a short order message: products with brand and code, quantities, prices (or "price on request"), item count, total, free delivery when it applies, and an order number such as `ATR-261106-3784`. It is kept short to match the store's WhatsApp Business quick replies: `/1` asks the customer to confirm, `/2` asks for name, governorate, address and mobile, `/3` confirms with the delivery fees. The customer presses Send in WhatsApp (WhatsApp never lets a website send for them) and the order arrives in the store's WhatsApp as a chat with that customer.
+- **One-tap WhatsApp order from the cart**: "Order on WhatsApp" opens a chat with the store's number with a short order message: products with brand and code, quantities, prices (or "price on request"), item count, total, free delivery when it applies, and an order number such as `ATR-261106-3784`. It is kept short to match the store's WhatsApp Business quick replies (see "Payment by InstaPay"). The customer presses Send in WhatsApp (WhatsApp never lets a website send for them) and the order arrives in the store's WhatsApp as a chat with that customer.
 - **Checkout** with name, Egyptian mobile number, governorate (all 27) and address, and two ways to pay:
   - **Card (Visa / Mastercard) through Paymob**: the customer pays on Paymob's secure page; card details never touch this site.
   - **Order on WhatsApp**: the full order (items, references, prices, delivery, customer details and an order number such as `ATR-261104-2180`) is sent to the store's WhatsApp to agree payment and delivery.
@@ -26,13 +26,21 @@ Prices and delivery fees live in `public/assets/js/shop.js`, which is read by bo
 - `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `AS01: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
 - `DELIVERY`: `freeFrom` (2000), `aswan` (EGP 50, local, 1–2 working days) and `other` (EGP 100, 2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
 
+## Payment by InstaPay
+Customers pay by **InstaPay**; an order is confirmed once they send the transfer screenshot in WhatsApp.
+
+- **Your InstaPay details**: set `INSTAPAY.address` (your InstaPay address such as `atr@instapay`, or the mobile number linked to InstaPay) and optionally `INSTAPAY.accountName` in `public/assets/js/shop.js`. The order screen then shows the address with a Copy button. While it is empty, customers are told the details will be sent in the WhatsApp chat.
+- **On the site**: the cart, the order screen and the checkout explain the three steps (send the order on WhatsApp → transfer the total including delivery by InstaPay → send the screenshot), and the WhatsApp message says "Payment: InstaPay". The terms page states that orders are confirmed after payment, refunds go back by InstaPay, and that the shop never asks for passwords or OTP codes.
+- **Quick replies for WhatsApp Business** (manual flow): `/1` asks for name, governorate, address and mobile; `/2` sends the total including delivery and the InstaPay details and asks for the screenshot; `/3` confirms the order after you see the money arrive in the InstaPay app.
+- **With the WhatsApp assistant on**, it does the same automatically: after the customer confirms their details it sends the exact total and the InstaPay address, waits for the screenshot (reminding them if they send text instead), then thanks them and alerts you to check the payment in the InstaPay app. The order's status goes `awaiting_payment` → `payment_sent`.
+
 ## WhatsApp order assistant
 An automatic assistant on the store's WhatsApp number that handles orders from the cart:
 
 1. The customer taps **Order on WhatsApp** in the cart. The site saves the cart on the server (`order-create`) and opens WhatsApp with a short message holding the order number; the customer presses Send.
 2. The assistant (`whatsapp-webhook`) replies with the **order details** and the buttons **✅ Confirm order · ✏️ Edit order · ❌ Cancel** (typing "تأكيد" / "confirm" or "إلغاء" / "cancel" also works).
 3. After Confirm it asks, one at a time: **full name** → governorate with the buttons **📍 In Aswan · 🚚 Other governorate** (sets the EGP 50 / 100 delivery fee) → **detailed address** (area, street, building, floor, flat, landmark) → **mobile** with **📱 This WhatsApp number · ☎️ Another number** (Egyptian numbers are checked, Arabic digits accepted).
-4. It shows a **summary with the total** and **✅ Confirm · ✏️ Edit details**; after the final confirm the customer gets the delivery time and you get the whole order as an alert (Telegram, see the Paymob section, and Netlify's function log). The order is stored with the status `confirmed`.
+4. It shows a **summary with the total** and **✅ Confirm & pay · ✏️ Edit details**; then it sends the **InstaPay** total and address and waits for the transfer screenshot (see "Payment by InstaPay"). When the screenshot arrives the customer gets the delivery time and you get the whole order as an alert (Telegram, see the Paymob section, and Netlify's function log). The order is stored with the status `confirmed`.
 
 People who just chat get a short welcome at most once a day, and every message is forwarded to you. It replies in Arabic or English, matching the language the customer used on the site. Orders and conversations are kept in Netlify Blobs (built into Netlify; the `@netlify/blobs` package in `package.json` is installed automatically).
 
