@@ -1,0 +1,8 @@
+{
+  "name": "atr-perfume",
+  "private": true,
+  "description": "Atr · Maison de Parfum website. The site in public/ needs no build; these packages are only for the Netlify functions.",
+  "dependencies": {
+    "@netlify/blobs": "11.1.4"
+  }
+}
