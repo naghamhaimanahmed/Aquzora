@@ -78,6 +78,28 @@
   const pic = (it, size, attrs = "") => `<picture><source type="image/webp" srcset="${galSrc(it, size, "webp")}"><img src="${galSrc(it, size)}" ${attrs}></picture>`;
   const byCode = code => GALLERY.find(it => it.code === code);
 
+  /* ---------- product details (details.js) ---------- */
+  const detailsOf = code => (typeof DETAILS !== "undefined" && DETAILS[code]) || null;
+  const li = () => (state.lang === "ar" ? 1 : 0);
+  const sizeLabel = d => d && d.size ? `${state.lang === "ar" ? d.size.replace(/\d+/g, n => (+n).toLocaleString("ar-EG")) : d.size} ${t("dt.ml")}` : "";
+  function detailsHtml(it) {
+    const d = detailsOf(it.code);
+    if (!d) return "";
+    const i = li(), sep = state.lang === "ar" ? "، " : ", ";
+    const facts = [sizeLabel(d), d.conc === false ? "" : t("dt.edp"), d.g ? t("dt.g." + d.g) : "",
+      (d.fam || []).map(f => FAMILIES[f] && FAMILIES[f][i]).filter(Boolean).join(" · ")].filter(Boolean);
+    const notes = list => list.map(n => (NOTES[n] ? NOTES[n][i] : n)).join(sep);
+    const rows = [["top", d.top], ["heart", d.heart], ["base", d.base], ["key", d.key]].filter(r => r[1] && r[1].length);
+    const desc = d[state.lang] || d.en;
+    return `<div class="dt">
+      ${facts.length ? `<ul class="dt__facts">${facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+      ${desc ? `<p class="dt__desc">${esc(desc)}</p>` : ""}
+      ${rows.length ? `<p class="dt__h">${t("dt.notes")}</p><dl class="dt__notes">${rows.map(([k, l]) => `<div><dt>${t("dt." + k)}</dt><dd>${esc(notes(l))}</dd></div>`).join("")}</dl>` : ""}
+      ${d.inc ? `<p class="dt__h">${t("dt.inc")}</p><ul class="dt__inc">${d.inc.map(x => `<li>${esc(x[i])}</li>`).join("")}</ul>` : ""}
+      ${d.by ? `<p class="dt__by">${t("dt.by")}: <bdi>${esc(d.by)}</bdi></p>` : ""}
+    </div>`;
+  }
+
   const filterMatch = (f, it) => (!f.type || it.type === f.type) && (!f.group || GALLERY_BRANDS[it.brand].group === f.group);
   function galList() {
     const f = GALLERY_FILTERS.find(x => x.id === state.gal.f) || GALLERY_FILTERS[0];
@@ -126,7 +148,7 @@
     $("#gal").innerHTML = shown.map((it, i) => `<button class="gal__item" data-gal="${i}" aria-label="${t("gal.view")}: ${esc(galTitle(it))}">
       ${it.type === "set" ? `<span class="ribbon">${t("gal.type.set")}</span>` : ""}
       <span class="gal__img">${pic(it, "thumb", `alt="${esc(galTitle(it))}" width="480" height="480" loading="lazy" decoding="async"`)}</span>
-      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small><span class="gal__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</span></span>
+      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc([galSub(it), sizeLabel(detailsOf(it.code))].filter(Boolean).join(" · "))}</small><span class="gal__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</span></span>
     </button>`).join("");
     $("#galCount").textContent = list.length === 1 ? t("gal.count1") : t("gal.count", { n: list.length });
     const left = list.length - shown.length;
@@ -152,6 +174,7 @@
         <h3 id="modalTitle">${esc(galTitle(it))}</h3>
         <p class="gv__ref">${t("gal.ref")} <bdi>${esc(it.code)}</bdi> · ${t("gal.pos", { a: i + 1, b: list.length })}</p>
         <p class="gv__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</p>
+        ${detailsHtml(it)}
         <p class="qv__desc">${t(SHOP.priceOf(it.code) === null ? "gal.note" : "gal.noteCart")}</p>
         <button class="btn btn--dark btn--block" data-add-cart="${it.code}">${BAG_ICON}<span>${t("cart.add")}</span></button>
         <a class="btn btn--line btn--block" data-gal-ask href="${esc(waHref(waAskText(it)))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</a>
@@ -639,9 +662,40 @@
   const header = $(".header");
   addEventListener("scroll", () => header.classList.toggle("is-scrolled", scrollY > 10), { passive: true });
 
+  /* ---------- brand film ---------- */
+  // Loads nothing until the section is near the screen; plays only while visible. Visitors who
+  // ask for less motion, or for data saving, see the still poster instead.
+  function initFilm() {
+    const v = $("#filmVideo");
+    if (!v) return;
+    const phone = matchMedia("(max-width: 760px)");
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches || (navigator.connection && navigator.connection.saveData);
+    // phones get 1280×1600; wide or high-density screens get 2560×1440, others 1920×1080
+    const base = () => (phone.matches ? v.dataset.mobile : innerWidth * (devicePixelRatio || 1) > 2100 ? v.dataset.hd : v.dataset.desktop);
+    let loaded = "", visible = false, noHd = false;
+    const load = () => {
+      let b = base(); if (noHd && b === v.dataset.hd) b = v.dataset.desktop;
+      if (loaded === b) return; loaded = b;
+      const sources = [["webm", "video/webm"], ["mp4", "video/mp4"]].map(([ext, type]) => Object.assign(document.createElement("source"), { src: `${b}.${ext}`, type }));
+      // if the HD file cannot be played, fall back to the 1920×1080 one
+      if (b === v.dataset.hd) sources[1].addEventListener("error", () => { noHd = true; load(); if (visible) v.play().catch(() => {}); });
+      v.replaceChildren(...sources);
+      v.load();
+    };
+    const poster = () => { v.poster = `${phone.matches ? v.dataset.mobile : v.dataset.desktop}-poster.webp`; };
+    poster();
+    phone.addEventListener("change", () => { poster(); if (loaded) { load(); if (visible) v.play().catch(() => {}); } });
+    if (still || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) { load(); v.play().catch(() => {}); } else v.pause();
+    }, { rootMargin: "200px 0px" }).observe(v);
+  }
+
   /* ---------- init ---------- */
   $("#year").textContent = new Date().getFullYear();
   saveCart(); // store the cleaned cart, dropping anything invalid that was saved before
   applyLang();
+  initFilm();
   handlePaymentReturn();
 })();

@@ -112,6 +112,18 @@
     </section>
     <div class="lattice" aria-hidden="true"></div>
 
+    <!-- Brand film: a silent, looping video; app.js picks the desktop or phone version and plays it only while it is on screen -->
+    <section class="film" aria-labelledby="filmTitle">
+      <video class="film__video" id="filmVideo" muted loop playsinline preload="none" disablepictureinpicture aria-hidden="true" tabindex="-1"
+        data-hd="assets/video/atr-film-desktop-hd" data-desktop="assets/video/atr-film-desktop" data-mobile="assets/video/atr-film-mobile"></video>
+      <div class="film__shade" aria-hidden="true"></div>
+      <div class="container film__copy">
+        <h2 id="filmTitle" data-i18n="film.title">عطرك… توقيعك</h2>
+        <p class="film__sub" data-i18n="film.sub">عطور أصلية من أعرق الدور العربية، تصلك من أسوان إلى باب بيتك.</p>
+        <a href="#collection" class="btn btn--gold" data-i18n="film.cta">تصفّح المجموعة</a>
+      </div>
+    </section>
+
     <!-- The collection -->
     <section class="section section--raised" id="collection">
       <div class="container">
@@ -271,6 +283,7 @@
 
   <script src="assets/js/data.js"></script>
   <script src="assets/js/shop.js"></script>
+  <script src="assets/js/details.js"></script>
   <script src="assets/js/i18n.js"></script>
   <script src="assets/js/app.js"></script>
 </body>

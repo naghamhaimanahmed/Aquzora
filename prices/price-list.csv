@@ -1,0 +1,57 @@
+﻿Code,Brand,Product,المنتج,Size,Currency,Price now (used),Regular price before discount,Price EGP (used),Regular price EGP,Price source,Source / note
+OS01,osma,Rouge,روج,100 ml,SAR,231,239,3320,3440,official store,sa.osmaperfumes.com
+OS02,osma,Noir,نوار,100 ml,SAR,231,239,3320,3440,estimate,not listed now; same as Osma Rouge 100 ml
+OS03,osma,Bonsoir,بونسوار,150 ml,SAR,259,,3720,,estimate,not listed now; Osma 150 ml price (Osma O 150 ml)
+OS04,osma,Positano,بوزيتانو,150 ml,SAR,259,,3720,,estimate,not listed now; Osma 150 ml price (Osma O 150 ml)
+OS05,osma,Bonjour,بونجور,150 ml,SAR,259,,3720,,estimate,not listed now; Osma 150 ml price (Osma O 150 ml)
+DK01,dkhoon,Special Edition Collection,مجموعة الإصدار الخاص,6 x 50 ml,JOD,50,,3800,,reseller,brandvip.me (Jordan)
+DK02,dkhoon,Musk Toffee,مسك توفي,100 ml,SAR,95,,1370,,estimate,"Dkhoon 100 ml price (Crown Black, No One)"
+DK03,dkhoon,Crown Black,كراون بلاك,100 ml,SAR,95,,1370,,official store,dkhoonemirates.com
+DK04,dkhoon,No One,نو ون,100 ml,SAR,95,,1370,,official store,dkhoonemirates.com
+DK05,dkhoon,Gold Tears,قولد تيرز,100 ml,SAR,95,,1370,,official store,dkhoonemirates.com
+DK06,dkhoon,Kahilan,كحيلان,100 ml,SAR,129,,1850,,official store,dkhoonemirates.com
+DK07,dkhoon,Dkhoon Desert,دخون ديزرت,100 ml,SAR,95,,1370,,estimate,page removed; Dkhoon 100 ml price
+RF01,reef,Princess Reef,برنسيس ريف,box,SAR,199,419,2860,6020,official store,sa.reefperfumes.com
+RF02,reef,Pesca,بيسكا,200 ml,SAR,259,325,3720,4670,official store,sa.reefperfumes.com
+RF03,reef,Reef 11,ريف 11,100 ml,GBP,39.95,55,2900,3990,reseller,justmylook.com (UK)
+RF04,reef,Reef 42,ريف 42,100 ml,GBP,39.95,55,2900,3990,reseller,justmylook.com (UK)
+RF05,reef,Diriyah,الدرعية,100 ml,SAR,229,325,3290,4670,estimate,"full size not listed now; sale 229 seen earlier, Reef 100 ml regular 325"
+RF06,reef,Summer Yellow,سمر الأصفر,100 ml,SAR,259,325,3720,4670,official store,sa.reefperfumes.com
+RF07,reef,Bluest,بلوست,200 ml,SAR,259,325,3720,4670,estimate,full size not listed now; Reef 200 ml price (Pesca)
+RF08,reef,Reef 10,ريف 10,100 ml,USD,76,,4100,,reseller,salamoccasions.com
+RF09,reef,Reef 19,ريف 19,100 ml,SAR,299,325,4300,4670,official store,sa.reefperfumes.com
+RF10,reef,Reef 31,ريف 31,100 ml,SAR,259,325,3720,4670,estimate,"full size not listed now; Reef 100 ml price (Summer Yellow, Reef 41)"
+LV01,laverne,Champion,تشامبيون,200 ml,SAR,115,275,1650,3950,official store,laverne.com
+LV02,laverne,Tyrant,تايرنت,200 ml,SAR,125,275,1800,3950,estimate,200 ml not listed now; Laverne 200 ml price
+LV03,laverne,Last Chance,لاست تشانس,200 ml,SAR,125,275,1800,3950,estimate,200 ml not listed now; Laverne 200 ml price
+LV04,laverne,Into the Sea,إنتو ذا سي,200 ml,SAR,125,275,1800,3950,official store,laverne.com
+LV05,laverne,Fearless,فيرليس,200 ml,SAR,125,275,1800,3950,official store,laverne.com
+C07,laverne,Amber Royal,أمبر رويال,200 ml,AED,149,275,2190,4040,official store,laverne.co (UAE)
+LV06,laverne,La'Dor Bakhur,لادور بخور,200 ml,SAR,125,275,1800,3950,official store,laverne.com
+LV07,laverne,La'Dor Bakhur Valley,لادور بخور فالي,200 ml,JOD,41,54,3120,4100,reseller,xmart.jo (Jordan)
+LV08,laverne,La'Dor Santorini,لادور سانتوريني,200 ml,SAR,125,275,1800,3950,official store,laverne.com
+LV09,laverne,Atlantis Homme,أتلانتس أوم,200 ml,SAR,149,275,2140,3950,official store,laverne.com (Atlantis 200 ml)
+LV10,laverne,Bella,بيلا,200 ml,AED,125,275,1830,4040,official store,laverne.co (UAE)
+LV11,laverne,Lady Rose Bloom 200 ml,ليدي روز بلوم ٢٠٠ مل,200 ml,AED,139,275,2040,4040,official store,laverne.co (UAE)
+LV12,laverne,Lady Rose Bloom 100 ml,ليدي روز بلوم ١٠٠ مل,100 ml,GBP,37.99,,2760,,reseller,soghaat.co.uk (UK)
+LV13,laverne,Orchid Valley,أوركيد فالي,200 ml,SAR,125,275,1800,3950,estimate,not listed now; Laverne 200 ml price
+LV14,laverne,Queen Rose,كوين روز,200 ml,SAR,125,275,1800,3950,estimate,not listed now; Laverne 200 ml price
+AS01,assaf,Pegasus Collection,مجموعة بيغاسوس,3 x 100 ml,AED,399.99,520.87,5870,7640,official store,assaf.ae (UAE)
+AS02,assaf,Aura Black,أورا بلاك,150 ml,SAR,99,250,1420,3590,official store,3saf.com
+AS03,assaf,Frankel Black Out,فرانكل بلاك أوت,200 ml,SAR,99,295,1420,4240,official store,3saf.com
+AS04,assaf,Frankel Blue Elixir,فرانكل بلو إليكسير,200 ml,SAR,99,299,1420,4300,official store,3saf.com
+AS05,assaf,Frankel Battle,فرانكل باتل,100 ml,SAR,99,289,1420,4150,official store,3saf.com
+AS06,assaf,Addict Blue,أديكت بلو,125 ml,SAR,125,275,1800,3950,official store,3saf.com
+AS07,assaf,Wild Pegasus,وايلد بيغاسوس,150 ml,SAR,129,275,1850,3950,official store,3saf.com
+AS08,assaf,No Comment,نو كومنت,,SAR,139,249,2000,3580,official store,3saf.com
+AS09,assaf,Gris Erik,غريس إريك,100 ml,SAR,99,199,1420,2860,official store,3saf.com
+AS10,assaf,Dangerous Arrogate,دينجرس أروغيت,200 ml,SAR,115,295,1650,4240,official store,3saf.com
+AS11,assaf,Arrogate Comete,أروغيت كوميت,200 ml,SAR,129,295,1850,4240,official store,3saf.com
+AS12,assaf,Arrogate Pink Diva,أروغيت بينك ديفا,200 ml,SAR,115,245,1650,3520,official store,3saf.com
+AS13,assaf,Boom Blue,بوم بلو,200 ml,SAR,99,199,1420,2860,official store,3saf.com
+AS14,assaf,Baby Girl,بيبي جيرل,120 ml,AED,99,199,1450,2920,official store,assaf.ae (UAE)
+AS15,assaf,Feeling,فيلينغ,200 ml,AED,125,275,1830,4040,official store,assaf.ae (UAE)
+AS16,assaf,Rose,روز,200 ml,SAR,125,225,1800,3230,estimate,no listing found; Assaf Garden Rose 200 ml price
+B08,assaf,Pink Queen,بينك كوين,,SAR,119,299,1710,4300,official store,3saf.com
+WA0119,assaf,Arrogate Girl,أروغيت جيرل,,SAR,199,299,2860,4300,official store,3saf.com
+WA0133,assaf,Arrogate Hook Blue,أروغيت هوك بلو,200 ml,SAR,99,199,1420,2860,official store,3saf.com
