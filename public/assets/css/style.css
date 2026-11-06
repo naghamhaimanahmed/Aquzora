@@ -351,9 +351,6 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .sum { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .sum--total { color: var(--ink); font-size: 18px; padding-top: 8px; border-top: 1px solid var(--line); }
 .cart-note { font-size: 13px; color: var(--burgundy); }
-.cart-wa { background: #1E7A4C; }
-.cart-wa svg { color: #fff; }
-.cart-wa:hover { background: #17633d; }
 .cart-wa-note { font-size: 12px; color: var(--ink-2); text-align: center; margin-top: -4px; }
 [dir="rtl"] .cart-wa-note { font-size: 14px; }
 [dir="rtl"] .cart-note { font-size: 15px; }

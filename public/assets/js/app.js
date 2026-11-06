@@ -243,9 +243,8 @@
       <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}${q.unpriced && q.subtotal ? " +" : ""}</span></div>
       <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
       ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
-      <button class="btn btn--wa btn--block cart-wa" data-cart-wa>${WA_ICON}${t("cart.waOrder")}</button>
-      <p class="cart-wa-note">${t(SHOP.WHATSAPP_BOT.enabled ? "cart.waNoteBot" : "cart.waNote")}<br>💳 ${t("cart.payNote")}</p>
-      <button class="btn btn--line btn--block" data-checkout>${t("cart.checkoutDetails")}</button>`;
+      <button class="btn btn--gold btn--block" data-checkout>${t("cart.checkout")}</button>
+      <p class="cart-wa-note">💳 ${t("cart.payNote")}</p>`;
   }
 
   /* ---------- checkout ---------- */
@@ -284,8 +283,8 @@
           <fieldset class="field">
             <legend>${t("co.pay")}</legend>
             <div class="pay-opts">
-              <label class="pay-opt" id="payCard"><input type="radio" name="pay" value="card"><span><strong>${t("co.card")}</strong><small id="payCardNote">${t("co.cardNote")}</small></span><span class="pay-opt__logos" aria-hidden="true">VISA · Mastercard</span></label>
-              <label class="pay-opt"><input type="radio" name="pay" value="whatsapp"><span><strong>${t("co.wa")}</strong><small>${t("co.waNote")}</small></span>${WA_ICON}</label>
+              ${SHOP.PAYMENT.cardEnabled ? `<label class="pay-opt" id="payCard"><input type="radio" name="pay" value="card"><span><strong>${t("co.card")}</strong><small id="payCardNote">${t("co.cardNote")}</small></span><span class="pay-opt__logos" aria-hidden="true">VISA · Mastercard</span></label>` : ""}
+              <label class="pay-opt"><input type="radio" name="pay" value="whatsapp" checked><span><strong>${t("co.wa")}</strong><small>${t("co.waNote")}</small></span>${WA_ICON}</label>
             </div>
           </fieldset>
           <div id="coEmailWrap" hidden>${field("email", t("co.email"), `<input id="coEmail" name="email" type="email" maxlength="80" autocomplete="email" dir="ltr">`)}</div>
@@ -306,13 +305,15 @@
   function updateCheckout() {
     const form = $("#coForm"); if (!form) return;
     const lines = cartLines(), gov = form.elements.namedItem("gov").value, q = SHOP.quote(lines, gov);
-    const block = cardBlock(q, gov), card = form.querySelector("[value=card]"), wa = form.querySelector("[value=whatsapp]");
-    card.disabled = !!block;
-    $("#payCard").classList.toggle("is-off", !!block);
-    $("#payCardNote").textContent = t(block || "co.cardNote");
-    if (!card.checked && !wa.checked) (block ? wa : card).checked = true;
-    if (block && card.checked) wa.checked = true;
-    const method = card.checked ? "card" : "whatsapp";
+    const card = form.querySelector("[value=card]"), wa = form.querySelector("[value=whatsapp]");
+    if (card) { // only present when card payment is switched on
+      const block = cardBlock(q, gov);
+      card.disabled = !!block;
+      $("#payCard").classList.toggle("is-off", !!block);
+      $("#payCardNote").textContent = t(block || "co.cardNote");
+      if (block && card.checked) wa.checked = true;
+    } else wa.checked = true;
+    const method = card && card.checked ? "card" : "whatsapp";
     $("#coEmailWrap").hidden = method !== "card";
     $("#coCodeWrap").hidden = method !== "whatsapp"; // discount codes are honoured on WhatsApp orders
     $("#coEmail").required = method === "card";
@@ -359,24 +360,25 @@
     try { w.opener = null; } catch { /* cross-origin already */ }
     return true;
   }
-  // With the WhatsApp assistant on: save the cart on the server, then open WhatsApp with the
-  // order number; the assistant replies there with the details and the confirm buttons.
-  async function orderViaAssistant() {
+  // With the WhatsApp assistant on: save the order (and the customer's details) on the server,
+  // then open WhatsApp with the order number; the assistant replies there with the summary
+  // and the InstaPay instructions.
+  async function orderViaAssistant(customer) {
     const tab = window.open("", "_blank"); // opened now, while the tap still counts, filled in below
     const lines = cartLines();
     let ref = null;
     try {
       const res = await fetch(SHOP.WHATSAPP_BOT.orderEndpoint, {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lang: state.lang, lines: lines.map(({ code, qty }) => ({ code, qty })) })
+        body: JSON.stringify({ lang: state.lang, lines: lines.map(({ code, qty }) => ({ code, qty })), customer: customer && { name: customer.name, phone: customer.phone, gov: customer.gov, address: customer.address } })
       });
       const data = await res.json();
       if (res.ok && /^ATR-\d{6}-\d{4}$/.test(data.ref || "")) ref = data.ref;
     } catch { /* falls back below */ }
     // If the server could not save it, send the full order as text instead, so nothing is lost
     const text = ref
-      ? t("wa.botStart", { ref, items: lines.map(l => `${l.code} × ${l.qty}`).join("، ") })
-      : waOrderText(ref = makeRef());
+      ? t("wa.botStart", { ref, items: lines.map(l => `${l.code} × ${num(l.qty)}`).join("، ") })
+      : waOrderText(ref = makeRef(), customer);
     if (tab) { try { tab.opener = null; tab.location = waHref(text); } catch { /* closed */ } }
     clearCart(); closeLayer(true);
     if (tab) orderSentScreen(ref, text);
@@ -428,6 +430,7 @@
     const ref = makeRef();
 
     if (form.elements.namedItem("pay").value === "whatsapp") {
+      if (SHOP.WHATSAPP_BOT.enabled) { orderViaAssistant(c); return; }
       const text = waOrderText(ref, c);
       if (openWhatsApp(text)) { clearCart(); orderSentScreen(ref, text); return; }
       $("#modalContent").innerHTML = `<div class="done">
@@ -570,21 +573,6 @@
     if (d.qty) { setQty(d.qty, (state.cart[d.qty] || 0) + +d.d); return; }
     if (d.remove) { setQty(d.remove, 0); return; }
     if ("checkout" in d) { checkout(); return; }
-    if ("cartWa" in d) {
-      if (!cartLines().length) return;
-      if (SHOP.WHATSAPP_BOT.enabled) { orderViaAssistant(); return; }
-      const ref = makeRef(), text = waOrderText(ref);
-      if (openWhatsApp(text)) { clearCart(); closeLayer(true); orderSentScreen(ref, text); openLayer($("#modal")); }
-      else { // the browser blocked the new tab: show a link the customer taps
-        $("#modalContent").innerHTML = `<div class="done"><div class="done__icon">${WA_ICON}</div>
-          <h3 id="modalTitle">${t("co.readyTitle")}</h3><p>${t("co.readySub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
-          ${instapayBox()}
-          <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
-          <button class="link" data-close>${t("co.continue")}</button></div>`;
-        openLayer($("#modal"));
-      }
-      return;
-    }
     if (d.copy) { // copy the InstaPay address
       const done = () => { el.textContent = t("ip.copied"); setTimeout(() => { el.textContent = t("ip.copy"); }, 1600); };
       if (navigator.clipboard) navigator.clipboard.writeText(d.copy).then(done, () => {});

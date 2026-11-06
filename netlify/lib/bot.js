@@ -157,6 +157,12 @@ function handle(session, msg, ctx) {
     const lang = order && order.lang === "en" ? "en" : "ar";
     if (!order) return { session: { step: "idle", waId: msg.from, welcomedAt: ctx.now, updated: ctx.now }, replies: [text(fill(T[lang].notFound, { site }))], alert: `💬 رسالة بطلب غير معروف من +${msg.from}:\n${words}` };
     const t = T[lang];
+    const c = order.customer;
+    if (c && c.name && c.phone && c.address && c.gov) { // details already given on the website: go to the summary
+      const s = { ref: refInText, lang, step: "final", waId: msg.from, updated: ctx.now,
+        name: c.name, phone: c.phone, address: c.address, gov: c.gov, govName: c.gov === "aswan" ? t.aswan : c.govName };
+      return { session: s, replies: [summary(s, order, t, lang)] };
+    }
     const s = { ref: refInText, lang, step: "confirm", waId: msg.from, updated: ctx.now };
     return { session: s, replies: [text([fill(t.detailsTitle, { ref: s.ref }), "", orderBlock(order, lang).text].join("\n")), confirmButtons(t)] };
   }
