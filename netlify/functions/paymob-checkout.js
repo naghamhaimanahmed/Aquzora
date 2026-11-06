@@ -34,7 +34,7 @@ exports.handler = async event => {
   if (headers.origin !== site) return json(403, { error: "origin" });
   if (!/^application\/json/.test(headers["content-type"] || "")) return json(415, { error: "type" });
   if ((event.body || "").length > 10000) return json(413, { error: "too_large" });
-  const ip = headers["x-nf-client-connection-ip"] || headers["x-forwarded-for"] || "unknown";
+  const ip = headers["x-nf-client-connection-ip"] || headers["x-real-ip"] || (headers["x-forwarded-for"] || "").split(",")[0].trim() || "unknown";
   if (rateLimited(ip)) return json(429, { error: "too_many" });
 
   let body;

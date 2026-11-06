@@ -9,7 +9,7 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 - **Shop by house** tiles (Assaf, Laverne, Reef) that open the collection filtered to that brand.
 - **Search** (header or bottom bar, press `/`) by product name, brand or type, in English or Arabic.
 - **WhatsApp** buttons in the header, banner, footer and mobile bottom bar.
-- **Newsletter** saved with Netlify Forms (with a spam trap); after signing up the customer sees the code **WELCOME10** (10% off the first WhatsApp order), which they can enter in the checkout's discount-code box.
+- **Newsletter** saved by the `newsletter` function (Netlify Blobs on Netlify, an Upstash Redis database on Vercel; with a spam trap); after signing up the customer sees the code **WELCOME10** (10% off the first WhatsApp order), which they can enter in the checkout's discount-code box.
 - **Reviews** section, shown only once real reviews are added to `TESTIMONIALS` in `public/assets/js/data.js`.
 - **Terms of sale** (`public/terms.html`) and **Privacy policy** (`public/privacy.html`), Arabic first with English below, linked from the footer and checkout.
 - Brands strip and a footer with contact details.
@@ -118,11 +118,22 @@ The older Aquzora logo sets are kept in `brand-archive/aquzora-logos/`; they are
 - **More headers**: Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, X-Permitted-Cross-Domain-Policies and Origin-Agent-Cluster; `/.well-known/security.txt` tells people how to report a security problem.
 - **Accounts**: turn on two-step login for GitHub, Netlify and Paymob, and keep Paymob keys only in Netlify's environment variables.
 
+## Publish on Vercel (recommended for Egypt)
+Since June 2026, sites on Netlify (`*.netlify.app` and custom domains pointed at Netlify) cannot be reached from Egypt without a VPN, so the shop is set up for Vercel as well. `vercel.json` publishes the `public/` folder with the same security headers and caching as `netlify.toml`, and the server functions run from `api/`: each file there wraps the matching function in `netlify/functions/` (`api/_adapter.js` converts the request), and `/.netlify/functions/<name>` is routed to `/api/<name>`, so the website and webhook addresses stay the same.
+
+1. **Sign up** at vercel.com with your GitHub account. Vercel's free Hobby plan is for personal, non-commercial projects; a shop should move to Pro when it starts selling.
+2. **Add New → Project → Import** this repository. Framework preset: **Other**. Leave the build command empty and keep the output directory `public` (both come from `vercel.json`). Click **Deploy**. The address is `https://<project-name>.vercel.app`; rename it under Settings → Domains or add your own domain there.
+3. **Storage** (newsletter sign-ups, orders and the WhatsApp assistant): Storage → Create Database → **Upstash for Redis** (free) → connect it to this project. Vercel adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` (or `UPSTASH_REDIS_REST_URL` / `_TOKEN`) by itself; then redeploy. Sign-ups are saved as `atr-newsletter:<email>` and can be seen in the database's **Data Browser**. Without the database the newsletter form shows "try again later".
+4. **Environment variables** (Settings → Environment Variables), as on Netlify: `SITE_URL` (your Vercel address) and, when you turn them on, the Paymob, WhatsApp and Telegram variables described above. Redeploy after adding them.
+5. **Webhooks**: Paymob and Meta can use the same paths on the Vercel address, e.g. `https://<project>.vercel.app/.netlify/functions/whatsapp-webhook`.
+
+Every push to the default branch publishes the site again automatically. Netlify's settings (`netlify.toml`) are kept, so the site can still be published there too.
+
 ## Publish on Netlify
 1. **Merge the work into `main`** on GitHub (pull request from `ccr-61478cd7-y9m2yh`).
 2. **Create the site**: sign up at netlify.com (free) with your GitHub account → **Add new site → Import an existing project → GitHub** → choose this repository → branch `main`. Leave the build command empty; `netlify.toml` sets the publish folder (`public`) and the functions folder. Click **Deploy**.
 3. **Name the site**: Site configuration → Change site name, e.g. `atr-perfume` → `https://atr-perfume.netlify.app`. Later you can add your own domain (Domain management → Add a domain); Netlify gives free HTTPS.
-4. **Newsletter**: Forms → **Enable form detection**, then redeploy (Deploys → Trigger deploy). Sign-ups then appear under Forms → newsletter. For an email per sign-up: Site configuration → Notifications → Emails and webhooks → Form submission notifications → Add notification → Email.
+4. **Newsletter**: sign-ups are saved by the `newsletter` function in Netlify Blobs (no setup needed). Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to get a message for each sign-up.
 5. **Card payments** (when ready): add the environment variables from "Card payments with Paymob" above, set `cardEnabled: true` in `public/assets/js/shop.js`, and push.
 6. **Check**: open the site on your phone, switch languages, add to cart, send a test WhatsApp order to yourself, and sign up to the newsletter once to see it arrive in Forms.
 

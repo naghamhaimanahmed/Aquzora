@@ -650,8 +650,10 @@
     if (!ok) return show("news.bad", false);
     btn.disabled = true;
     try {
-      // Netlify Forms stores the email; it appears under Forms → newsletter in the Netlify dashboard
-      const res = await fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() });
+      // saved by the newsletter function (netlify/functions/newsletter.js); "website" is the hidden field only bots fill in
+      const trap = form.querySelector('[name="bot-field"]');
+      const res = await fetch(SHOP.NEWSLETTER_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: inp.value.trim(), lang: state.lang, website: trap ? trap.value : "" }) });
       if (!res.ok) throw new Error(res.status);
       inp.value = ""; show("news.ok", true);
     } catch { show("news.fail", false); }

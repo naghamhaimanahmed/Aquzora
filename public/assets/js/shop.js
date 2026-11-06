@@ -12,6 +12,9 @@ const SHOP = {
   // Example:  B03: 1850,
   // Prices: the price each brand's website sells at today (6 Nov 2026), converted to EGP and rounded to 10.
   // Full list with sources: prices/price-list.csv. Change any number here to set your own price.
+  // Newsletter sign-ups are saved by this function (Netlify Blobs on Netlify, the Redis database on Vercel).
+  NEWSLETTER_ENDPOINT: "/.netlify/functions/newsletter",
+
   PRICES: {
     // osma
     OS01: 3320,   // Rouge, 100 ml: 231 SAR (regular 239)
