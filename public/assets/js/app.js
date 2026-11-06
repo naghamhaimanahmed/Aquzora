@@ -662,9 +662,35 @@
   const header = $(".header");
   addEventListener("scroll", () => header.classList.toggle("is-scrolled", scrollY > 10), { passive: true });
 
+  /* ---------- brand film ---------- */
+  // Loads nothing until the section is near the screen; plays only while visible. Visitors who
+  // ask for less motion, or for data saving, see the still poster instead.
+  function initFilm() {
+    const v = $("#filmVideo");
+    if (!v) return;
+    const phone = matchMedia("(max-width: 760px)");
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches || (navigator.connection && navigator.connection.saveData);
+    const base = () => (phone.matches ? v.dataset.mobile : v.dataset.desktop);
+    let loaded = "", visible = false;
+    const load = () => {
+      const b = base(); if (loaded === b) return; loaded = b;
+      v.replaceChildren(...[["webm", "video/webm"], ["mp4", "video/mp4"]].map(([ext, type]) => Object.assign(document.createElement("source"), { src: `${b}.${ext}`, type })));
+      v.load();
+    };
+    const poster = () => { v.poster = `${base()}-poster.webp`; };
+    poster();
+    phone.addEventListener("change", () => { poster(); if (loaded) { load(); if (visible) v.play().catch(() => {}); } });
+    if (still || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) { load(); v.play().catch(() => {}); } else v.pause();
+    }, { rootMargin: "200px 0px" }).observe(v);
+  }
+
   /* ---------- init ---------- */
   $("#year").textContent = new Date().getFullYear();
   saveCart(); // store the cleaned cart, dropping anything invalid that was saved before
   applyLang();
+  initFilm();
   handlePaymentReturn();
 })();

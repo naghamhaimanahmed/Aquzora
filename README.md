@@ -88,6 +88,9 @@ The type is `perfume`, `musk` or `set` (a "Musk" filter can be added back in `GA
 
 The product in the arch at the top of the page is set by `HERO_PHOTO` in `public/assets/js/data.js` (now `OS01`, Osma Rouge). If a photo is missing, the site shows a drawn bottle instead of a broken image.
 
+### Brand film
+The "عطرك… توقيعك" band between the brands strip and the collection plays a silent 14-second looping film from `public/assets/video/`: `atr-film-desktop` (1920×1080) on wider screens and `atr-film-mobile` (1080×1350) on phones, each as WebM (smaller) with an MP4 fallback and a WebP poster. The page loads only the poster at first; `initFilm()` in `app.js` loads the video when the band comes near the screen, plays it only while it is visible, and shows just the poster to visitors who ask for reduced motion or data saving. The heading and button are ordinary page text (`film.*` in `i18n.js`), so they follow the language switch. To change the film, replace those files with the same names; how it was made is in `marketing/README.md`.
+
 ## Brand
 The design follows the Atr brand identity sheet:
 - **Colours** (the `:root` tokens at the top of `public/assets/css/style.css`): Oud Black `#15110E` (primary), Antique Gold `#D4AF6A` (logo, accents on dark), Gift Burgundy `#5E1F24` (gift-set ribbons and the newsletter offer), Bronze `#8A6A2E` (accent text on light), Smoke Ivory `#EDE6DA` (page ground).

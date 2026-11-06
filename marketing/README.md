@@ -26,3 +26,10 @@ Products, texts and timings are at the top of the `<script>` in `source/scene.ht
 Source in `cinematic-source/`: `cutout.py` cuts the bottles out of the site photos (rembg), `tex.py` makes the smoke and grain
 textures, `scene.html` is the animated scene (served over http so masks load), `render.js` renders it frame by frame with
 Playwright, and `music.py` composes the score (numpy/scipy).
+
+# Website film (silent loop)
+
+`public/assets/video/atr-film-desktop.(webm|mp4)` (1920×1080) and `atr-film-mobile.(webm|mp4)` (1080×1350), 14-second
+seamless loops with posters, shown in the "عطرك… توقيعك" band on the home page. Built from
+`cinematic-source/web.html` (`?w=1920&h=1080` or `?w=1080&h=1350`) with `render_web.js`, then encoded:
+H.264 `-crf 22 -maxrate 6M`, VP9 `-crf 34`, no audio, `+faststart`.

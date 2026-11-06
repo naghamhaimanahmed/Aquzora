@@ -180,6 +180,25 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .brands__row { display: flex; gap: 64px; width: max-content; animation: marquee 36s linear infinite; }
 .brands__track:hover .brands__row { animation-play-state: paused; }
 .brand { font: 500 22px/1 "Cinzel", Georgia, serif; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; color: var(--on-dark); opacity: .9; }
+
+/* brand film */
+.film { position: relative; isolation: isolate; overflow: hidden; background: var(--oud); color: var(--on-dark);
+  aspect-ratio: 16 / 9; max-height: 88vh; min-height: 460px; width: 100%; display: grid; align-items: end; }
+.film__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; background: var(--oud); }
+.film__shade { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to top, rgba(21,17,14,.94) 0%, rgba(21,17,14,.6) 24%, rgba(21,17,14,0) 48%); }
+.film__copy { display: grid; justify-items: center; gap: 12px; text-align: center; padding-bottom: clamp(30px, 5vw, 64px); }
+.film h2 { color: var(--ivory); font-size: clamp(34px, 4.4vw, 62px); letter-spacing: .02em; }
+[dir="rtl"] .film h2 { letter-spacing: 0; }
+.film__sub { color: var(--on-dark-2); max-width: 48ch; font-size: 17px; margin-bottom: 8px; }
+/* phones: the film on top, fading into the text below it */
+@media (max-width: 760px) {
+  .film { display: block; aspect-ratio: auto; max-height: none; min-height: 0; padding-bottom: 8px; }
+  .film__video { position: relative; inset: auto; display: block; height: auto; aspect-ratio: 4 / 5; z-index: 0; }
+  .film__shade { inset: 0 0 auto; height: calc(125vw + 3px); z-index: 1; background: linear-gradient(to top, var(--oud) 0%, rgba(21,17,14,.6) 14%, rgba(21,17,14,0) 32%); }
+  .film__copy { position: relative; z-index: 2; margin-top: -14vw; padding-bottom: 36px; }
+  .film__sub { font-size: 15px; }
+}
 .brand::after { content: "◆"; font-size: 9px; color: var(--gold); margin-inline-start: 64px; vertical-align: middle; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
