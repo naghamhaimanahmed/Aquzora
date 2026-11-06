@@ -10,7 +10,70 @@ const SHOP = {
   // A product with no price here shows "Price on request": it can still go in the cart and be
   // ordered on WhatsApp, but it cannot be paid by card until it has a price.
   // Example:  B03: 1850,
+  // Prices: each brand's regular price converted to EGP at the 6 Nov 2026 rate and rounded to 10.
+  // Full list with sources: prices/price-list.csv. Change any number here to set your own price.
   PRICES: {
+    // osma
+    OS01: 3440,   // Rouge, 100 ml: 239 SAR
+    OS02: 3440,   // Noir, 100 ml: 239 SAR (estimate)
+    OS03: 3720,   // Bonsoir, 150 ml: 259 SAR (estimate)
+    OS04: 3720,   // Positano, 150 ml: 259 SAR (estimate)
+    OS05: 3720,   // Bonjour, 150 ml: 259 SAR (estimate)
+    // dkhoon
+    DK01: 3800,   // Special Edition Collection, 6 x 50 ml: 50 JOD
+    DK02: 1370,   // Musk Toffee, 100 ml: 95 SAR (estimate)
+    DK03: 1370,   // Crown Black, 100 ml: 95 SAR
+    DK04: 1370,   // No One, 100 ml: 95 SAR
+    DK05: 1370,   // Gold Tears, 100 ml: 95 SAR
+    DK06: 1850,   // Kahilan, 100 ml: 129 SAR
+    DK07: 1370,   // Dkhoon Desert, 100 ml: 95 SAR (estimate)
+    // reef
+    RF01: 6020,   // Princess Reef, box: 419 SAR
+    RF02: 4670,   // Pesca, 200 ml: 325 SAR
+    RF03: 3990,   // Reef 11, 100 ml: 55 GBP
+    RF04: 3990,   // Reef 42, 100 ml: 55 GBP
+    RF05: 4670,   // Diriyah, 100 ml: 325 SAR (estimate)
+    RF06: 4670,   // Summer Yellow, 100 ml: 325 SAR
+    RF07: 4670,   // Bluest, 200 ml: 325 SAR (estimate)
+    RF08: 4100,   // Reef 10, 100 ml: 76 USD
+    RF09: 4670,   // Reef 19, 100 ml: 325 SAR
+    RF10: 4670,   // Reef 31, 100 ml: 325 SAR (estimate)
+    // laverne
+    LV01: 3950,   // Champion, 200 ml: 275 SAR
+    LV02: 3950,   // Tyrant, 200 ml: 275 SAR (estimate)
+    LV03: 3950,   // Last Chance, 200 ml: 275 SAR (estimate)
+    LV04: 3950,   // Into the Sea, 200 ml: 275 SAR
+    LV05: 3950,   // Fearless, 200 ml: 275 SAR
+    C07: 4040,    // Amber Royal, 200 ml: 275 AED
+    LV06: 3950,   // La'Dor Bakhur, 200 ml: 275 SAR
+    LV07: 4100,   // La'Dor Bakhur Valley, 200 ml: 54 JOD
+    LV08: 3950,   // La'Dor Santorini, 200 ml: 275 SAR
+    LV09: 3950,   // Atlantis Homme, 200 ml: 275 SAR
+    LV10: 4040,   // Bella, 200 ml: 275 AED
+    LV11: 4040,   // Lady Rose Bloom 200 ml, 200 ml: 275 AED
+    LV12: 2760,   // Lady Rose Bloom 100 ml, 100 ml: 37.99 GBP
+    LV13: 3950,   // Orchid Valley, 200 ml: 275 SAR (estimate)
+    LV14: 3950,   // Queen Rose, 200 ml: 275 SAR (estimate)
+    // assaf
+    AS01: 7640,   // Pegasus Collection, 3 x 100 ml: 520.87 AED
+    AS02: 3590,   // Aura Black, 150 ml: 250 SAR
+    AS03: 4240,   // Frankel Black Out, 200 ml: 295 SAR
+    AS04: 4300,   // Frankel Blue Elixir, 200 ml: 299 SAR
+    AS05: 4150,   // Frankel Battle, 100 ml: 289 SAR
+    AS06: 3950,   // Addict Blue, 125 ml: 275 SAR
+    AS07: 3950,   // Wild Pegasus, 150 ml: 275 SAR
+    AS08: 3580,   // No Comment: 249 SAR
+    AS09: 2860,   // Gris Erik, 100 ml: 199 SAR
+    AS10: 4240,   // Dangerous Arrogate, 200 ml: 295 SAR
+    AS11: 4240,   // Arrogate Comete, 200 ml: 295 SAR
+    AS12: 3520,   // Arrogate Pink Diva, 200 ml: 245 SAR
+    AS13: 2860,   // Boom Blue, 200 ml: 199 SAR
+    AS14: 2920,   // Baby Girl, 120 ml: 199 AED
+    AS15: 4040,   // Feeling, 200 ml: 275 AED
+    AS16: 3230,   // Rose, 200 ml: 225 SAR (estimate)
+    B08: 4300,    // Pink Queen: 299 SAR
+    WA0119: 4300, // Arrogate Girl: 299 SAR
+    WA0133: 2860, // Arrogate Hook Blue, 200 ml: 199 SAR
   },
 
   // Delivery fee in EGP. Free when the order total reaches freeFrom.
