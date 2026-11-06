@@ -670,14 +670,19 @@
     if (!v) return;
     const phone = matchMedia("(max-width: 760px)");
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches || (navigator.connection && navigator.connection.saveData);
-    const base = () => (phone.matches ? v.dataset.mobile : v.dataset.desktop);
-    let loaded = "", visible = false;
+    // phones get 1280×1600; wide or high-density screens get 2560×1440, others 1920×1080
+    const base = () => (phone.matches ? v.dataset.mobile : innerWidth * (devicePixelRatio || 1) > 2100 ? v.dataset.hd : v.dataset.desktop);
+    let loaded = "", visible = false, noHd = false;
     const load = () => {
-      const b = base(); if (loaded === b) return; loaded = b;
-      v.replaceChildren(...[["webm", "video/webm"], ["mp4", "video/mp4"]].map(([ext, type]) => Object.assign(document.createElement("source"), { src: `${b}.${ext}`, type })));
+      let b = base(); if (noHd && b === v.dataset.hd) b = v.dataset.desktop;
+      if (loaded === b) return; loaded = b;
+      const sources = [["webm", "video/webm"], ["mp4", "video/mp4"]].map(([ext, type]) => Object.assign(document.createElement("source"), { src: `${b}.${ext}`, type }));
+      // if the HD file cannot be played, fall back to the 1920×1080 one
+      if (b === v.dataset.hd) sources[1].addEventListener("error", () => { noHd = true; load(); if (visible) v.play().catch(() => {}); });
+      v.replaceChildren(...sources);
       v.load();
     };
-    const poster = () => { v.poster = `${base()}-poster.webp`; };
+    const poster = () => { v.poster = `${phone.matches ? v.dataset.mobile : v.dataset.desktop}-poster.webp`; };
     poster();
     phone.addEventListener("change", () => { poster(); if (loaded) { load(); if (visible) v.play().catch(() => {}); } });
     if (still || !("IntersectionObserver" in window)) return;
