@@ -24,6 +24,13 @@ const SHOP = {
 
   // Card payments through Paymob (see README → "Card payments with Paymob").
   // Turn on only after the Paymob keys are set on the server.
+  // The automatic WhatsApp assistant (see README → "WhatsApp order assistant").
+  // Turn on only after it is connected to the WhatsApp Business Platform.
+  WHATSAPP_BOT: {
+    enabled: false,
+    orderEndpoint: "/.netlify/functions/order-create"
+  },
+
   PAYMENT: {
     cardEnabled: false,
     checkoutEndpoint: "/.netlify/functions/paymob-checkout",
@@ -73,6 +80,7 @@ SHOP.quote = (lines, governorateId) => {
   let delivery = null;
   if (subtotal >= SHOP.DELIVERY.freeFrom && !unpriced) delivery = 0;
   else if (gov) delivery = gov.local ? SHOP.DELIVERY.aswan : SHOP.DELIVERY.other;
+  else if (governorateId === "other") delivery = SHOP.DELIVERY.other; // "another governorate" (not Aswan)
   // no total while any item has no price: it is agreed on WhatsApp
   return { subtotal, unpriced, delivery, total: unpriced || delivery === null ? null : subtotal + delivery };
 };

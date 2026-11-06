@@ -114,3 +114,6 @@ const GALLERY = [
   g("OS04", "osma", "perfume", "Positano", "بوزيتانو"),
   g("OS05", "osma", "perfume", "Bonjour", "بونجور")
 ];
+
+// The WhatsApp assistant (netlify/functions) reads the same catalogue on the server.
+if (typeof module !== "undefined") module.exports = { STORE, GALLERY, GALLERY_BRANDS };

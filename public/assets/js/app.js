@@ -243,7 +243,7 @@
       <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
       ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
       <button class="btn btn--wa btn--block cart-wa" data-cart-wa>${WA_ICON}${t("cart.waOrder")}</button>
-      <p class="cart-wa-note">${t("cart.waNote")}</p>
+      <p class="cart-wa-note">${t(SHOP.WHATSAPP_BOT.enabled ? "cart.waNoteBot" : "cart.waNote")}</p>
       <button class="btn btn--line btn--block" data-checkout>${t("cart.checkoutDetails")}</button>`;
   }
 
@@ -352,6 +352,34 @@
     try { w.opener = null; } catch { /* cross-origin already */ }
     return true;
   }
+  // With the WhatsApp assistant on: save the cart on the server, then open WhatsApp with the
+  // order number; the assistant replies there with the details and the confirm buttons.
+  async function orderViaAssistant() {
+    const tab = window.open("", "_blank"); // opened now, while the tap still counts, filled in below
+    const lines = cartLines();
+    let ref = null;
+    try {
+      const res = await fetch(SHOP.WHATSAPP_BOT.orderEndpoint, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lang: state.lang, lines: lines.map(({ code, qty }) => ({ code, qty })) })
+      });
+      const data = await res.json();
+      if (res.ok && /^ATR-\d{6}-\d{4}$/.test(data.ref || "")) ref = data.ref;
+    } catch { /* falls back below */ }
+    // If the server could not save it, send the full order as text instead, so nothing is lost
+    const text = ref
+      ? t("wa.botStart", { ref, items: lines.map(l => `${l.code} × ${l.qty}`).join("، ") })
+      : waOrderText(ref = makeRef());
+    if (tab) { try { tab.opener = null; tab.location = waHref(text); } catch { /* closed */ } }
+    clearCart(); closeLayer(true);
+    if (tab) orderSentScreen(ref, text);
+    else $("#modalContent").innerHTML = `<div class="done"><div class="done__icon">${WA_ICON}</div>
+      <h3 id="modalTitle">${t("co.readyTitle")}</h3><p>${t("co.readySub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
+      <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+      <button class="link" data-close>${t("co.continue")}</button></div>`;
+    openLayer($("#modal"));
+  }
+
   function orderSentScreen(ref, text) {
     $("#modalContent").innerHTML = `<div class="done">
       <div class="done__icon">${WA_ICON}</div>
@@ -523,6 +551,7 @@
     if ("checkout" in d) { checkout(); return; }
     if ("cartWa" in d) {
       if (!cartLines().length) return;
+      if (SHOP.WHATSAPP_BOT.enabled) { orderViaAssistant(); return; }
       const ref = makeRef(), text = waOrderText(ref);
       if (openWhatsApp(text)) { clearCart(); closeLayer(true); orderSentScreen(ref, text); openLayer($("#modal")); }
       else { // the browser blocked the new tab: show a link the customer taps

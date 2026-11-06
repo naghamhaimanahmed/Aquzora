@@ -26,6 +26,31 @@ Prices and delivery fees live in `public/assets/js/shop.js`, which is read by bo
 - `PRICES`: one line per product, by its photo reference, in Egyptian pounds, e.g. `AS01: 1850,`. A product without a price shows "Price on request"; it can still be ordered on WhatsApp but not paid by card.
 - `DELIVERY`: `freeFrom` (2000), `aswan` (EGP 50, local, 1–2 working days) and `other` (EGP 100, 2–4 days) fees. While a fee is `null`, it is agreed on WhatsApp and card payment is not offered below the free-delivery amount.
 
+## WhatsApp order assistant
+An automatic assistant on the store's WhatsApp number that handles orders from the cart:
+
+1. The customer taps **Order on WhatsApp** in the cart. The site saves the cart on the server (`order-create`) and opens WhatsApp with a short message holding the order number; the customer presses Send.
+2. The assistant (`whatsapp-webhook`) replies with the **order details** and the buttons **✅ Confirm order · ✏️ Edit order · ❌ Cancel** (typing "تأكيد" / "confirm" or "إلغاء" / "cancel" also works).
+3. After Confirm it asks, one at a time: **full name** → governorate with the buttons **📍 In Aswan · 🚚 Other governorate** (sets the EGP 50 / 100 delivery fee) → **detailed address** (area, street, building, floor, flat, landmark) → **mobile** with **📱 This WhatsApp number · ☎️ Another number** (Egyptian numbers are checked, Arabic digits accepted).
+4. It shows a **summary with the total** and **✅ Confirm · ✏️ Edit details**; after the final confirm the customer gets the delivery time and you get the whole order as an alert (Telegram, see the Paymob section, and Netlify's function log). The order is stored with the status `confirmed`.
+
+People who just chat get a short welcome at most once a day, and every message is forwarded to you. It replies in Arabic or English, matching the language the customer used on the site. Orders and conversations are kept in Netlify Blobs (built into Netlify; the `@netlify/blobs` package in `package.json` is installed automatically).
+
+Until it is switched on, the cart button sends the full order as a ready-written WhatsApp message instead (and it falls back to that if the server cannot be reached).
+
+**Setting it up** (the WhatsApp Business Platform from Meta):
+1. **Meta Business account** at business.facebook.com, and verify the business.
+2. **App**: developers.facebook.com → Create app → type *Business* → add the **WhatsApp** product.
+3. **Phone number**: choose one of these.
+   - Keep using 01289555608 in the **WhatsApp Business app** and connect it to the platform ("use your existing WhatsApp Business app number"). Chats then appear both in the app and to the assistant. If the number is on ordinary WhatsApp, move it to the WhatsApp Business app first.
+   - If Meta does not offer that for your number, connecting it moves it off the app. Then use a **new number** for the assistant and put it in `STORE.whatsapp` in `public/assets/js/data.js`.
+4. **Permanent token**: Business settings → System users → add one → assign the app and the WhatsApp account → Generate token with `whatsapp_business_messaging` and `whatsapp_business_management`.
+5. **Netlify environment variables**: `WHATSAPP_TOKEN` (that token), `WHATSAPP_PHONE_NUMBER_ID` (WhatsApp → API setup), `WHATSAPP_APP_SECRET` (App settings → Basic), `WHATSAPP_VERIFY_TOKEN` (any long random text you choose), `SITE_URL`, and `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` for the order alerts. Redeploy.
+6. **Webhook**: WhatsApp → Configuration → Callback URL `https://YOUR-SITE/.netlify/functions/whatsapp-webhook`, Verify token = your `WHATSAPP_VERIFY_TOKEN`, then subscribe to **messages**.
+7. **Turn it on**: `WHATSAPP_BOT.enabled: true` in `public/assets/js/shop.js`, push, and place a test order from your phone.
+
+Cost: the assistant only replies to customers who wrote first, which WhatsApp does not charge for. Security: every delivery from Meta is checked with the app secret (HMAC-SHA256), repeated deliveries are ignored, and `order-create` accepts only your own site, valid product codes and at most 10 orders per visitor in 10 minutes.
+
 ## Card payments with Paymob
 Card payment needs a Paymob merchant account and a small server function (already written in `netlify/functions/`), because the Paymob secret key must never be inside the website. Until it is set up, the card option shows "Card payment is coming soon" and WhatsApp ordering works on its own.
 

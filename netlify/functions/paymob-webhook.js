@@ -11,6 +11,7 @@
    always listed in the Paymob dashboard.
 */
 const crypto = require("crypto");
+const { notifyOwner } = require("../lib/notify.js");
 
 // Paymob signs these transaction fields, concatenated in exactly this order.
 const FIELDS = ["amount_cents", "created_at", "currency", "error_occured", "has_parent_transaction", "id",
@@ -48,17 +49,6 @@ function orderMessage(obj) {
   ].join("\n");
 }
 
-async function notifyOwner(text) {
-  const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = process.env;
-  console.log(text); // always kept in Netlify's function log
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
-    });
-  } catch (e) { console.error("Telegram alert failed", e.message); }
-}
 
 exports.handler = async event => {
   if (event.httpMethod !== "POST") return reply(405, { error: "method" });

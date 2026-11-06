@@ -60,7 +60,7 @@ const I18N = {
     "pay.failTitle": "لم يكتمل الدفع", "pay.failSub": "سلتك ما زالت محفوظة. جرّب مرة أخرى، أو اطلب عبر واتساب.", "pay.ask": "راسلنا على واتساب",
     "wa.order": "مرحباً عطر، أريد طلب:", "wa.items": "عدد القطع", "wa.deliveryRule": "{a} داخل أسوان، {b} لباقي المحافظات، ومجاني فوق {f}",
     "wa.fillIn": "بياناتي للتوصيل:", "wa.sentTitle": "تم فتح طلبك في واتساب", "wa.sentSub": "اضغط «إرسال» في واتساب ليصلنا الطلب {ref}، وسنرد عليك لتأكيده.", "wa.openAgain": "افتح واتساب مرة أخرى",
-    "cart.waOrder": "اطلب عبر واتساب", "cart.waNote": "يفتح واتساب برسالة فيها طلبك كاملاً، اضغط «إرسال» فقط.", "cart.checkoutDetails": "إتمام الطلب بالعنوان أو الدفع بالبطاقة", "wa.orderRef": "رقم الطلب", "wa.code": "كود الخصم", "wa.name": "الاسم", "wa.phone": "الموبايل", "wa.gov": "المحافظة", "wa.address": "العنوان",
+    "cart.waOrder": "اطلب عبر واتساب", "cart.waNoteBot": "اضغط «إرسال» في واتساب، وسيصلك تفصيل طلبك وزر لتأكيده.", "wa.botStart": "مرحباً عطر 🌹 أريد إتمام طلبي رقم {ref}\n({items})", "cart.waNote": "يفتح واتساب برسالة فيها طلبك كاملاً، اضغط «إرسال» فقط.", "cart.checkoutDetails": "إتمام الطلب بالعنوان أو الدفع بالبطاقة", "wa.orderRef": "رقم الطلب", "wa.code": "كود الخصم", "wa.name": "الاسم", "wa.phone": "الموبايل", "wa.gov": "المحافظة", "wa.address": "العنوان",
     "bar.cart": "السلة", "wa.ask": "مرحباً عطر، أنا مهتم بهذا المنتج:", "wa.contact": "مرحباً عطر، لدي استفسار.",
     "search.label": "ابحث في المجموعة", "search.ph": "ابحث عن عطر، ماركة، طقم هدايا…",
     "search.none": "لا توجد نتائج. جرّب «عساف» أو «لافيرن» أو «روز».", "search.hint": "الأكثر بحثاً: لافيرن، فرانكل، ريف، روز، طقم هدايا"
@@ -124,7 +124,7 @@ const I18N = {
     "pay.failTitle": "The payment didn't go through", "pay.failSub": "Your cart is still saved. Try again, or order on WhatsApp.", "pay.ask": "Message us on WhatsApp",
     "wa.order": "Hello Atr, I would like to order:", "wa.items": "Items", "wa.deliveryRule": "{a} in Aswan, {b} to other governorates, free over {f}",
     "wa.fillIn": "My delivery details:", "wa.sentTitle": "Your order is open in WhatsApp", "wa.sentSub": "Press Send in WhatsApp so order {ref} reaches us; we will reply to confirm it.", "wa.openAgain": "Open WhatsApp again",
-    "cart.waOrder": "Order on WhatsApp", "cart.waNote": "Opens WhatsApp with your whole order written in; just press Send.", "cart.checkoutDetails": "Checkout with address or pay by card", "wa.orderRef": "Order", "wa.code": "Discount code", "wa.name": "Name", "wa.phone": "Mobile", "wa.gov": "Governorate", "wa.address": "Address",
+    "cart.waOrder": "Order on WhatsApp", "cart.waNoteBot": "Press Send in WhatsApp and you will get your order details with a button to confirm.", "wa.botStart": "Hello Atr 🌹 I would like to complete my order {ref}\n({items})", "cart.waNote": "Opens WhatsApp with your whole order written in; just press Send.", "cart.checkoutDetails": "Checkout with address or pay by card", "wa.orderRef": "Order", "wa.code": "Discount code", "wa.name": "Name", "wa.phone": "Mobile", "wa.gov": "Governorate", "wa.address": "Address",
     "bar.cart": "Cart", "wa.ask": "Hello Atr, I am interested in this item:", "wa.contact": "Hello Atr, I have a question.",
     "search.label": "Search the collection", "search.ph": "Search perfumes, brands, gift sets…",
     "search.none": "No results. Try “Assaf”, “Laverne” or “rose”.", "search.hint": "Popular: Laverne, Frankel, Reef, rose, gift set"
