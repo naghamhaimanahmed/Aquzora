@@ -12,10 +12,23 @@
 
   const GAL_PAGE = 12;
   const state = {
-    lang: store.get("lang", "ar"), // Arabic first
+    lang: store.get("lang", "ar") === "en" ? "en" : "ar", // Arabic first
     gal: { f: "all", shown: GAL_PAGE, at: -1 },
-    cart: store.get("cart", {}) // { photo reference: quantity }
+    cart: cleanCart(store.get("cart", {})) // { product code: quantity }
   };
+  // Keep only known product codes with whole quantities from 1 to 20 (storage can be edited by anyone).
+  function cleanCart(raw) {
+    const out = {};
+    if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+      Object.entries(raw).forEach(([code, qty]) => {
+        const n = Math.floor(Number(qty));
+        if (/^[A-Z0-9]{2,12}$/.test(code) && GALLERY.some(it => it.code === code) && n >= 1) out[code] = Math.min(20, n);
+      });
+    }
+    return out;
+  }
+  // Text typed by a customer: no control characters, limited length.
+  const cleanText = (v, max) => String(v || "").replace(/[\u0000-\u001f\u007f\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
   const BAG_ICON = `<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>`;
   const WA_ICON = `<svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>`;
 
@@ -229,7 +242,9 @@
       <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}${q.unpriced && q.subtotal ? " +" : ""}</span></div>
       <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
       ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
-      <button class="btn btn--gold btn--block" data-checkout>${t("cart.checkout")}</button>`;
+      <button class="btn btn--wa btn--block cart-wa" data-cart-wa>${WA_ICON}${t("cart.waOrder")}</button>
+      <p class="cart-wa-note">${t("cart.waNote")}</p>
+      <button class="btn btn--line btn--block" data-checkout>${t("cart.checkoutDetails")}</button>`;
   }
 
   /* ---------- checkout ---------- */
@@ -252,10 +267,10 @@
       <h3 id="modalTitle">${t("co.title")}</h3>
       <div class="co__grid">
         <div class="co__fields">
-          ${field("name", t("co.name"), `<input id="coName" name="name" autocomplete="name" required>`)}
-          ${field("phone", t("co.phone"), `<input id="coPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01X XXXX XXXX" dir="ltr" required>`)}
+          ${field("name", t("co.name"), `<input id="coName" name="name" autocomplete="name" maxlength="80" required>`)}
+          ${field("phone", t("co.phone"), `<input id="coPhone" name="phone" type="tel" maxlength="20" inputmode="tel" autocomplete="tel" placeholder="01X XXXX XXXX" dir="ltr" required>`)}
           ${field("gov", t("co.gov"), `<select id="coGov" name="gov" required><option value="">${t("co.govPick")}</option>${SHOP.GOVERNORATES.map(g => `<option value="${g.id}">${esc(L(g))}</option>`).join("")}</select>`)}
-          ${field("address", t("co.address"), `<textarea id="coAddress" name="address" rows="2" autocomplete="street-address" required></textarea>`)}
+          ${field("address", t("co.address"), `<textarea id="coAddress" name="address" rows="2" maxlength="200" autocomplete="street-address" required></textarea>`)}
           <fieldset class="field">
             <legend>${t("co.pay")}</legend>
             <div class="pay-opts">
@@ -263,7 +278,7 @@
               <label class="pay-opt"><input type="radio" name="pay" value="whatsapp"><span><strong>${t("co.wa")}</strong><small>${t("co.waNote")}</small></span>${WA_ICON}</label>
             </div>
           </fieldset>
-          <div id="coEmailWrap" hidden>${field("email", t("co.email"), `<input id="coEmail" name="email" type="email" autocomplete="email" dir="ltr">`)}</div>
+          <div id="coEmailWrap" hidden>${field("email", t("co.email"), `<input id="coEmail" name="email" type="email" maxlength="80" autocomplete="email" dir="ltr">`)}</div>
           <div id="coCodeWrap">${field("code", t("co.code"), `<input id="coCode" name="code" autocomplete="off" dir="ltr" maxlength="20">`)}</div>
         </div>
         <aside class="co__summary">
@@ -307,17 +322,43 @@
       : t("co.submitWa");
   }
 
-  function waOrderText(ref, c) {
-    const lines = cartLines(), q = SHOP.quote(lines, c.gov);
-    const gov = SHOP.GOVERNORATES.find(g => g.id === c.gov);
-    const rows = lines.map(({ code, qty, it }) => { const p = SHOP.priceOf(code); return `• ${galTitle(it)} (${code}) × ${qty}${p === null ? "" : ` = ${money(p * qty)}`}`; });
-    const out = [t("wa.order"), ...rows, ""];
+  // The message that reaches the store's WhatsApp. c (customer details) is optional:
+  // from the cart's quick button the customer fills in name and address in the chat.
+  function waOrderText(ref, c = null) {
+    const lines = cartLines(), q = SHOP.quote(lines, c ? c.gov : null);
+    const gov = c && SHOP.GOVERNORATES.find(g => g.id === c.gov);
+    const brand = it => { const b = galBrand(it); return b && it.en ? ` – ${b}` : ""; };
+    const rows = lines.map(({ code, qty, it }) => { const p = SHOP.priceOf(code); return `• ${galTitle(it)}${brand(it)} (${code}) × ${qty}${p === null ? ` – ${t("price.onRequest")}` : ` = ${money(p * qty)}`}`; });
+    const count = lines.reduce((a, l) => a + l.qty, 0);
+    const out = [t("wa.order"), "", ...rows, "", `${t("wa.items")}: ${count}`];
     if (q.subtotal) out.push(`${t("cart.subtotal")}: ${money(q.subtotal)}${q.unpriced ? " + " + t("price.onRequest") : ""}`);
-    out.push(`${t("cart.delivery")}: ${q.delivery === null ? t("cart.onWa") : q.delivery === 0 ? t("cart.free") : money(q.delivery)}`);
+    const deliveryText = q.delivery === 0 ? t("cart.free")
+      : q.delivery !== null ? money(q.delivery)
+      : gov ? t("cart.onWa")
+      : t("wa.deliveryRule", { a: money(SHOP.DELIVERY.aswan), b: money(SHOP.DELIVERY.other), f: money(SHOP.DELIVERY.freeFrom) });
+    out.push(`${t("cart.delivery")}: ${deliveryText}`);
     if (q.total !== null) out.push(`${t("cart.total")}: ${money(q.total)}`);
-    if (c.code) out.push(`${t("wa.code")}: ${c.code}`);
-    out.push("", `${t("wa.orderRef")}: ${ref}`, `${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
+    if (c && c.code) out.push(`${t("wa.code")}: ${c.code}`);
+    out.push("", `${t("wa.orderRef")}: ${ref}`);
+    if (c) out.push(`${t("wa.name")}: ${c.name}`, `${t("wa.phone")}: ${c.phone}`, `${t("wa.gov")}: ${gov ? L(gov) : ""}`, `${t("wa.address")}: ${c.address}`);
+    else out.push("", t("wa.fillIn"), `${t("wa.name")}: `, `${t("wa.gov")}: `, `${t("wa.address")}: `);
     return out.join("\n");
+  }
+
+  // Open the order in WhatsApp in a new tab. Returns false if the browser blocked it.
+  function openWhatsApp(text) {
+    const w = window.open(waHref(text), "_blank");
+    if (!w) return false;
+    try { w.opener = null; } catch { /* cross-origin already */ }
+    return true;
+  }
+  function orderSentScreen(ref, text) {
+    $("#modalContent").innerHTML = `<div class="done">
+      <div class="done__icon">${WA_ICON}</div>
+      <h3 id="modalTitle">${t("wa.sentTitle")}</h3>
+      <p>${t("wa.sentSub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
+      <a class="btn btn--wa" href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("wa.openAgain")}</a>
+      <button class="link" data-close>${t("co.continue")}</button></div>`;
   }
 
   async function submitCheckout(form) {
@@ -333,15 +374,19 @@
       if (msg) { ok = false; inp.insertAdjacentHTML("afterend", `<small class="field__err">${msg}</small>`); }
     });
     if (!ok) { $("[aria-invalid=true]", form).focus(); return; }
-    const c = { name: form.elements.namedItem("name").value.trim(), phone: form.elements.namedItem("phone").value.trim(), gov: form.elements.namedItem("gov").value, address: form.elements.namedItem("address").value.trim(), email: form.elements.namedItem("email").value.trim(), code: form.elements.namedItem("code").value.trim().toUpperCase() };
+    const v = n => form.elements.namedItem(n).value;
+    const c = { name: cleanText(v("name"), 80), phone: cleanText(v("phone"), 20), gov: SHOP.GOVERNORATES.some(g => g.id === v("gov")) ? v("gov") : "",
+      address: cleanText(v("address"), 200), email: cleanText(v("email"), 80), code: cleanText(v("code"), 20).toUpperCase().replace(/[^A-Z0-9-]/g, "") };
     const ref = makeRef();
 
     if (form.elements.namedItem("pay").value === "whatsapp") {
+      const text = waOrderText(ref, c);
+      if (openWhatsApp(text)) { clearCart(); orderSentScreen(ref, text); return; }
       $("#modalContent").innerHTML = `<div class="done">
         <div class="done__icon">${WA_ICON}</div>
         <h3 id="modalTitle">${t("co.readyTitle")}</h3>
         <p>${t("co.readySub", { ref: `<bdi>${ref}</bdi>` })}</p>
-        <a class="btn btn--wa" data-wa-order href="${esc(waHref(waOrderText(ref, c)))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+        <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
         <button class="link" data-close>${t("co.continue")}</button></div>`;
       return;
     }
@@ -476,6 +521,19 @@
     if (d.qty) { setQty(d.qty, (state.cart[d.qty] || 0) + +d.d); return; }
     if (d.remove) { setQty(d.remove, 0); return; }
     if ("checkout" in d) { checkout(); return; }
+    if ("cartWa" in d) {
+      if (!cartLines().length) return;
+      const ref = makeRef(), text = waOrderText(ref);
+      if (openWhatsApp(text)) { clearCart(); closeLayer(true); orderSentScreen(ref, text); openLayer($("#modal")); }
+      else { // the browser blocked the new tab: show a link the customer taps
+        $("#modalContent").innerHTML = `<div class="done"><div class="done__icon">${WA_ICON}</div>
+          <h3 id="modalTitle">${t("co.readyTitle")}</h3><p>${t("co.readySub", { ref: `<bdi>${esc(ref)}</bdi>` })}</p>
+          <a class="btn btn--wa" data-wa-order href="${esc(waHref(text))}" target="_blank" rel="noopener">${WA_ICON}${t("co.send")}</a>
+          <button class="link" data-close>${t("co.continue")}</button></div>`;
+        openLayer($("#modal"));
+      }
+      return;
+    }
     if ("waOrder" in d) { clearCart(); setTimeout(() => closeLayer(), 300); return; } // the link itself opens WhatsApp
     if ("waContact" in d || "galAsk" in d) return; // plain links to WhatsApp
   });
@@ -539,6 +597,7 @@
 
   /* ---------- init ---------- */
   $("#year").textContent = new Date().getFullYear();
+  saveCart(); // store the cleaned cart, dropping anything invalid that was saved before
   applyLang();
   handlePaymentReturn();
 })();

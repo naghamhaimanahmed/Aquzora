@@ -16,6 +16,7 @@ A bilingual (العربية / English) perfume store website, based in Aswan and
 - Mobile first: bottom navigation bar, bottom-sheet photo viewer, large tap targets, keyboard and screen-reader friendly, respects reduced motion.
 
 - **Cart**: add products from the photo viewer, change quantities, see the free-delivery progress (free over EGP 2,000). The cart is saved in the customer's browser.
+- **One-tap WhatsApp order from the cart**: "Order on WhatsApp" opens a chat with the store's number with the whole order already written (products with brand and code, quantities, prices, delivery rule, an order number such as `ATR-261106-3784`, and blank lines for the customer's name, governorate and address). The customer presses Send in WhatsApp (WhatsApp never lets a website send for them) and the order arrives in the store's WhatsApp as a chat with that customer.
 - **Checkout** with name, Egyptian mobile number, governorate (all 27) and address, and two ways to pay:
   - **Card (Visa / Mastercard) through Paymob**: the customer pays on Paymob's secure page; card details never touch this site.
   - **Order on WhatsApp**: the full order (items, references, prices, delivery, customer details and an order number such as `ATR-261104-2180`) is sent to the store's WhatsApp to agree payment and delivery.
@@ -75,6 +76,8 @@ The older Aquzora logo sets are kept in `brand-archive/aquzora-logos/`; they are
 - **No outside requests**: fonts are self-hosted in `public/assets/fonts/` (subset to the letters used; the calligraphy font holds only عطر), so visitors' browsers contact only your site, plus WhatsApp or Paymob when the customer chooses them.
 - **Images**: WebP with JPG fallback, lazy loading, 480 px thumbnails for the grid and tiles, and the hero photo marked as the first thing to load.
 - **Caching**: fonts are cached for a year, photos and logos for a week.
+- **Customer input**: the saved cart and language are checked when the page loads (unknown products, negative or huge quantities and other edited values are dropped), typed details are length-limited and cleaned of hidden control characters before they go into a WhatsApp message or to the payment server, and every link that opens a new tab uses `rel="noopener"`.
+- **More headers**: Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, X-Permitted-Cross-Domain-Policies and Origin-Agent-Cluster; `/.well-known/security.txt` tells people how to report a security problem.
 - **Accounts**: turn on two-step login for GitHub, Netlify and Paymob, and keep Paymob keys only in Netlify's environment variables.
 
 ## Publish on Netlify

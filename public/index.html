@@ -177,7 +177,7 @@
           <input type="hidden" name="form-name" value="newsletter">
           <p class="sr" aria-hidden="true"><label>Leave empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
           <label class="sr" for="newsEmail" data-i18n="news.label">البريد الإلكتروني</label>
-          <input id="newsEmail" name="email" type="email" autocomplete="email" required data-i18n-ph="news.ph" placeholder="بريدك الإلكتروني">
+          <input id="newsEmail" name="email" type="email" autocomplete="email" maxlength="120" required data-i18n-ph="news.ph" placeholder="بريدك الإلكتروني">
           <button class="btn btn--gold" type="submit" data-i18n="news.btn">اشترك</button>
           <p class="form-msg" id="newsMsg" role="status"></p>
         </form>
@@ -261,7 +261,7 @@
     <div class="container">
       <label class="search search--big">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="searchBig" type="search" autocomplete="off" data-i18n-ph="search.ph" placeholder="ابحث عن عطر، ماركة، طقم هدايا…" aria-label="ابحث في المجموعة">
+        <input id="searchBig" type="search" autocomplete="off" maxlength="60" data-i18n-ph="search.ph" placeholder="ابحث عن عطر، ماركة، طقم هدايا…" aria-label="ابحث في المجموعة">
         <button class="icon-btn" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </label>
       <div class="search-pop__results" id="searchResults"></div>
