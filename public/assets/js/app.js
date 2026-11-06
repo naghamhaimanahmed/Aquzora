@@ -240,7 +240,7 @@
     }).join("");
     const delivery = !q.unpriced && q.subtotal >= free ? t("cart.free") : t("cart.atCheckout");
     $("#cartFoot").innerHTML = `
-      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}${q.unpriced && q.subtotal ? " +" : ""}</span></div>
+      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : t("cart.priceOnWa")}${q.unpriced && q.subtotal ? " +" : ""}</span></div>
       <div class="sum"><span>${t("cart.delivery")}</span><span>${delivery}</span></div>
       ${q.unpriced ? `<p class="cart-note">${t("cart.unpricedNote")}</p>` : ""}
       <button class="btn btn--gold btn--block" data-checkout>${t("cart.checkout")}</button>
@@ -325,7 +325,7 @@
       const p = SHOP.priceOf(code);
       return `<li><span>${esc(galTitle(it))} × ${qty.toLocaleString(state.lang === "ar" ? "ar-EG" : "en")}</span><span>${p === null ? t("price.onRequest") : money(p * qty)}</span></li>`;
     }).join("")}</ul>
-      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : "—"}</span></div>
+      <div class="sum"><span>${t("cart.subtotal")}</span><span>${q.subtotal ? money(q.subtotal) : t("cart.priceOnWa")}</span></div>
       <div class="sum"><span>${t("cart.delivery")}</span><span>${deliveryText}</span></div>
       <div class="sum sum--total"><span>${t("cart.total")}</span><span>${totalText}</span></div>`;
     $("#coSubmit").textContent = method === "card"
