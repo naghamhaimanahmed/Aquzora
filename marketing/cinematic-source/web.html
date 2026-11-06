@@ -26,7 +26,7 @@ html, body { overflow: hidden; background: #000; }
 .floor { position: absolute; left: -10%; right: -10%; height: 60%; background: linear-gradient(to bottom, rgba(255,240,215,.06), rgba(0,0,0,0) 40%); }
 .smoke { position: absolute; background: url(tex/smoke.png) center / 100% 100% no-repeat; mix-blend-mode: screen; }
 #vignette { position: absolute; inset: 0; }
-#grain { position: absolute; inset: -60px; background: url(tex/grain.png) 0 0 / 512px 512px; mix-blend-mode: overlay; opacity: .045; }
+#grain { display: none; } /* no grain on the website film: it reads as noise and costs file size */
 canvas { position: absolute; inset: 0; }
 </style>
 </head>
@@ -84,6 +84,10 @@ const eOut = x => 1 - Math.pow(1 - x, 3);
 const set = (el, o) => { for (const k in o) el.style[k] = o[k]; };
 const T = 14, TAU = Math.PI * 2;                  // loop length: every motion below repeats exactly every T seconds
 const IMG = n => `b/${n}.png?v=3`, SIZE = {};
+// pre-filtered sizes of each bottle (made with Lanczos), so the browser never shrinks fine details such as ribbed glass
+// by much: it picks the smallest one that is still at least as tall as the bottle will be drawn, camera push included
+const MIPS = [500, 650, 800, 1000, 1250, 1550, 1900];
+const pick = (n, h) => { const need = h * (window.devicePixelRatio || 1) * 1.12, m = MIPS.find(v => v >= need && v < SIZE[n][1]); return m ? `b/mip/${n}_${m}.png?v=5` : IMG(n); };
 
 // layout: floor line and hero height, as fractions of the frame
 const FLOOR = H * (WIDE ? .64 : .58), HERO = H * (WIDE ? .47 : .42);
@@ -91,8 +95,9 @@ function bottle(parent, name, cx, baseY, h, opt = {}) {
   const [nw, nh] = SIZE[name], w = h * nw / nh;
   const el = document.createElement("div"); el.className = "bt";
   set(el, { left: `${cx - w / 2}px`, top: `${baseY - h}px`, width: `${w}px`, height: `${h}px` });
-  el.innerHTML = `${opt.noShadow ? "" : '<div class="shadow"></div>'}<img class="refl" src="${IMG(name)}">
-    <div class="body"><img class="img" src="${IMG(name)}"><img class="hl sheen" src="${IMG(name)}"><img class="hl sweep" src="${IMG(name)}"></div>`;
+  const src = pick(name, h);
+  el.innerHTML = `${opt.noShadow ? "" : '<div class="shadow"></div>'}<img class="refl" src="${src}">
+    <div class="body"><img class="img" src="${src}"><img class="hl sheen" src="${src}"><img class="hl sweep" src="${src}"></div>`;
   if (opt.glow) el.querySelector(".body").style.filter = `drop-shadow(0 0 ${Math.round(H * .03)}px ${opt.glow})`;
   if (opt.css) set(el, opt.css);
   parent.appendChild(el);
@@ -154,7 +159,7 @@ function frame(t) {
   const kA = p(tA, -0.8, 3.9);
   const oA = t > 7 ? eSine(p(t, 13.55, 14)) : 1 - eSine(p(t, 3.25, 3.75));
   set($("#sA"), { opacity: oA });
-  set($("#wA"), { transform: `translateX(${lerp(W * .035, -W * .035, kA)}px) scale(${1.04 + .03 * kA})`, filter: `blur(${8 * eSine(p(t, 3.25, 3.75)) * (t < 7) + 8 * (1 - eSine(p(t, 13.55, 14))) * (t > 7)}px)` });
+  set($("#wA"), { transform: `translateX(${lerp(W * .02, -W * .02, kA)}px) scale(${1.04 + .02 * kA})`, filter: `blur(${8 * eSine(p(t, 3.25, 3.75)) * (t < 7) + 8 * (1 - eSine(p(t, 13.55, 14))) * (t > 7)}px)` });
   B.g.forEach((b, j) => sweepAt(b, eSine(p(tA, .2 + j * .15, 1.6 + j * .15))));
   drift($("#smA"), t, W * .03, H * .03);
 

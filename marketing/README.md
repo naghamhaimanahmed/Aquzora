@@ -34,7 +34,9 @@ Playwright, and `music.py` composes the score (numpy/scipy).
 
 # Website film (silent loop)
 
-`public/assets/video/atr-film-desktop.(webm|mp4)` (1920×1080) and `atr-film-mobile.(webm|mp4)` (1080×1350), 14-second
-seamless loops with posters, shown in the "عطرك… توقيعك" band on the home page. Built from
-`cinematic-source/web.html` (`?w=1920&h=1080` or `?w=1080&h=1350`) with `render_web.js`, then encoded:
-H.264 `-crf 22 -maxrate 6M`, VP9 `-crf 34`, no audio, `+faststart`.
+`public/assets/video/atr-film-desktop-hd.(webm|mp4)` (2560×1440), `atr-film-desktop.(webm|mp4)` (1920×1080) and
+`atr-film-mobile.(webm|mp4)` (1280×1600), 14-second seamless loops with posters, shown in the "عطرك… توقيعك" band on the
+home page. Built from `cinematic-source/web.html` with `render_web.js`, supersampled: `DSF=1.5 node render_web.js out 2560 1440`
+(and `1280 1600` for phones), then scaled down with Lanczos while encoding: H.264 `-crf 18`, VP9 `-crf 27/28`, no audio,
+`+faststart`. The bottles are drawn from pre-filtered sizes in `b/mip/` (the ribbed Laverne bottles slightly softened at small
+sizes) so fine ribs do not shimmer, and there is no grain.
