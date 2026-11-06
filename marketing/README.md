@@ -16,3 +16,13 @@ ffmpeg -framerate 30 -i /tmp/frames/f%05d.jpg -i /tmp/music.wav -c:v libx264 -cr
 ```
 
 Products, texts and timings are at the top of the `<script>` in `source/scene.html`.
+
+# Cinematic brand film (22.5 s)
+
+- `atr-cinematic.mp4`: 1080×1920, 30 fps, original score at 80 BPM (every cut lands on a beat)
+- `atr-cinematic-silent.mp4`: the same picture without sound, for adding a licensed track in Instagram or TikTok (pick one around 80 or 160 BPM)
+- `atr-cinematic-cover.jpg`: end-card cover
+
+Source in `cinematic-source/`: `cutout.py` cuts the bottles out of the site photos (rembg), `tex.py` makes the smoke and grain
+textures, `scene.html` is the animated scene (served over http so masks load), `render.js` renders it frame by frame with
+Playwright, and `music.py` composes the score (numpy/scipy).
