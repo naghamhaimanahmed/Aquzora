@@ -284,7 +284,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .form-msg.is-bad { color: #F2C3B8; }
 
 /* footer */
-.footer { background: var(--oud); color: var(--on-dark-2); }
+.footer { background: var(--oud); color: var(--on-dark-2); padding-bottom: 72px; } /* room for the floating WhatsApp button */
 .footer__grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 40px; padding-top: 64px; }
 .footer h4 { font: 500 12px/1 var(--f-body); color: var(--gold); margin-bottom: 18px; text-transform: uppercase; letter-spacing: .24em; }
 [dir="rtl"] .footer h4 { letter-spacing: 0; font: 700 18px/1 var(--f-ar); }
@@ -297,6 +297,10 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .footer .btn--wa:hover { border-color: var(--gold); color: var(--gold); }
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 24px; margin-top: 52px; border-top: 1px solid var(--line-dark); font-size: 12px; letter-spacing: .08em; }
 .pay { letter-spacing: .14em; opacity: .75; }
+/* developer credit */
+.credit { flex-basis: 100%; text-align: center; font-size: 12px; letter-spacing: .06em; color: var(--on-dark-2); opacity: .85; padding-top: 14px; border-top: 1px solid var(--line-dark); }
+[dir="rtl"] .credit { letter-spacing: 0; font-size: 14px; }
+.legal-foot .credit { border: 0; padding-top: 6px; font-size: 12px; }
 
 /* bottom bar (mobile) */
 .bottom-bar { display: none; }
@@ -523,7 +527,7 @@ img.is-fallback { object-fit: contain !important; }
   .reviews { grid-template-columns: 1fr; }
   .newsletter__inner { grid-template-columns: 1fr; gap: 24px; }
   .footer__grid { grid-template-columns: 1fr; gap: 30px; padding-top: 48px; }
-  .footer { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  .footer { padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); } /* bottom bar + floating WhatsApp button */
   .modal { padding: 0; align-items: end; }
   .modal__box { border-radius: 14px 14px 0 0; max-height: 92vh; }
   .qv { grid-template-columns: 1fr; }
