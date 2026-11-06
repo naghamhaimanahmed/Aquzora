@@ -1,0 +1,185 @@
+/* Product details shown in the photo viewer: size, who it is for, scent family,
+   fragrance notes and a short description, in Arabic and English.
+   Taken from each brand's own product page (or a large reseller's page when the
+   brand no longer lists it). Edit freely: every field is optional.
+
+   code: {
+     size: "100",              // ml, or text such as "6 × 50"
+     g: "m" | "w" | "u",       // for him / for her / unisex
+     fam: ["amber", "floral"], // scent family, keys of FAMILIES below
+     top: [], heart: [], base: [],   // notes, keys of NOTES below
+     key: [],                  // main notes, when the brand does not split them into top/heart/base
+     inc: [["en", "ar"], …],   // what is inside a gift set
+     by: "Perfumer name",
+     ar: "…", en: "…"          // short description
+   } */
+
+const NOTES = {
+  "amber": ["Amber", "العنبر"], "dry amber": ["Dry amber", "العنبر الجاف"], "ambroxan": ["Ambroxan", "الأمبروكسان"],
+  "amber wood": ["Amber wood", "خشب العنبر"], "apple": ["Apple", "التفاح"], "balsam": ["Balsam", "البلسم"],
+  "basil": ["Basil", "الريحان"], "bergamot": ["Bergamot", "البرغموت"], "italian bergamot": ["Italian bergamot", "البرغموت الإيطالي"],
+  "black tea": ["Black tea", "الشاي الأسود"], "blackberry": ["Blackberry", "التوت الأسود"], "blackcurrant": ["Blackcurrant", "الكشمش الأسود"],
+  "bulgarian rose": ["Bulgarian rose", "الورد البلغاري"], "caramel": ["Caramel", "الكراميل"], "cardamom": ["Cardamom", "الهيل"],
+  "cedarwood": ["Cedarwood", "خشب الأرز"], "centifolia rose": ["Centifolia rose", "الورد السنتيفوليا"], "cinnamon": ["Cinnamon", "القرفة"],
+  "citrus": ["Citrus", "الحمضيات"], "clove": ["Clove", "القرنفل"], "cocoa": ["Cocoa", "الكاكاو"], "coffee": ["Coffee", "القهوة"],
+  "coriander leaf": ["Coriander leaf", "أوراق الكزبرة"], "cumin": ["Cumin", "الكمون"], "cypress": ["Cypress", "السرو"],
+  "french flowers": ["French flowers", "الزهور الفرنسية"], "fruits": ["Fruits", "الفواكه"], "gardenia": ["Gardenia", "الغاردينيا"],
+  "geranium": ["Geranium", "إبرة الراعي"], "ginger": ["Ginger", "الزنجبيل"], "grapefruit": ["Grapefruit", "الجريب فروت"],
+  "green tea": ["Green tea", "الشاي الأخضر"], "guaiac wood": ["Guaiac wood", "خشب الغاياك"], "incense": ["Incense", "البخور"],
+  "iris": ["Iris", "السوسن"], "jasmine": ["Jasmine", "الياسمين"], "juniper": ["Juniper", "العرعر"], "labdanum": ["Labdanum", "اللابدانوم"],
+  "lavender": ["Lavender", "اللافندر"], "leather": ["Leather", "الجلد"], "lemon": ["Lemon", "الليمون"], "lemon blossom": ["Lemon blossom", "زهر الليمون"],
+  "lily of the valley": ["Lily of the valley", "زنبق الوادي"], "lychee": ["Lychee", "الليتشي"], "magnolia": ["Magnolia", "الماغنوليا"],
+  "mandarin": ["Mandarin", "اليوسفي"], "mango": ["Mango", "المانجو"], "mate": ["Mate", "المتة"], "musk": ["Musk", "المسك"],
+  "narcissus": ["Narcissus", "النرجس"], "neroli": ["Neroli", "النيرولي"], "nutmeg": ["Nutmeg", "جوزة الطيب"], "oakmoss": ["Oakmoss", "طحلب البلوط"],
+  "olibanum": ["Olibanum", "اللبان"], "orange": ["Orange", "البرتقال"], "orange blossom": ["Orange blossom", "زهر البرتقال"],
+  "osmanthus": ["Osmanthus", "الأوسمانثوس"], "oud": ["Oud", "العود"], "patchouli": ["Patchouli", "الباتشولي"], "peach": ["Peach", "الخوخ"],
+  "pear": ["Pear", "الكمثرى"], "peony": ["Peony", "الفاوانيا"], "pina colada": ["Piña colada", "بينا كولادا"], "pineapple": ["Pineapple", "الأناناس"],
+  "pink pepper": ["Pink pepper", "الفلفل الوردي"], "plum": ["Plum", "البرقوق"], "raspberry": ["Raspberry", "التوت"], "red rose": ["Red rose", "الورد الأحمر"],
+  "resin": ["Resin", "الراتنج"], "rhubarb": ["Rhubarb", "الراوند"], "rose": ["Rose", "الورد"], "saffron": ["Saffron", "الزعفران"],
+  "sage": ["Sage", "المريمية"], "sandalwood": ["Sandalwood", "خشب الصندل"], "spices": ["Spices", "التوابل"], "sweet lemon": ["Sweet lemon", "الليمون الحلو"],
+  "tonka": ["Tonka bean", "حبوب التونكا"], "tuberose": ["Tuberose", "مسك الروم"], "turkish rose": ["Turkish rose", "الورد التركي"],
+  "vanilla": ["Vanilla", "الفانيليا"], "vanilla leaf": ["Vanilla leaf", "أوراق الفانيليا"], "vanilla sugar": ["Vanilla sugar", "سكر الفانيليا"],
+  "vetiver": ["Vetiver", "نجيل الهند"], "violet": ["Violet", "البنفسج"], "violet leaf": ["Violet leaf", "أوراق البنفسج"],
+  "white flowers": ["White flowers", "الزهور البيضاء"], "white musk": ["White musk", "المسك الأبيض"], "white peach": ["White peach", "الخوخ الأبيض"],
+  "woods": ["Woods", "الأخشاب"], "yogurt": ["Yogurt", "الزبادي"]
+};
+
+const FAMILIES = {
+  amber: ["Amber", "عنبري"], aromatic: ["Aromatic", "عشبي"], citrus: ["Citrus", "حمضي"], floral: ["Floral", "زهري"],
+  fresh: ["Fresh", "منعش"], fruity: ["Fruity", "فاكهي"], gourmand: ["Sweet", "حلو"], incense: ["Incense", "بخوري"],
+  musky: ["Musky", "مسكي"], oriental: ["Oriental", "شرقي"], spicy: ["Spicy", "حار"], woody: ["Woody", "خشبي"]
+};
+
+const DETAILS = {
+  /* ---------- Osma ---------- */
+  OS01: { size: "100", g: "u", fam: ["amber", "spicy"], top: ["cinnamon", "saffron"], heart: ["rose", "dry amber"], base: ["cedarwood", "sandalwood"],
+    ar: "ورد وعنبر يدفّئهما القرفة والزعفران فوق أخشاب الأرز والصندل. عطر شتوي جريء يلفت الأنظار.",
+    en: "Rose and amber warmed by cinnamon and saffron over cedar and sandalwood. A bold winter scent that turns heads." },
+
+  /* ---------- Dkhoon Al Emiratia ---------- */
+  DK01: { size: "6 × 50", g: "u", inc: [["Casa", "كاسا"], ["Master", "ماستر"], ["Desire", "ديزاير"], ["Force", "فورس"], ["Jota", "جوتا"], ["Legacy", "ليجاسي"]],
+    ar: "صندوق فاخر يضم ستة عطور أو دو بارفان، لكلٍّ منها شخصيته، لتختار ما يناسب مزاجك ومناسبتك. هدية مثالية لعشّاق العطور.",
+    en: "A collector's box of six Eau de Parfums, each with its own character, for every mood and occasion. A perfect gift for perfume lovers." },
+  DK03: { size: "100", g: "u", fam: ["fresh", "floral"], top: ["bergamot", "vanilla"], heart: ["white peach", "musk"], base: ["bulgarian rose"],
+    ar: "من سلسلة كراون الملكية: برغموت منعش وفانيليا مع الخوخ الأبيض والمسك على قاعدة من الورد البلغاري. عطر صيفي يدوم طويلاً.",
+    en: "From the royal Crown line: fresh bergamot and vanilla with white peach and musk on Bulgarian rose. A long-lasting summer scent." },
+  DK05: { size: "100", g: "u", fam: ["musky", "floral"], top: ["musk"], heart: ["french flowers"], base: ["vanilla"],
+    ar: "نعومة المسك وأناقة الزهور الفرنسية مع دفء الفانيليا. رفيق ناعم ليومك من الصباح إلى المساء.",
+    en: "Soft musk, elegant French flowers and warm vanilla. A gentle companion from morning to evening." },
+
+  /* ---------- Reef ---------- */
+  RF02: { size: "200", g: "u", fam: ["fruity", "floral"], top: ["peach"], heart: ["iris"], base: ["mate"],
+    ar: "خوخ مخملي يتبعه قلب أنيق من السوسن وقاعدة غامضة من المتة. عطر ناعم يترك أثراً لا يُنسى.",
+    en: "Velvety peach, an elegant iris heart and a mysterious mate base. A soft scent that leaves a lasting memory." },
+  RF03: { size: "100", g: "u", fam: ["woody", "floral"], top: ["pink pepper"], heart: ["jasmine"], base: ["sandalwood"],
+    ar: "خشبي زهري ناعم: فلفل وردي خفيف وياسمين على قاعدة كريمية من خشب الصندل. سهل الاستخدام كل يوم.",
+    en: "A soft woody floral: a light sparkle of pink pepper and jasmine on creamy sandalwood. Easy to wear every day." },
+  RF04: { size: "100", g: "u", fam: ["fruity", "floral"], top: ["peach"], heart: ["rose"], base: ["musk"],
+    ar: "رومانسي فاكهي زهري: خوخ ناضج وورد ناعم يستقران على مسك دافئ قريب من البشرة.",
+    en: "Romantic and fruity floral: ripe peach and soft rose settling into warm, skin-like musk." },
+  RF06: { size: "100", g: "u", fam: ["fresh", "floral"], key: ["orange blossom", "vanilla"],
+    ar: "شمس الصيف في زجاجة: انتعاش زهر البرتقال مع نعومة الفانيليا، بإشراقة تدوم طوال اليوم.",
+    en: "Summer sunshine in a bottle: fresh orange blossom with soft vanilla and a glow that lasts all day." },
+  RF08: { size: "100", g: "u", fam: ["citrus", "floral"], top: ["mandarin"], heart: ["jasmine"], base: ["vanilla leaf"],
+    ar: "يوسفي منعش وياسمين أنيق على قاعدة دافئة من أوراق الفانيليا. جرأة وأناقة في عطر واحد.",
+    en: "Zesty mandarin and graceful jasmine on a warm base of vanilla leaf. Boldness and elegance in one." },
+
+  /* ---------- Laverne ---------- */
+  LV01: { size: "200", g: "m", fam: ["fresh", "woody"], top: ["italian bergamot", "juniper", "pink pepper"], heart: ["sage", "cedarwood", "patchouli"], base: ["musk", "vetiver", "guaiac wood"],
+    ar: "برغموت إيطالي منعش ودرعٌ من خشب الغاياك. عطر صيفي لكل الفصول يمنحك إحساس البطل.",
+    en: "Fresh Italian bergamot with a shield of guaiac wood. A summer hero that works in every season." },
+  LV02: { size: "200", g: "m", fam: ["aromatic", "amber"], top: ["bergamot", "lavender", "cypress"], heart: ["jasmine", "sandalwood"], base: ["amber", "vetiver", "vanilla"],
+    ar: "لافندر وبرغموت مع ياسمين وصندل على قاعدة من العنبر والفانيليا. حضور طاغٍ يسيطر على المكان.",
+    en: "Lavender and bergamot, jasmine and sandalwood over amber and vanilla. An overpowering presence that owns the room." },
+  LV03: { size: "200", g: "w", fam: ["floral", "fruity"], top: ["bergamot", "plum", "rose"], heart: ["jasmine", "lily of the valley"], base: ["patchouli", "vetiver", "musk", "sandalwood", "vanilla"],
+    ar: "زهري فاكهي يتجدد مع كل لحظة: برقوق وورد مع ياسمين وزنبق الوادي على مسك وفانيليا.",
+    en: "A floral fruity scent that feels new every moment: plum and rose, jasmine and lily of the valley on musk and vanilla." },
+  LV04: { size: "200", g: "m", fam: ["fresh", "woody"], top: ["italian bergamot", "orange blossom", "mandarin"], heart: ["violet leaf", "black tea", "sage", "juniper"], base: ["sandalwood", "ambroxan", "cedarwood", "guaiac wood", "vetiver"],
+    ar: "مستوحى من حركة البحر: بداية حمضية مشرقة، قلب عشبي من الشاي الأسود، وختام خشبي هادئ.",
+    en: "Inspired by the movement of the sea: a bright citrus opening, an aromatic black-tea heart and a calm woody finish." },
+  LV05: { size: "200", g: "m", fam: ["citrus", "woody"], top: ["bergamot", "mandarin"], heart: ["sandalwood", "jasmine"], base: ["amber", "musk"],
+    ar: "عطر يومي نظيف: حمضيات مشرقة ثم صندل وياسمين يستقران على العنبر والمسك. يناسب كل الفصول.",
+    en: "A clean everyday scent: bright citrus, then sandalwood and jasmine settling on amber and musk. For all seasons." },
+  C07: { size: "200", g: "u", fam: ["amber", "floral"], top: ["rose", "white flowers", "mandarin", "coriander leaf"], heart: ["osmanthus", "magnolia", "narcissus", "saffron"], base: ["amber", "musk", "leather"],
+    ar: "عبير العنبر الملكي الذي سحر الشعراء في قصور الملوك: ورود وزعفران على عنبر ومسك وجلد.",
+    en: "The royal amber that charmed poets in the palaces of kings: florals and saffron over amber, musk and leather." },
+  LV06: { size: "200", g: "u", fam: ["incense", "woody"], top: ["cardamom", "orange", "mandarin", "pink pepper", "pear"], heart: ["juniper", "jasmine", "orange blossom", "coffee"], base: ["leather", "cedarwood", "patchouli", "guaiac wood", "musk"],
+    ar: "روح البخور من لافيرن في زجاجة بلون المجرّات: هيل وقهوة وياسمين على أخشاب دافئة ومسك.",
+    en: "Laverne's spirit of incense in a galaxy-blue bottle: cardamom, coffee and jasmine over warm woods and musk." },
+  LV07: { size: "200", g: "u", fam: ["woody", "spicy"],
+    ar: "خشبي دافئ بلمسات توابل متوازنة، أنيق من العمل إلى السهرة. من سلسلة لادور بخور.",
+    en: "Warm woods with balanced spice, elegant from the office to the evening. From the La'Dor Bakhur line." },
+  LV08: { size: "200", fam: ["fruity", "gourmand"], top: ["pineapple", "mango"], heart: ["pina colada", "yogurt"], base: ["vanilla sugar", "amber wood"],
+    ar: "رحلة استوائية: أناناس ومانجو، ثم قلب كريمي من البينا كولادا، وختام دافئ من سكر الفانيليا وخشب العنبر.",
+    en: "A tropical journey: pineapple and mango, a creamy piña colada heart and a warm vanilla-sugar and amber-wood finish." },
+  LV09: { size: "200", g: "m", fam: ["fresh", "citrus"], top: ["bergamot", "grapefruit", "pink pepper"], heart: ["blackberry", "green tea"], base: ["white musk", "ambroxan"], by: "Jordi Fernández",
+    ar: "عطر صيفي منعش يبدأ كنسمة ويترك أثر الماء: حمضيات وشاي أخضر على مسك أبيض نظيف.",
+    en: "A fresh summer scent that starts as a breeze and leaves a trace of water: citrus and green tea on clean white musk." },
+  LV10: { size: "200", g: "w", fam: ["fruity", "floral"], top: ["mandarin", "peach", "bergamot", "pear", "pink pepper"], heart: ["tuberose", "orange blossom", "rose"], base: ["patchouli", "musk", "sandalwood", "vanilla"], by: "Nathalie Lorson",
+    ar: "يتفتّح كزهرة ناعمة: فواكه مشرقة وقلب زهري رقيق يستقر على المسك والصندل والفانيليا.",
+    en: "Opens like a soft bloom: luminous fruits and a gentle floral heart settling on musk, sandalwood and vanilla." },
+  LV11: { size: "200", g: "w", fam: ["floral", "gourmand"], top: ["pink pepper", "blackcurrant", "saffron"], heart: ["raspberry", "coffee", "bulgarian rose"], base: ["cocoa", "patchouli", "musk", "sandalwood"],
+    ar: "سحر أنثوي بنفحات الورد الأبيض: زعفران وتوت وقهوة مع الورد البلغاري على الكاكاو والمسك.",
+    en: "Feminine magic with white-rose notes: saffron, raspberry and coffee with Bulgarian rose over cocoa and musk." },
+  LV12: { size: "100", g: "w", fam: ["floral", "gourmand"], top: ["pink pepper", "blackcurrant", "saffron"], heart: ["raspberry", "coffee", "bulgarian rose"], base: ["cocoa", "patchouli", "musk", "sandalwood"],
+    ar: "ليدي روز بلوم بالحجم الأصغر: زعفران وتوت وقهوة مع الورد البلغاري على الكاكاو والمسك.",
+    en: "Lady Rose Bloom in the smaller size: saffron, raspberry and coffee with Bulgarian rose over cocoa and musk." },
+
+  /* ---------- Assaf ---------- */
+  AS01: { size: "3 × 100", g: "u", inc: [["Pegasus Wild", "بيغاسوس وايلد"], ["Pegasus Incense", "بيغاسوس إنسنس"], ["Pegasus Purino", "بيغاسوس بورينو"]],
+    ar: "ثلاثة عطور بيغاسوس في علبة فاخرة بنقش الخيول: وايلد الزهري العنبري، وإنسنس بالبخور والعود، وبورينو الفاكهي.",
+    en: "Three Pegasus scents in an embossed-horse gift box: floral-amber Wild, oud-and-incense Incense and fruity Purino." },
+  AS02: { size: "150", g: "m", fam: ["spicy", "woody"], top: ["bergamot", "blackcurrant", "grapefruit", "nutmeg"], heart: ["ginger", "cinnamon", "lemon", "clove"], base: ["patchouli", "woods", "vetiver", "oakmoss", "musk", "tonka"],
+    ar: "هالة تسبقك قبل وصولك: حمضيات وتوابل دافئة على أخشاب وطحلب البلوط والتونكا. ثبات طويل وفوحان متوازن.",
+    en: "An aura that arrives before you: citrus and warm spices over woods, oakmoss and tonka. Long-lasting and well balanced." },
+  AS03: { size: "200", g: "m", fam: ["woody", "amber"], top: ["lemon", "iris"], heart: ["violet", "basil", "vetiver"], base: ["amber", "vanilla", "cedarwood", "musk"],
+    ar: "الإصدار الأقوى من فرانكل بلاك: خشبي عنبري فاخر بثبات طاغٍ، للعمل والمناسبات.",
+    en: "The strongest edition of Frankel Black: a luxurious woody amber with commanding longevity, for work and occasions." },
+  AS04: { size: "200", g: "m", fam: ["fresh", "spicy"], top: ["orange", "sweet lemon", "mandarin", "pink pepper"], heart: ["black tea", "blackcurrant", "lavender", "nutmeg", "cinnamon"], base: ["patchouli", "guaiac wood"],
+    ar: "انفجار حمضي مشرق يلتقي بالشاي الأسود والتوابل على أخشاب الباتشولي والغاياك. انتعاش ودفء بثبات طويل.",
+    en: "A bright citrus burst meets black tea and spices over patchouli and guaiac wood. Fresh, warm and long-lasting." },
+  AS05: { size: "100", fam: ["oriental", "woody"], top: ["oud", "fruits"], heart: ["jasmine", "narcissus", "centifolia rose", "amber", "resin", "incense"], base: ["patchouli", "olibanum", "woods"],
+    ar: "عود فاخر بنفحات الفاكهة، وتناغم زهري شرقي مع العنبر والبخور، على أخشاب عميقة واللبان. شرقي خشبي فخم.",
+    en: "Rich oud with soft fruit, an oriental floral heart of amber and incense, and deep woods with olibanum. Luxurious and oriental." },
+  AS06: { size: "125", g: "m", fam: ["fresh", "amber"], top: ["bergamot", "orange"], heart: ["geranium", "orange blossom"], base: ["dry amber", "tonka"],
+    ar: "بداية مشرقة من البرغموت والبرتقال، وقلب أنيق، وقاعدة دافئة من العنبر الجاف والتونكا. رائحة يصعب الاستغناء عنها.",
+    en: "A bright bergamot-and-orange start, an elegant heart and a warm base of dry amber and tonka. Hard to stop wearing." },
+  AS07: { size: "150", g: "u", fam: ["floral", "amber"], top: ["italian bergamot", "pink pepper"], heart: ["rose", "jasmine", "orange blossom"], base: ["amber", "sandalwood", "patchouli", "vanilla"],
+    ar: "أناقة متحررة من القيود: برغموت إيطالي وفلفل وردي، باقة ورد وياسمين، على عنبر وصندل وفانيليا.",
+    en: "Elegance without limits: Italian bergamot and pink pepper, a rose-and-jasmine bouquet over amber, sandalwood and vanilla." },
+  AS08: { fam: ["amber", "woody"], key: ["amber", "spices", "woods", "vanilla", "balsam", "citrus"],
+    ar: "تركيز عالٍ يصل إلى ٣٥٪ لثبات وعمق استثنائيين: عنبر دافئ وتوابل وأخشاب، مع لمسة فانيليا وأثر حمضي خفيف.",
+    en: "A high 35% concentration for exceptional depth and longevity: warm amber, spice and woods with a touch of vanilla and a light citrus trail." },
+  AS09: { size: "100", g: "u", fam: ["woody", "amber"], key: ["sandalwood", "amber", "cedarwood", "bergamot", "patchouli", "oakmoss", "rose"], by: "Hamid Merati",
+    ar: "ياسمين وبرغموت مع أخشاب ندية وصندل كريمي، ودفء الباتشولي وطحلب البلوط. أنيق للرجال والنساء.",
+    en: "Jasmine and bergamot with moist woods and creamy sandalwood, warmed by patchouli and oakmoss. Elegant for men and women." },
+  AS10: { size: "200", g: "u", fam: ["amber", "woody"], top: ["orange", "bergamot", "pink pepper", "peach"], heart: ["lemon blossom", "sandalwood"], base: ["amber", "vanilla", "musk", "cedarwood"],
+    ar: "جريء بروح الخيل أروغيت: حمضيات وخوخ، ثم زهر الليمون والصندل، وقاعدة غنية من العنبر والفانيليا تدوم لساعات.",
+    en: "Bold, with the spirit of the racehorse Arrogate: citrus and peach, lemon blossom and sandalwood, and a rich amber-vanilla base that lasts for hours." },
+  AS11: { size: "200", g: "m", fam: ["amber", "floral"], top: ["orange", "saffron"], heart: ["orange blossom", "red rose"], base: ["amber", "cedarwood"], by: "Gaël Montero",
+    ar: "من الأكثر مبيعاً: برتقال مشرق وزعفران، زهر البرتقال والورد الأحمر، على العنبر وخشب الأرز. أثر أنيق لا يُنسى.",
+    en: "A best seller: bright orange and saffron, orange blossom and red rose, over amber and cedarwood. A polished, unforgettable trail." },
+  AS12: { size: "200", g: "w", fam: ["fruity", "floral"], top: ["orange", "peach", "raspberry"], heart: ["rose", "iris", "gardenia"], base: ["sandalwood", "musk", "patchouli"], by: "Dominique Ropion",
+    ar: "أنوثة واثقة: برتقال وخوخ وتوت، ورد وسوسن وغاردينيا، على الصندل والمسك. ثبات طويل وفوحان عالٍ.",
+    en: "Confident femininity: orange, peach and raspberry, rose, iris and gardenia over sandalwood and musk. Long-lasting with strong sillage." },
+  WA0119: { size: "200", g: "w", fam: ["floral", "fruity"], top: ["mandarin", "orange", "bergamot", "olibanum", "peach"], heart: ["orange blossom", "lily of the valley", "jasmine", "gardenia", "caramel", "cypress"], base: ["musk", "sandalwood", "cedarwood", "vanilla"],
+    ar: "أنثوي بطاقة أروغيت: حمضيات مشرقة وخوخ، باقة زهور بيضاء مع الكراميل، وختام دافئ من المسك والصندل والفانيليا. للنهار والمساء.",
+    en: "Feminine with Arrogate energy: bright citrus and peach, white florals with caramel, and a warm musk, sandalwood and vanilla finish. Day or night." },
+  AS13: { size: "200", g: "m", fam: ["fresh", "woody"], top: ["pear", "apple", "cumin"], heart: ["labdanum", "orange blossom", "patchouli"], base: ["vetiver", "amber", "sandalwood"],
+    ar: "انفجار الصيف: انتعاش فوري من الكمثرى والتفاح، قلب نظيف وعصري، وقاعدة ناعمة تدوم لساعات.",
+    en: "The summer explosion: instant freshness of pear and apple, a clean modern heart and a smooth base that lasts for hours." },
+  WA0133: { size: "200", g: "m", fam: ["fresh", "aromatic"], top: ["cardamom", "bergamot", "pear"], heart: ["lavender", "patchouli", "cumin"], base: ["vetiver", "cedarwood", "sandalwood"], by: "Dominique Ropion",
+    ar: "عطر صيفي يخطف الأنظار: هيل وبرغموت وكمثرى، قلب عشبي من اللافندر، وختام خشبي غني.",
+    en: "A head-turning summer scent: cardamom, bergamot and pear, an aromatic lavender heart and a rich woody finish." },
+  AS14: { size: "120", g: "w", fam: ["floral", "musky"], key: ["neroli", "jasmine", "orange blossom"],
+    ar: "زهور بيضاء أنثوية بنفحات النيرولي والياسمين ولمسة منعشة من برعم زهر البرتقال، بطابع مسكي ناعم.",
+    en: "Feminine white flowers with neroli and jasmine and a fresh touch of orange-blossom bud, with a soft musky feel." },
+  AS15: { size: "200", g: "w", fam: ["floral", "fruity"], top: ["grapefruit", "lychee", "rhubarb"], heart: ["turkish rose", "peony"], base: ["vanilla", "musk"],
+    ar: "أنوثة طاغية في زجاجة وردية: جريب فروت وليتشي، باقة من الورد التركي والفاوانيا، على الفانيليا والمسك.",
+    en: "Overwhelming femininity in a pink bottle: grapefruit and lychee, a bouquet of Turkish rose and peony over vanilla and musk." },
+  B08: { g: "w", fam: ["floral", "fresh"], key: ["bergamot", "rose"],
+    ar: "أناقة أنثوية فاخرة: برغموت منعش وورد ناعم يأسران الحواس من الرشة الأولى.",
+    en: "Luxurious feminine elegance: fresh bergamot and soft rose that captivate from the first spray." }
+};
+
+if (typeof module !== "undefined") module.exports = { DETAILS, NOTES, FAMILIES };

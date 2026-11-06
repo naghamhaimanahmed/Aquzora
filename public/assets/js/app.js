@@ -78,6 +78,28 @@
   const pic = (it, size, attrs = "") => `<picture><source type="image/webp" srcset="${galSrc(it, size, "webp")}"><img src="${galSrc(it, size)}" ${attrs}></picture>`;
   const byCode = code => GALLERY.find(it => it.code === code);
 
+  /* ---------- product details (details.js) ---------- */
+  const detailsOf = code => (typeof DETAILS !== "undefined" && DETAILS[code]) || null;
+  const li = () => (state.lang === "ar" ? 1 : 0);
+  const sizeLabel = d => d && d.size ? `${state.lang === "ar" ? d.size.replace(/\d+/g, n => (+n).toLocaleString("ar-EG")) : d.size} ${t("dt.ml")}` : "";
+  function detailsHtml(it) {
+    const d = detailsOf(it.code);
+    if (!d) return "";
+    const i = li(), sep = state.lang === "ar" ? "، " : ", ";
+    const facts = [sizeLabel(d), d.conc === false ? "" : t("dt.edp"), d.g ? t("dt.g." + d.g) : "",
+      (d.fam || []).map(f => FAMILIES[f] && FAMILIES[f][i]).filter(Boolean).join(" · ")].filter(Boolean);
+    const notes = list => list.map(n => (NOTES[n] ? NOTES[n][i] : n)).join(sep);
+    const rows = [["top", d.top], ["heart", d.heart], ["base", d.base], ["key", d.key]].filter(r => r[1] && r[1].length);
+    const desc = d[state.lang] || d.en;
+    return `<div class="dt">
+      ${facts.length ? `<ul class="dt__facts">${facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+      ${desc ? `<p class="dt__desc">${esc(desc)}</p>` : ""}
+      ${rows.length ? `<p class="dt__h">${t("dt.notes")}</p><dl class="dt__notes">${rows.map(([k, l]) => `<div><dt>${t("dt." + k)}</dt><dd>${esc(notes(l))}</dd></div>`).join("")}</dl>` : ""}
+      ${d.inc ? `<p class="dt__h">${t("dt.inc")}</p><ul class="dt__inc">${d.inc.map(x => `<li>${esc(x[i])}</li>`).join("")}</ul>` : ""}
+      ${d.by ? `<p class="dt__by">${t("dt.by")}: <bdi>${esc(d.by)}</bdi></p>` : ""}
+    </div>`;
+  }
+
   const filterMatch = (f, it) => (!f.type || it.type === f.type) && (!f.group || GALLERY_BRANDS[it.brand].group === f.group);
   function galList() {
     const f = GALLERY_FILTERS.find(x => x.id === state.gal.f) || GALLERY_FILTERS[0];
@@ -126,7 +148,7 @@
     $("#gal").innerHTML = shown.map((it, i) => `<button class="gal__item" data-gal="${i}" aria-label="${t("gal.view")}: ${esc(galTitle(it))}">
       ${it.type === "set" ? `<span class="ribbon">${t("gal.type.set")}</span>` : ""}
       <span class="gal__img">${pic(it, "thumb", `alt="${esc(galTitle(it))}" width="480" height="480" loading="lazy" decoding="async"`)}</span>
-      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc(galSub(it))}</small><span class="gal__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</span></span>
+      <span class="gal__cap"><strong>${esc(galTitle(it))}</strong><small>${esc([galSub(it), sizeLabel(detailsOf(it.code))].filter(Boolean).join(" · "))}</small><span class="gal__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</span></span>
     </button>`).join("");
     $("#galCount").textContent = list.length === 1 ? t("gal.count1") : t("gal.count", { n: list.length });
     const left = list.length - shown.length;
@@ -152,6 +174,7 @@
         <h3 id="modalTitle">${esc(galTitle(it))}</h3>
         <p class="gv__ref">${t("gal.ref")} <bdi>${esc(it.code)}</bdi> · ${t("gal.pos", { a: i + 1, b: list.length })}</p>
         <p class="gv__price ${SHOP.priceOf(it.code) === null ? "is-ask" : ""}">${priceLabel(it.code)}</p>
+        ${detailsHtml(it)}
         <p class="qv__desc">${t(SHOP.priceOf(it.code) === null ? "gal.note" : "gal.noteCart")}</p>
         <button class="btn btn--dark btn--block" data-add-cart="${it.code}">${BAG_ICON}<span>${t("cart.add")}</span></button>
         <a class="btn btn--line btn--block" data-gal-ask href="${esc(waHref(waAskText(it)))}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19.2L4 20z"/></svg>${t("gal.ask")}</a>
