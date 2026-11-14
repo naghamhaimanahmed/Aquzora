@@ -1,0 +1,654 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Nexus film</title>
+<style>
+@font-face{font-family:Poppins;src:url(node_modules/@fontsource/poppins/files/poppins-latin-300-normal.woff2);font-weight:300}
+@font-face{font-family:Poppins;src:url(node_modules/@fontsource/poppins/files/poppins-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Poppins;src:url(node_modules/@fontsource/poppins/files/poppins-latin-500-normal.woff2);font-weight:500}
+@font-face{font-family:Poppins;src:url(node_modules/@fontsource/poppins/files/poppins-latin-600-normal.woff2);font-weight:600}
+@font-face{font-family:Poppins;src:url(node_modules/@fontsource/poppins/files/poppins-latin-700-normal.woff2);font-weight:700}
+@font-face{font-family:Cairo;src:url(node_modules/@fontsource/cairo/files/cairo-arabic-500-normal.woff2);font-weight:500}
+@font-face{font-family:Cairo;src:url(node_modules/@fontsource/cairo/files/cairo-arabic-700-normal.woff2);font-weight:700}
+@font-face{font-family:Cairo;src:url(node_modules/@fontsource/cairo/files/cairo-arabic-800-normal.woff2);font-weight:800}
+@font-face{font-family:Mono;src:url(node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2);font-weight:400}
+@font-face{font-family:Mono;src:url(node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2);font-weight:600}
+:root{--navy:#0B1020;--cyan:#22D3EE;--teal:#0891B2;--rose:#F43F5E;--muted:#8894AE;--text:#E9EEF6}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#05080F}
+#stage{position:absolute;inset:0;overflow:hidden;font-family:Poppins,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+.abs{position:absolute}
+.sc{position:absolute;inset:0;display:none}
+.ar{font-family:Cairo,Poppins,sans-serif;direction:rtl}
+.mono{font-family:Mono,monospace}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .14em;margin:0 -.02em -.14em}
+.wi{display:inline-block;will-change:transform}
+.chap{font-family:Mono;font-size:20px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}
+.chap b{color:var(--rose);font-weight:600}
+.h1{font-weight:600;letter-spacing:-.03em;line-height:1.04}
+.sub{font-weight:400;color:#AAB4C8;line-height:1.5}
+.cy{color:var(--cyan)} .ro{color:var(--rose)}
+.glass{background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 60px -20px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08)}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:14px 26px 14px 18px;border-radius:999px;font-size:24px;font-weight:500;white-space:nowrap}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+/* background */
+#bg{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,#0D1428 0%,#070B17 60%,#04060C 100%)}
+.glow{position:absolute;width:1400px;height:1400px;border-radius:50%;left:0;top:0;margin:-700px 0 0 -700px}
+#glowA{background:radial-gradient(closest-side,rgba(8,145,178,.34),rgba(8,145,178,0))}
+#glowB{background:radial-gradient(closest-side,rgba(244,63,94,.22),rgba(244,63,94,0))}
+#grid{position:absolute;inset:-80px;background-image:radial-gradient(rgba(148,170,210,.22) 1.3px,transparent 1.6px);background-size:44px 44px;-webkit-mask-image:radial-gradient(70% 70% at 50% 50%,#000 30%,transparent 100%)}
+#vig{position:absolute;inset:0;background:radial-gradient(110% 100% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+#sweep{position:absolute;top:-300px;height:1700px;width:520px;left:0;background:linear-gradient(90deg,transparent,rgba(34,211,238,.0) 20%,rgba(160,240,255,.55) 50%,rgba(34,211,238,0) 80%,transparent);transform:rotate(14deg);mix-blend-mode:screen;opacity:0}
+#flash{position:absolute;inset:0;background:#DFFBFF;opacity:0;mix-blend-mode:screen}
+#bug{position:absolute;right:56px;bottom:44px;display:flex;align-items:center;gap:12px;font-size:20px;font-weight:600;letter-spacing:.02em;opacity:0}
+#bug span{font-weight:400;color:var(--muted);font-size:17px;margin-left:6px}
+/* browser */
+.browser{position:absolute;border-radius:16px;overflow:hidden;background:#111827;box-shadow:0 60px 120px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.1)}
+.bbar{height:44px;background:linear-gradient(#1C2235,#161B2B);display:flex;align-items:center;padding:0 18px;gap:9px;border-bottom:1px solid rgba(255,255,255,.06)}
+.bbar i{width:13px;height:13px;border-radius:50%;display:block}
+.url{margin-left:22px;flex:1;max-width:520px;height:28px;border-radius:8px;background:rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;padding:0 14px;font-size:15px;color:#B9C3D6}
+.bview{position:absolute;left:0;right:0;top:44px;bottom:0;overflow:hidden;background:#141110}
+.bview img{position:absolute;left:0;top:0;width:100%;display:block}
+/* phone */
+.phone{position:absolute;width:408px;height:890px;border-radius:66px;background:linear-gradient(145deg,#3A3F4B,#15181F 40%,#2A2E38);padding:14px;box-shadow:0 70px 120px -30px rgba(0,0,0,.85),inset 0 0 0 2px rgba(255,255,255,.12)}
+.screen{position:relative;width:380px;height:862px;border-radius:52px;overflow:hidden;background:#141110}
+.island{position:absolute;left:50%;top:11px;width:112px;height:32px;margin-left:-56px;border-radius:20px;background:#000;z-index:20}
+.sbar{position:absolute;left:0;right:0;top:0;height:46px;z-index:15;display:flex;justify-content:space-between;align-items:center;padding:6px 34px 0 40px;font-size:16px;font-weight:600;color:#F2EBDD}
+.view{position:absolute;left:0;right:0;top:46px;bottom:0;overflow:hidden}
+.view img{position:absolute;left:0;top:0;width:100%;display:block}
+.pscreen{position:absolute;inset:0;overflow:hidden;background:#141110}
+.tap{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:3px solid rgba(255,255,255,.95);background:rgba(34,211,238,.35);box-shadow:0 0 30px rgba(34,211,238,.8);opacity:0;z-index:30}
+/* s1 */
+#codePlane{position:absolute;left:60px;top:0;width:1900px;transform-origin:50% 50%}
+#codeLines{font-family:Mono;font-size:31px;line-height:54px;white-space:pre;color:#A3B0CC}
+.k{color:#F472B6}.s{color:#5EEAD4}.c{color:#6B7794;font-style:italic}.n{color:#FDBA74}.f{color:#93C5FD}
+#t1,#t2{position:absolute;left:0;right:0;text-align:center;font-weight:600;letter-spacing:-.03em}
+#t1{top:430px;font-size:92px}
+#t2{top:560px;font-size:92px}
+.caret{display:inline-block;width:.09em;height:.95em;background:var(--cyan);vertical-align:-.12em;margin-left:.06em;box-shadow:0 0 18px var(--cyan)}
+#compile{position:absolute;left:610px;top:440px;width:700px;padding:38px 50px 44px;border-radius:22px;background:rgba(6,10,20,.88);border:1px solid rgba(34,211,238,.25);box-shadow:0 40px 80px rgba(0,0,0,.6);opacity:0}
+#compile .lbl{font-family:Mono;font-size:26px;color:#C8D3E6;display:flex;justify-content:space-between}
+#compile .bar{margin-top:20px;height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}
+#compile .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--cyan));box-shadow:0 0 20px var(--cyan)}
+/* s3 */
+#s3wrap{position:absolute;left:1090px;top:560px;width:0;height:0;perspective:2600px}
+#s3g{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.layer{position:absolute;width:1000px;left:-500px;transform-style:preserve-3d;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px rgba(34,211,238,.35),0 40px 80px rgba(0,0,0,.55)}
+.layer img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.mk{position:absolute;right:0;top:50%;width:2px;height:2px}
+.lab{position:absolute;display:flex;align-items:center;gap:16px;white-space:nowrap;font-size:24px;font-weight:500;opacity:0}
+.lab .ln{height:2px;background:linear-gradient(90deg,rgba(34,211,238,.9),rgba(34,211,238,.25))}
+.lab .nd{width:14px;height:14px;border-radius:50%;border:3px solid var(--cyan);background:#06101C;margin-left:-7px}
+.lab small{display:block;font-size:16px;color:var(--muted);font-weight:400;font-family:Mono;letter-spacing:.06em}
+/* s4 */
+#divider{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--cyan);box-shadow:0 0 24px var(--cyan),0 0 60px rgba(34,211,238,.6);z-index:5}
+#handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);padding:10px 18px;border-radius:999px;background:#0B1020;border:2px solid var(--cyan);font-size:20px;font-weight:600;white-space:nowrap;display:flex;gap:12px;align-items:center}
+/* s5 */
+.step{position:absolute;left:0;width:470px;display:flex;gap:22px;align-items:flex-start}
+.step .num{font-family:Mono;font-size:20px;color:var(--muted);width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:none}
+.step h4{margin:0;font-size:30px;font-weight:600;line-height:1.1}
+.step p{margin:6px 0 0;font-size:19px;color:var(--muted)}
+/* s6 chat */
+.chat{position:absolute;inset:0;background:#0B141A}
+.chead{position:absolute;left:0;right:0;top:0;height:118px;background:#1F2C34;z-index:5;display:flex;align-items:flex-end;padding:0 18px 14px;gap:12px}
+.av{width:44px;height:44px;border-radius:50%;background:#1A1512;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.av img{width:34px}
+.chead b{font-size:18px;font-weight:600;display:block}
+.chead small{font-size:13px;color:#8FA3AE}
+.cbody{position:absolute;left:0;right:0;top:118px;bottom:76px;overflow:hidden;background:#0B141A;background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.5px);background-size:22px 22px}
+.cmsgs{position:absolute;left:0;right:0;top:0;padding:16px 12px}
+.msg{max-width:290px;padding:9px 12px 20px;border-radius:12px;font-size:15.5px;line-height:1.38;margin-bottom:9px;position:relative;opacity:0;white-space:pre-line}
+.msg .tm{position:absolute;right:10px;bottom:4px;font-size:11px;color:rgba(255,255,255,.55)}
+.msg.in{background:#1F2C34;margin-right:auto;border-top-left-radius:3px}
+.msg.out{background:#005C4B;margin-left:auto;border-top-right-radius:3px}
+.btns{display:flex;flex-direction:column;gap:6px;margin:-4px 0 9px;max-width:290px;opacity:0}
+.btns div{background:#1F2C34;border-radius:10px;text-align:center;padding:9px;font-size:15px;color:#53BDEB;font-weight:500}
+.cfoot{position:absolute;left:0;right:0;bottom:0;height:76px;background:#0B141A;display:flex;align-items:center;gap:10px;padding:0 12px 18px}
+.cfoot div{flex:1;height:44px;border-radius:22px;background:#1F2C34;color:#8696A0;font-size:16px;display:flex;align-items:center;padding:0 18px}
+.cfoot i{width:44px;height:44px;border-radius:50%;background:#00A884;display:block}
+.typing{display:flex;gap:5px;padding:14px 16px;background:#1F2C34;border-radius:12px;width:70px;opacity:0;border-top-left-radius:3px;margin-bottom:9px}
+.typing i{width:8px;height:8px;border-radius:50%;background:#8696A0;display:block}
+.node{position:absolute;width:330px;height:92px;border-radius:18px;display:flex;align-items:center;gap:16px;padding:0 20px;opacity:0}
+.node .ic{width:52px;height:52px;border-radius:14px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);display:flex;align-items:center;justify-content:center;flex:none}
+.node b{display:block;font-size:21px;font-weight:600;white-space:nowrap}
+.node small{display:block;font-family:Mono;font-size:13.5px;color:var(--muted);white-space:nowrap;margin-top:3px}
+.node .st{position:absolute;right:16px;top:16px;width:10px;height:10px;border-radius:50%;background:#334155}
+.notif{position:absolute;width:520px;border-radius:22px;padding:18px 22px;display:flex;gap:16px;align-items:center;opacity:0;background:rgba(30,38,58,.92);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.notif .ic{width:48px;height:48px;border-radius:12px;background:#229ED9;display:flex;align-items:center;justify-content:center;flex:none}
+.notif b{font-size:19px;display:block}.notif small{font-size:16px;color:#B6C2D6}
+/* s7 */
+.tile{position:absolute;width:390px;height:320px;border-radius:26px;padding:34px 34px;opacity:0;overflow:hidden}
+.tile .big{font-size:132px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.tile .big sup{font-size:.4em;color:var(--cyan);vertical-align:.9em;margin-left:6px}
+.tile p{margin:22px 0 0;font-size:23px;color:#B4BED2;line-height:1.35}
+.tile:before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--rose))}
+/* s8 */
+.svc{position:absolute;width:524px;height:156px;border-radius:22px;display:flex;align-items:center;gap:24px;padding:0 30px;opacity:0}
+.svc .ic{width:76px;height:76px;border-radius:20px;background:linear-gradient(145deg,rgba(34,211,238,.2),rgba(244,63,94,.12));border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;flex:none}
+.svc b{font-size:28px;font-weight:600;display:block;letter-spacing:-.01em}
+.svc small{font-size:18px;color:var(--muted);display:block;margin-top:4px}
+svg.i{width:38px;height:38px;fill:none;stroke:#BFF4FF;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* s9 */
+#lock{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;align-items:center;gap:34px}
+#wm{white-space:nowrap;font-size:168px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.cta{display:inline-flex;align-items:center;gap:18px;padding:22px 40px;border-radius:999px;background:var(--rose);font-size:30px;font-weight:600;box-shadow:0 20px 60px -10px rgba(244,63,94,.7)}
+</style></head>
+<body><div id="stage">
+<div id="bg"></div><div id="glowA" class="glow"></div><div id="glowB" class="glow"></div><div id="grid"></div>
+
+<!-- S1 code open -->
+<div class="sc" id="s1">
+  <div id="codeWrap" class="abs" style="inset:0;perspective:1300px"><div id="codePlane"><div id="codeLines"></div></div></div>
+  <div class="abs" style="inset:0;background:radial-gradient(60% 50% at 50% 50%,rgba(5,8,15,.7),rgba(5,8,15,.05))" id="codeShade"></div>
+  <div id="t1"><span id="t1txt"></span><span class="caret" id="caret1"></span></div>
+  <div id="t2" class="h1">We turn it into <span class="mono cy" style="font-weight:600;letter-spacing:-.04em">code.</span></div>
+  <div id="compile"><div class="lbl"><span id="cpTxt">building atr.store</span><span id="cpPct">0%</span></div><div class="bar"><i id="cpBar"></i></div></div>
+</div>
+
+<!-- S2 reveal -->
+<div class="sc" id="s2">
+  <div class="abs" style="left:120px;top:250px;width:520px">
+    <div class="chap" id="s2c"><b>01</b> — The project</div>
+    <div class="h1" id="s2h" style="font-size:96px;margin-top:26px">Meet Atr.</div>
+    <div class="sub" id="s2s" style="font-size:29px;margin-top:26px">A perfume house in Aswan, now selling online to all of Egypt.</div>
+    <div class="pill glass" id="s2p" style="margin-top:44px;opacity:0"><svg viewBox="-8 -8 56 76" width="26" height="34"><g fill="none" stroke="#0891B2" stroke-linecap="round"><path d="M0 52V44C0 30 20 32 20 18V8" stroke-width="5"/><path d="M40 52V44C40 30 20 32 20 18" stroke-width="5"/><circle cx="0" cy="60" r="5.5" stroke-width="4"/><circle cx="40" cy="60" r="5.5" stroke-width="4"/><circle cx="20" cy="0" r="5.5" stroke-width="4"/></g><circle cx="20" cy="18" r="7.5" fill="#F43F5E"/></svg>Designed &amp; built by Nexus</div>
+  </div>
+  <div id="s2wrap" class="abs" style="inset:0;perspective:2400px">
+    <div class="browser" id="br2" style="left:640px;top:126px;width:1200px;height:794px;transform-origin:100% 50%">
+      <div class="bbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><div class="url"><svg width="13" height="15" viewBox="0 0 13 15"><rect x="1" y="6" width="11" height="8" rx="2" fill="#7DD3FC"/><path d="M3.5 6V4.5a3 3 0 0 1 6 0V6" stroke="#7DD3FC" stroke-width="1.6" fill="none"/></svg>Atr · Maison de Parfum</div></div>
+      <div class="bview"><img id="br2img" src="cap/d-en-full.png"><img id="br2hdr" src="cap/d-en-header.png" style="opacity:0"></div>
+    </div>
+  </div>
+  <div class="pill glass abs" id="b1" style="left:560px;top:96px"><span class="dot"></span>Arabic + English</div>
+  <div class="pill glass abs" id="b2" style="left:1540px;top:62px"><span class="dot" style="background:var(--rose);box-shadow:0 0 14px var(--rose)"></span>56 products</div>
+  <div class="pill glass abs" id="b3" style="left:600px;top:900px"><span class="dot" style="background:#25D366;box-shadow:0 0 14px #25D366"></span>WhatsApp checkout</div>
+  <div class="pill glass abs" id="b4" style="left:1450px;top:940px"><span class="dot" style="background:#FDBA74;box-shadow:0 0 14px #FDBA74"></span>InstaPay payments</div>
+</div>
+
+<!-- S3 exploded -->
+<div class="sc" id="s3">
+  <div class="abs" style="left:120px;top:150px;width:560px">
+    <div class="chap" id="s3c"><b>02</b> — Design &amp; build</div>
+    <div class="h1" id="s3h" style="font-size:84px;margin-top:26px">Every layer, crafted.</div>
+    <div class="sub" id="s3s" style="font-size:27px;margin-top:24px">Brand, layout and code made for one business. No templates.</div>
+  </div>
+  <div id="s3wrap"><div id="s3g">
+    <div class="layer" id="L0" style="height:217px"><img src="cap/d-en-el-footer.png"><div class="mk"></div></div>
+    <div class="layer" id="L1" style="height:660px"><img src="cap/d-en-el-collection-crop.png"><div class="mk"></div></div>
+    <div class="layer" id="L2" style="height:376px;background:#EEE7DA"><img src="cap/d-en-el-cats.png" style="object-fit:contain"><div class="mk"></div></div>
+    <div class="layer" id="L3" style="height:525px"><img src="cap/d-en-el-herosec.png"><div class="mk"></div></div>
+    <div class="layer" id="L4" style="height:57px"><img src="cap/d-en-el-header.png"><div class="mk"></div></div>
+  </div></div>
+  <div class="lab" id="lb4"><div class="nd"></div><div class="ln"></div><div>Bilingual navigation<small>AR ⇄ EN · SEARCH · CART</small></div></div>
+  <div class="lab" id="lb3"><div class="nd"></div><div class="ln"></div><div>Brand-true hero<small>ATR IDENTITY · TYPE · MOTION</small></div></div>
+  <div class="lab" id="lb2"><div class="nd"></div><div class="ln"></div><div>Shop by house<small>ASSAF · LAVERNE · REEF</small></div></div>
+  <div class="lab" id="lb1"><div class="nd"></div><div class="ln"></div><div>56-product catalogue<small>FILTERS · PRICES IN EGP</small></div></div>
+  <div class="lab" id="lb0"><div class="nd"></div><div class="ln"></div><div>Contact &amp; legal pages<small>TERMS · PRIVACY · WHATSAPP</small></div></div>
+</div>
+
+<!-- S4 bilingual -->
+<div class="sc" id="s4">
+  <div class="abs" style="left:0;right:0;top:70px;text-align:center">
+    <div class="chap" id="s4c"><b>03</b> — Bilingual</div>
+    <div class="h1" id="s4h" style="font-size:76px;margin-top:20px">Speaks your customer’s language.</div>
+    <div class="ar" id="s4a" style="font-size:52px;font-weight:700;margin-top:6px;color:#C9D4E6;direction:rtl">يتكلم لغة عميلك.</div>
+  </div>
+  <div id="s4wrap" class="abs" style="inset:0;perspective:2400px">
+    <div class="browser" id="br4" style="left:330px;top:350px;width:1260px;height:832px;transform-origin:50% 0%">
+      <div class="bbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><div class="url">Atr · Maison de Parfum</div></div>
+      <div class="bview"><img src="cap/d-en-hero.png"><img id="arImg" src="cap/d-ar-hero.png"><div id="divider"><div id="handle"><span>EN</span><span style="color:var(--cyan)">⇄</span><span class="ar" style="font-size:22px">عربي</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S5 mobile -->
+<div class="sc" id="s5">
+  <div class="abs" style="left:120px;top:300px;width:540px">
+    <div class="chap" id="s5c"><b>04</b> — Mobile first</div>
+    <div class="h1" id="s5h" style="font-size:84px;margin-top:26px">Built for the thumb.</div>
+    <div class="sub" id="s5s" style="font-size:27px;margin-top:24px">Most customers shop from a phone, so that is where we start.</div>
+  </div>
+  <div class="phone" id="ph5" style="left:756px;top:95px">
+    <div class="screen"><div class="island"></div><div class="sbar" style="background:#141110"><span>9:41</span><span>●●● 5G</span></div>
+      <div class="view">
+        <div class="pscreen" id="v5a"><img id="v5full" src="cap/m-en-full.png"><img id="v5hdr" src="cap/m-en-header.png" style="opacity:0"><img src="cap/m-en-bottombar.png" style="top:auto;bottom:0"></div>
+        <div class="pscreen" id="v5b"><img src="cap/m-en-modal.png"></div>
+        <div class="pscreen" id="v5c"><img src="cap/m-en-search.png"></div>
+        <div class="pscreen" id="v5d"><img src="cap/m-en-cart.png"></div>
+        <div class="pscreen" id="v5e"><img src="cap/m-en-checkout.png"></div>
+        <div class="tap" id="tap5"></div>
+      </div>
+    </div>
+  </div>
+  <div class="abs" id="steps" style="left:1340px;top:250px;width:480px;height:600px">
+    <div class="abs" style="left:22px;top:30px;width:2px;height:520px;background:rgba(255,255,255,.1)"><i id="stepBar" style="display:block;width:2px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);height:0"></i></div>
+  </div>
+</div>
+
+<!-- S6 automation -->
+<div class="sc" id="s6">
+  <div class="phone" id="ph6" style="left:300px;top:95px">
+    <div class="screen"><div class="island"></div><div class="sbar" style="background:#1F2C34;color:#E9EDEF"><span>9:41</span><span>●●● 5G</span></div>
+      <div class="chat">
+        <div class="chead"><div class="av"><img src="atr-logo-gold-transparent.png"></div><div><b>Atr · Maison de Parfum</b><small>Order assistant · online</small></div></div>
+        <div class="cbody"><div class="cmsgs" id="cm">
+          <div class="msg out" id="m1">Hi! I'd like to place my order ATR-261114-2841 🛍️<span class="tm">9:41 ✓✓</span></div>
+          <div class="typing" id="ty1"><i></i><i></i><i></i></div>
+          <div class="msg in" id="m2"><b>Order ATR-261114-2841</b>
+• Rouge × 1 — EGP 3,320
+• Crown Black × 2 — EGP 2,740
+Delivery: free<span class="tm">9:41</span></div>
+          <div class="btns" id="bt2"><div>✅ Confirm order</div><div>✏️ Edit order</div><div>❌ Cancel</div></div>
+          <div class="msg out" id="m3">✅ Confirm order<span class="tm">9:42 ✓✓</span></div>
+          <div class="typing" id="ty2"><i></i><i></i><i></i></div>
+          <div class="msg in" id="m4">Total: <b>EGP 6,060</b>
+Pay by InstaPay, then send the transfer screenshot here 📸<span class="tm">9:42</span></div>
+          <div class="msg out" id="m5" style="padding:8px 8px 22px"><div style="width:250px;height:120px;border-radius:9px;background:linear-gradient(135deg,#3B2A6B,#5B3DA8);display:flex;flex-direction:column;justify-content:center;padding:0 18px;gap:4px"><span style="font-size:13px;opacity:.8">Transfer successful</span><b style="font-size:24px">EGP 6,060 ✓</b></div><span class="tm">9:44 ✓✓</span></div>
+          <div class="typing" id="ty3"><i></i><i></i><i></i></div>
+          <div class="msg in" id="m6">Payment received ✅
+Your order is confirmed and arrives in 2–4 days. Thank you! 🌹<span class="tm">9:44</span></div>
+        </div></div>
+        <div class="cfoot"><div>Message</div><i></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="abs" style="left:880px;top:110px;width:960px">
+    <div class="chap" id="s6c"><b>05</b> — Automation</div>
+    <div class="h1" id="s6h" style="font-size:76px;margin-top:22px">Orders that close themselves.</div>
+    <div class="sub" id="s6s" style="font-size:26px;margin-top:18px">A WhatsApp assistant confirms the order, collects payment and alerts the owner. Day and night.</div>
+  </div>
+  <svg class="abs" id="flow" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+  <div class="node glass" id="n1" style="left:880px;top:470px"><div class="ic"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6"/></svg></div><div><b>Website checkout</b><small>POST /order-create</small></div><span class="st"></span></div>
+  <div class="node glass" id="n2" style="left:880px;top:640px"><div class="ic"><svg class="i" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1-5A8 8 0 1 1 21 12z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg></div><div><b>WhatsApp assistant</b><small>webhook · HMAC verified</small></div><span class="st"></span></div>
+  <div class="node glass" id="n3" style="left:880px;top:810px"><div class="ic"><svg class="i" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div><div><b>InstaPay · Paymob</b><small>awaiting_payment → paid</small></div><span class="st"></span></div>
+  <div class="node glass" id="n4" style="left:1450px;top:640px"><div class="ic" style="background:rgba(244,63,94,.14);border-color:rgba(244,63,94,.45)"><svg class="i" viewBox="0 0 24 24" style="stroke:#FFC2CD"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div><div><b>Owner alert</b><small>Telegram · instant</small></div><span class="st"></span></div>
+  <div class="notif" id="nt" style="left:1330px;top:470px"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M21.5 4.5 2.8 11.7c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.8 5.5c.2.7 1.1.9 1.6.4l2.6-2.4 4.8 3.5c.6.4 1.4.1 1.6-.6l3.3-15.4c.2-.9-.6-1.6-1.5-1.5z" fill="#fff"/></svg></div><div><b>New paid order · EGP 6,060</b><small>ATR-261114-2841 · Salma, Aswan</small></div></div>
+</div>
+
+<!-- S7 numbers -->
+<div class="sc" id="s7">
+  <div class="abs" id="s7bgw" style="inset:0;perspective:1800px;overflow:hidden"><img id="s7bg" src="cap/d-ar-full.png" style="position:absolute;left:260px;top:0;width:1400px;opacity:.16;filter:blur(3px)"></div>
+  <div class="abs" style="inset:0;background:radial-gradient(70% 60% at 50% 50%,rgba(5,8,15,.55),rgba(5,8,15,.92))"></div>
+  <div class="abs" style="left:0;right:0;top:170px;text-align:center">
+    <div class="chap" id="s7c"><b>06</b> — Delivered</div>
+    <div class="h1" id="s7h" style="font-size:84px;margin-top:22px">Launch-ready from day one.</div>
+  </div>
+  <div class="tile glass" id="tl0" style="left:120px;top:480px"><div class="big"><span id="c0">0</span></div><p>products online with studio photos</p></div>
+  <div class="tile glass" id="tl1" style="left:540px;top:480px"><div class="big"><span id="c1">0</span></div><p>languages: Arabic &amp; English</p></div>
+  <div class="tile glass" id="tl2" style="left:960px;top:480px"><div class="big"><span id="c2">0</span></div><p>governorates with delivery</p></div>
+  <div class="tile glass" id="tl3" style="left:1380px;top:480px"><div class="big"><span id="c3">0</span><sup>/7</sup></div><p>order assistant on WhatsApp</p></div>
+</div>
+
+<!-- S8 services -->
+<div class="sc" id="s8">
+  <div class="abs" id="s8t" style="left:0;right:0;top:0;height:1080px">
+    <div class="h1 abs" id="s8a" style="left:0;right:0;top:400px;text-align:center;font-size:96px">That’s one project.</div>
+    <div class="h1 abs" id="s8b" style="left:0;right:0;top:520px;text-align:center;font-size:96px;color:#9FB0CC">Here’s what else we build.</div>
+  </div>
+  <div id="svcs"></div>
+  <div class="h1 abs" id="s8c" style="left:0;right:0;top:360px;text-align:center;font-size:110px">Even this film?</div>
+  <div class="h1 abs" id="s8d" style="left:0;right:0;top:520px;text-align:center;font-size:110px"><span class="mono cy" style="font-weight:600;letter-spacing:-.05em">&lt;/&gt;</span> Written in code.</div>
+</div>
+
+<!-- S9 end -->
+<div class="sc" id="s9">
+  <svg class="abs" id="net" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+  <div id="lock">
+    <svg id="logo" viewBox="-8 -8 56 76" width="150" height="204" style="overflow:visible"><g fill="none" stroke="#0891B2" stroke-linecap="round"><path id="lg1" d="M0 52V44C0 30 20 32 20 18V8" stroke-width="5"/><path id="lg2" d="M40 52V44C40 30 20 32 20 18" stroke-width="5"/><circle id="lc1" cx="0" cy="60" r="5.5" stroke-width="4"/><circle id="lc2" cx="40" cy="60" r="5.5" stroke-width="4"/><circle id="lc3" cx="20" cy="0" r="5.5" stroke-width="4"/></g><circle id="lm" cx="20" cy="18" r="7.5" fill="#F43F5E"/></svg>
+    <div id="wm"><span class="w"><span class="wi">N</span></span><span class="w"><span class="wi">e</span></span><span class="w"><span class="wi">x</span></span><span class="w"><span class="wi">u</span></span><span class="w"><span class="wi">s</span></span></div>
+  </div>
+  <div class="abs" id="tagl" style="left:0;right:0;top:500px;text-align:center;font-family:Mono;font-size:24px;letter-spacing:.42em;color:var(--cyan);opacity:0">SOFTWARE DEVELOPMENT COMPANY</div>
+  <div class="h1 abs" id="s9h" style="left:0;right:0;top:600px;text-align:center;font-size:72px">Let’s build yours.</div>
+  <div class="ar abs" id="s9a" style="left:0;right:0;top:690px;text-align:center;font-size:46px;font-weight:700;color:#C9D4E6">لنبنِ مشروعك القادم معًا.</div>
+  <div class="abs" id="s9cta" style="left:0;right:0;top:800px;text-align:center;opacity:0"><span class="cta">Get a quote <span style="opacity:.6">·</span> nexuscodes.tech</span></div>
+  <div class="abs" id="s9f" style="left:0;right:0;top:940px;text-align:center;font-size:21px;color:var(--muted);letter-spacing:.06em;opacity:0">Mobile apps · Websites · E-commerce · Custom software · AI &amp; automation&nbsp;&nbsp;|&nbsp;&nbsp;UAE-licensed · Ajman Free Zone</div>
+</div>
+
+<div id="bug"><svg viewBox="-8 -8 56 76" width="20" height="27"><g fill="none" stroke="#0891B2" stroke-linecap="round"><path d="M0 52V44C0 30 20 32 20 18V8" stroke-width="5"/><path d="M40 52V44C40 30 20 32 20 18" stroke-width="5"/><circle cx="0" cy="60" r="5.5" stroke-width="4"/><circle cx="40" cy="60" r="5.5" stroke-width="4"/><circle cx="20" cy="0" r="5.5" stroke-width="4"/></g><circle cx="20" cy="18" r="7.5" fill="#F43F5E"/></svg>Nexus<span>nexuscodes.tech</span></div>
+<div id="vig"></div><div id="sweep"></div><div id="flash"></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => cl((t - a) / (b - a));
+const L = (a, b, k) => a + (b - a) * k;
+const eo = x => 1 - Math.pow(1 - x, 3), ei = x => x * x * x;
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const ex = x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+const eb = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const sm = x => x * x * (3 - 2 * x);
+window.DURATION = 64;
+const CUTS = [7, 13, 21, 27, 37, 46, 51, 57];
+const SC = [['s1', 0, 7.15], ['s2', 6.95, 13.2], ['s3', 12.85, 21.2], ['s4', 20.85, 27.2], ['s5', 26.85, 37.2], ['s6', 36.85, 46.2], ['s7', 45.85, 51.2], ['s8', 50.85, 57.2], ['s9', 56.85, 64]];
+const CUES = []; const cue = (t, type, v = 1) => CUES.push({ t: +t.toFixed(3), type, v });
+
+/* ---------- word splitting ---------- */
+function split(el) {
+  const nodes = [...el.childNodes]; el.innerHTML = '';
+  nodes.forEach(n => {
+    if (n.nodeType === 3) n.textContent.split(/(\s+)/).forEach(w => { if (!w) return; if (/^\s+$/.test(w)) { el.appendChild(document.createTextNode(' ')); return; } const o = document.createElement('span'); o.className = 'w'; o.innerHTML = '<span class="wi"></span>'; o.firstChild.textContent = w; el.appendChild(o); });
+    else { const o = document.createElement('span'); o.className = 'w'; const i = document.createElement('span'); i.className = 'wi'; i.appendChild(n); o.appendChild(i); el.appendChild(o); }
+  });
+}
+// reveal words: in at t0, out at t1 (optional)
+function rev(el, t, t0, o = {}) {
+  const d = o.d || .75, st = o.st == null ? .07 : o.st, t1 = o.t1, od = o.od || .45;
+  el.querySelectorAll('.wi').forEach((w, i) => {
+    const k = eo(P(t, t0 + i * st, t0 + i * st + d));
+    let y = (1 - k) * 128, op = 1;
+    if (t1 != null) { const q = ei(P(t, t1 + i * st * .4, t1 + i * st * .4 + od)); y -= q * 128; }
+    w.style.transform = `translateY(${y}%)`;
+  });
+}
+function fade(el, t, t0, d = .6, t1 = null, od = .4, dy = 24) {
+  const k = eo(P(t, t0, t0 + d)); let op = k, y = (1 - k) * dy;
+  if (t1 != null) { const q = ei(P(t, t1, t1 + od)); op *= 1 - q; y -= q * dy; }
+  el.style.opacity = op; el.style.transform = `translateY(${y}px)`;
+}
+document.querySelectorAll('#t2,#s2h,#s2s,#s3h,#s3s,#s4h,#s4a,#s5h,#s5s,#s6h,#s6s,#s7h,#s8a,#s8b,#s8c,#s8d,#s9h,#s9a,.chap').forEach(split);
+
+/* ---------- S1 code ---------- */
+const KW = /\b(const|let|var|function|return|if|else|for|of|in|new|true|false|null|await|async|typeof)\b/g;
+function hl(line) {
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const ci = line.indexOf('//'); let code = line, com = '';
+  if (ci >= 0 && !/["'`][^"'`]*\/\//.test(line.slice(0, ci + 2))) { code = line.slice(0, ci); com = line.slice(ci); }
+  let out = '', re = /("[^"]*"|'[^']*'|`[^`]*`)/g, last = 0, m;
+  const plain = s => esc(s).replace(KW, '<span class="k">$1</span>').replace(/\b(\d[\d_.]*)\b/g, '<span class="n">$1</span>').replace(/\b([a-zA-Z_]\w*)(?=\()/g, '<span class="f">$1</span>');
+  while ((m = re.exec(code))) { out += plain(code.slice(last, m.index)) + '<span class="s">' + esc(m[0]) + '</span>'; last = m.index + m[0].length; }
+  out += plain(code.slice(last));
+  return out + (com ? '<span class="c">' + esc(com) + '</span>' : '');
+}
+const T1 = 'Every brand has a story.';
+const TY0 = .55, TYS = .062;
+for (let i = 0; i < T1.length; i++) if (T1[i] !== ' ') cue(TY0 + i * TYS, 'key');
+function s1(t) {
+  // code plane
+  const sp = t < 5.4 ? t * 38 : 5.4 * 38 + Math.pow(t - 5.4, 2) * 520;
+  const z = t < 5.4 ? 0 : Math.pow(P(t, 5.4, 7.05), 2.2) * 900;
+  $('codePlane').style.transform = `translateZ(${z}px) rotateX(22deg) rotateZ(-7deg) translateY(${-sp - 700}px)`;
+  const op = L(0, .8, sm(P(t, 2.4, 4.0))) + .2 * P(t, 5.4, 6.6);
+  $('codeLines').style.opacity = op;
+  $('codeLines').style.filter = `blur(${L(2.2, 0, P(t, 3, 5.5))}px)`;
+  $('codeShade').style.opacity = L(1, .35, P(t, 5.2, 6.4));
+  // typed hook
+  const n = Math.floor(cl((t - TY0) / TYS + 1, 0, T1.length));
+  $('t1txt').textContent = T1.slice(0, n);
+  const blink = (t < TY0 || t > TY0 + T1.length * TYS) ? (Math.floor(t * 2.4) % 2 ? 0 : 1) : 1;
+  $('caret1').style.opacity = t > 3.0 ? 0 : blink;
+  const up = eio(P(t, 2.9, 3.5)), out1 = ei(P(t, 4.9, 5.35));
+  $('t1').style.transform = `translateY(${-up * 70 - out1 * 40}px)`; $('t1').style.opacity = (1 - up * .45) * (1 - out1);
+  rev($('t2'), t, 3.25, { st: .1, t1: 5.0, od: .4 }); $('t2').style.transform = `translateY(${-up * 70}px)`;
+  // compile bar
+  const c = P(t, 5.5, 6.75);
+  $('compile').style.opacity = eo(P(t, 5.4, 5.7)) * (1 - P(t, 6.85, 7.0));
+  $('compile').style.transform = `scale(${1 + ei(P(t, 6.75, 7.05)) * .3})`;
+  const pct = Math.round(eio(c) * 100); $('cpPct').textContent = pct + '%'; $('cpBar').style.width = pct + '%';
+  $('cpTxt').textContent = pct < 100 ? 'building atr.store' : '✓ ready to sell';
+  $('cpTxt').style.color = pct < 100 ? '#C8D3E6' : '#5EEAD4';
+}
+cue(3.25, 'swell'); cue(5.45, 'riser', 1.6); cue(6.72, 'ding2');
+
+/* ---------- S2 reveal ---------- */
+[[9.6, 'b1'], [9.9, 'b2'], [10.2, 'b3'], [10.5, 'b4']].forEach(([a]) => cue(a, 'pop'));
+cue(11.0, 'pop2');
+function s2(t) {
+  const k = eo(P(t, 7.0, 8.4)), ko = ei(P(t, 12.6, 13.15));
+  const br = $('br2');
+  br.style.transform = `translateX(${(1 - k) * 260}px) translateZ(${(1 - k) * -900 + ko * 500}px) rotateY(${L(-38, -11, k) + ko * 20}deg) rotateX(${L(10, 3, k)}deg)`;
+  br.style.opacity = P(t, 7.0, 7.35) * (1 - ko);
+  const sc = eio(P(t, 8.6, 12.9)) * 2150; $('br2img').style.transform = `translateY(${-sc}px)`;
+  $('br2hdr').style.opacity = sc > 40 ? 1 : 0;
+  rev($('s2c'), t, 7.5, { st: .05, t1: 12.55 }); rev($('s2h'), t, 7.75, { st: .12, t1: 12.55 }); rev($('s2s'), t, 8.25, { st: .04, d: .6, t1: 12.6 });
+  fade($('s2p'), t, 11.0, .5, 12.6);
+  [['b1', 9.6, 0], ['b2', 9.9, 1], ['b3', 10.2, 2], ['b4', 10.5, 3]].forEach(([id, a, i]) => {
+    const e = $(id), q = eb(P(t, a, a + .5)), o = ei(P(t, 12.45 + i * .04, 12.8 + i * .04));
+    e.style.opacity = cl(P(t, a, a + .2)) * (1 - o);
+    e.style.transform = `translateY(${Math.sin(t * 1.4 + i * 1.7) * 7 - o * 20}px) scale(${.6 + .4 * q})`;
+  });
+}
+
+/* ---------- S3 exploded ---------- */
+const LH = [217, 660, 376, 525, 57];
+[[14.6, 4], [14.9, 3], [15.2, 2], [15.5, 1], [15.8, 0]].forEach(([a]) => cue(a, 'tick'));
+function s3(t) {
+  const k = eio(P(t, 13.0, 14.6)), sp = eo(P(t, 13.6, 15.4)), ko = ei(P(t, 20.4, 21.1));
+  const rz = L(-8, -36, k) + (t - 13) * .9, rx = L(12, 56, k);
+  const s = L(1.15, .82, k) * (1 + ko * .25);
+  $('s3g').style.transform = `translateY(${L(-60, -10, k)}px) scale(${s}) rotateX(${rx}deg) rotateZ(${rz}deg)`;
+  const gap = L(0, 175, sp) * (1 - ko * .6);
+  let y = 0; const tot = LH.reduce((a, b) => a + b, 0) * (1 - sp);
+  for (let i = 0; i < 5; i++) {
+    // collapsed: stacked as a page (y offset); exploded: same centre, separated in z
+    const pageY = [5627, 2781, 1149, 121, 40][i];
+    const cy = L((pageY / 2880 * 1000) * 0.5 - 600, -LH[i] / 2, sp);
+    const el = $('L' + i);
+    el.style.top = (L(cy, -LH[i] / 2, sp)) + 'px';
+    el.style.transform = `translateZ(${(i - 2) * gap}px)`;
+    el.style.opacity = P(t, 12.9, 13.3) * (1 - ko);
+  }
+  rev($('s3c'), t, 13.4, { st: .05, t1: 20.4 }); rev($('s3h'), t, 13.6, { st: .1, t1: 20.4 }); rev($('s3s'), t, 14.2, { st: .035, t1: 20.45 });
+  // labels from projected markers
+  const marks = document.querySelectorAll('#s3g .mk');
+  const targetsY = [905, 735, 565, 395, 225];
+  [4, 3, 2, 1, 0].forEach((i, j) => {
+    const r = marks[i].getBoundingClientRect(); const lb = $('lb' + i);
+    const a = [14.6, 14.9, 15.2, 15.5, 15.8][j];
+    const q = eo(P(t, a, a + .6)), o = ei(P(t, 20.2 + j * .03, 20.5 + j * .03));
+    const x0 = r.left, y0 = r.top, lx = 1560;
+    lb.style.left = x0 + 'px'; lb.style.top = (y0 - 20) + 'px';
+    lb.querySelector('.ln').style.width = Math.max(0, (lx - x0) * q) + 'px';
+    lb.style.opacity = cl(q * 2) * (1 - o);
+    lb.lastElementChild.style.opacity = P(t, a + .25, a + .6);
+  });
+}
+
+/* ---------- S4 bilingual ---------- */
+cue(22.2, 'swish', 1); cue(24.3, 'swish', .7);
+function s4(t) {
+  const k = eo(P(t, 21.0, 22.2)), ko = ei(P(t, 26.5, 27.1));
+  $('br4').style.transform = `translateY(${(1 - k) * 500 + ko * -60}px) rotateX(${L(30, 9, k)}deg) scale(${1 - ko * .1})`;
+  $('br4').style.opacity = P(t, 21, 21.3) * (1 - ko);
+  rev($('s4c'), t, 21.2, { st: .05, t1: 26.5 }); rev($('s4h'), t, 21.35, { st: .08, t1: 26.5 }); rev($('s4a'), t, 22.0, { st: .1, t1: 26.55 });
+  let x = 1;
+  x = L(1, 0, eio(P(t, 22.3, 23.8)));
+  x = L(x, .5, eio(P(t, 24.4, 25.4)));
+  x += Math.sin((t - 25.4) * 1.6) * .03 * P(t, 25.4, 25.9);
+  const pct = x * 100;
+  $('arImg').style.clipPath = `inset(0 0 0 ${pct}%)`;
+  $('divider').style.left = pct + '%';
+  $('divider').style.opacity = P(t, 22.0, 22.3) * (1 - P(t, 26.2, 26.5));
+}
+
+/* ---------- S5 mobile ---------- */
+const STEPS = [['Browse', 'The whole collection, house by house'], ['Discover', 'Notes, sizes and prices in EGP'], ['Search', 'In Arabic or English'], ['Cart', 'Free-delivery progress bar'], ['Checkout', 'Order sent in one tap']];
+const ST_T = [27.3, 29.6, 31.2, 32.7, 34.4];
+STEPS.forEach(([h, p], i) => { const d = document.createElement('div'); d.className = 'step'; d.id = 'st' + i; d.style.top = (i * 118) + 'px'; d.innerHTML = `<div class="num">0${i + 1}</div><div><h4>${h}</h4><p>${p}</p></div>`; $('steps').appendChild(d); });
+const TAPS = [[29.35, 190, 470], [31.0, 336, 60], [32.5, 243, 785], [34.2, 195, 748]];
+TAPS.forEach(([a]) => cue(a, 'tap')); ST_T.forEach(a => cue(a + .05, 'blip'));
+function s5(t) {
+  const k = eo(P(t, 27.0, 28.2)), ko = ei(P(t, 36.5, 37.1));
+  $('ph5').style.transform = `translateY(${(1 - k) * 700 - ko * 60}px) rotate(${(1 - k) * 8}deg) scale(${1 - ko * .15})`;
+  $('ph5').style.opacity = 1 - ko;
+  rev($('s5c'), t, 27.4, { st: .05, t1: 36.5 }); rev($('s5h'), t, 27.6, { st: .1, t1: 36.5 }); rev($('s5s'), t, 28.2, { st: .035, t1: 36.55 });
+  // screens push
+  const scr = ['v5a', 'v5b', 'v5c', 'v5d', 'v5e'], at = [0, 29.55, 31.15, 32.65, 34.35];
+  scr.forEach((id, i) => {
+    const e = $(id); const a = at[i]; const nx = at[i + 1];
+    let x = 0; if (i > 0) x = (1 - eio(P(t, a, a + .4))) * 380;
+    if (nx) x -= eio(P(t, nx, nx + .4)) * 120;
+    e.style.transform = `translateX(${x}px)`; e.style.zIndex = i;
+    e.style.filter = nx ? `brightness(${1 - .5 * P(t, nx, nx + .4)})` : 'none';
+    e.style.display = (t >= a - .01 && (!nx || t < nx + .45)) || i === 0 && t < at[1] + .45 ? 'block' : 'none';
+  });
+  const sy = eio(P(t, 27.6, 28.9)) * 1950 + eio(P(t, 28.9, 29.3)) * 760;
+  $('v5full').style.transform = `translateY(${-sy}px)`; $('v5hdr').style.opacity = sy > 62 ? 1 : 0;
+  // tap ripple
+  const tp = $('tap5'); let tv = 0;
+  TAPS.forEach(([a, x, y]) => { const q = P(t, a - .12, a + .35); if (q > 0 && q < 1) { tv = 1; tp.style.left = x + 'px'; tp.style.top = (y) + 'px'; tp.style.opacity = Math.sin(q * Math.PI); tp.style.transform = `scale(${.6 + q * .7})`; } });
+  if (!tv) tp.style.opacity = 0;
+  // steps
+  let cur = 0; ST_T.forEach((a, i) => { if (t >= a) cur = i; });
+  STEPS.forEach((_, i) => {
+    const e = $('st' + i); const a = 27.5 + i * .12;
+    const q = eo(P(t, a, a + .6)), o = ei(P(t, 36.4 + i * .03, 36.8 + i * .03));
+    const on = i === cur && t >= ST_T[0];
+    e.style.opacity = q * (1 - o) * (on ? 1 : i < cur ? .55 : .32);
+    e.style.transform = `translateX(${(1 - q) * 40}px)`;
+    const nm = e.querySelector('.num'); nm.style.borderColor = on ? '#22D3EE' : i < cur ? 'rgba(34,211,238,.5)' : 'rgba(255,255,255,.18)'; nm.style.color = on ? '#22D3EE' : '#8894AE'; nm.style.boxShadow = on ? '0 0 20px rgba(34,211,238,.6)' : 'none'; nm.style.background = on ? 'rgba(34,211,238,.1)' : '#070B17';
+  });
+  const bp = cur / 4 + (t >= ST_T[4] ? 0 : (t - ST_T[cur]) / ((ST_T[cur + 1] || 37) - ST_T[cur]) / 4);
+  $('stepBar').style.height = (cl(bp) * 472 * P(t, 27.3, 27.6)) + 'px';
+  $('steps').style.opacity = 1 - ei(P(t, 36.5, 37));
+}
+
+/* ---------- S6 automation ---------- */
+const MS = [['m1', 37.7], ['ty1', 38.3, 38.95], ['m2', 38.95], ['bt2', 39.35], ['m3', 40.3], ['ty2', 40.7, 41.3], ['m4', 41.3], ['m5', 42.4], ['ty3', 42.9, 43.5], ['m6', 43.5]];
+cue(37.7, 'send'); cue(38.95, 'recv'); cue(39.35, 'pop'); cue(40.1, 'tap'); cue(40.3, 'send'); cue(41.3, 'recv'); cue(42.4, 'send'); cue(43.5, 'recv'); cue(44.2, 'ding');
+const FL = { n1: [1045, 516], n2: [1045, 686], n3: [1045, 856], n4: [1615, 686] };
+const flowSvg = $('flow');
+const paths = [
+  ['M1045 562 L1045 640', 37.9, 38.6], ['M1045 732 L1045 810', 41.0, 41.8], ['M1210 856 C1330 856 1330 686 1450 686', 43.6, 44.3]
+];
+flowSvg.innerHTML = paths.map((p, i) => `<path id="fp${i}" d="${p[0]}" fill="none" stroke="rgba(34,211,238,.25)" stroke-width="3" stroke-dasharray="6 8"/><circle id="fd${i}" r="8" fill="#22D3EE" style="filter:drop-shadow(0 0 8px #22D3EE)"/>`).join('');
+function s6(t) {
+  const k = eo(P(t, 37.0, 38.0)), ko = ei(P(t, 45.6, 46.1));
+  $('ph6').style.transform = `translateX(${(1 - k) * -500 - ko * 80}px) rotate(${(1 - k) * -6}deg) scale(${1 - ko * .12})`;
+  $('ph6').style.opacity = 1 - ko;
+  rev($('s6c'), t, 37.3, { st: .05, t1: 45.6 }); rev($('s6h'), t, 37.45, { st: .09, t1: 45.6 }); rev($('s6s'), t, 38.0, { st: .03, t1: 45.65 });
+  // chat
+  let hgt = 0; const cm = $('cm');
+  MS.forEach(([id, a, b]) => {
+    const e = $(id); const q = eo(P(t, a, a + .3));
+    const vis = t >= a && (!b || t < b);
+    e.style.display = vis || (!b && t >= a) ? '' : 'none';
+    if (b) { e.style.display = t >= a && t < b ? 'flex' : 'none'; e.style.opacity = 1; e.querySelectorAll('i').forEach((d, j) => d.style.transform = `translateY(${Math.sin(t * 9 - j * .9) * 3}px)`); }
+    else { e.style.opacity = q; e.style.transform = `translateY(${(1 - q) * 16}px) scale(${.94 + .06 * q})`; e.style.transformOrigin = e.classList.contains('out') ? '100% 100%' : '0 100%'; }
+  });
+  const body = cm.parentElement.clientHeight; const ch = cm.scrollHeight;
+  cm.style.top = Math.min(0, body - ch) + 'px';
+  // flow
+  ['n1', 'n2', 'n3', 'n4'].forEach((id, i) => { const a = [38.0, 38.2, 38.4, 38.6][i]; const q = eo(P(t, a, a + .5)), o = ei(P(t, 45.5 + i * .04, 45.9 + i * .04)); const e = $(id); e.style.opacity = q * (1 - o); e.style.transform = `translateY(${(1 - q) * 30}px)`; });
+  const lit = [38.6, 39.0, 42.4, 44.3];
+  ['n1', 'n2', 'n3', 'n4'].forEach((id, i) => { const on = t >= lit[i]; const st = $(id).querySelector('.st'); st.style.background = on ? (i === 3 ? '#F43F5E' : '#34D399') : '#334155'; st.style.boxShadow = on ? `0 0 12px ${i === 3 ? '#F43F5E' : '#34D399'}` : 'none'; $(id).style.borderColor = t >= lit[i] && t < lit[i] + .6 ? 'rgba(34,211,238,.8)' : ''; });
+  paths.forEach(([d, a, b], i) => {
+    const pe = $('fp' + i), dot = $('fd' + i); const L0 = pe.getTotalLength();
+    pe.style.opacity = P(t, 38.3, 38.8) * (1 - P(t, 45.5, 45.9)); pe.style.strokeDashoffset = -t * 30;
+    const q = P(t, a, b); const pt = pe.getPointAtLength(eio(q) * L0);
+    dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); dot.style.opacity = q > 0 && q < 1 ? 1 : 0;
+  });
+  const nq = eb(P(t, 44.2, 44.7)), no = ei(P(t, 45.4, 45.8));
+  $('nt').style.opacity = cl(P(t, 44.2, 44.4)) * (1 - no); $('nt').style.transform = `translateY(${(1 - nq) * -40}px) scale(${.85 + .15 * nq})`;
+}
+
+/* ---------- S7 numbers ---------- */
+const NUMS = [56, 2, 27, 24];
+NUMS.forEach((_, i) => cue(46.6 + i * .18, 'pop'));
+for (let x = 46.8; x < 48.2; x += .07) cue(x, 'tick2');
+function s7(t) {
+  const ko = ei(P(t, 50.6, 51.1));
+  $('s7bg').style.transform = `rotateX(28deg) rotateZ(-6deg) translateY(${-(t - 46) * 120 - 400}px)`;
+  $('s7bgw').style.opacity = P(t, 46, 46.6) * (1 - ko);
+  rev($('s7c'), t, 46.1, { st: .05, t1: 50.6 }); rev($('s7h'), t, 46.25, { st: .09, t1: 50.6 });
+  NUMS.forEach((n, i) => {
+    const a = 46.6 + i * .18, q = eb(P(t, a, a + .6)), o = ei(P(t, 50.5 + i * .05, 50.9 + i * .05));
+    const e = $('tl' + i); e.style.opacity = cl(P(t, a, a + .25)) * (1 - o);
+    e.style.transform = `translateY(${(1 - q) * 80 - o * 40}px)`;
+    $('c' + i).textContent = Math.round(eo(P(t, a + .15, a + 1.5)) * n);
+  });
+}
+
+/* ---------- S8 services ---------- */
+const IC = {
+  phone: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+  web: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>',
+  cart: '<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.5L21.5 8H6"/>',
+  sys: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  ai: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+  bot: '<rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9 17h6"/>',
+  pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  cloud: '<path d="M18 10h-1.3A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'
+};
+const SV = [['phone', 'Mobile apps', 'iOS & Android, sketch to store'], ['web', 'Websites & platforms', 'Fast, searchable, easy to edit'], ['cart', 'E-commerce', 'Stores with a checkout people finish'],
+  ['sys', 'Custom software', 'ERP, CRM, dashboards, internal tools'], ['ai', 'AI solutions', 'Features that answer and predict'], ['bot', 'Automation & chatbots', 'WhatsApp bots that work 24/7'],
+  ['pen', 'UI & UX design', 'Clear interfaces, tested with users'], ['cloud', 'Cloud & DevOps', 'Hosting and releases that stay up'], ['shield', 'Testing & care', 'Quality before and after launch']];
+SV.forEach(([ic, h, p], i) => { const d = document.createElement('div'); d.className = 'svc glass'; d.id = 'sv' + i; d.style.left = (130 + (i % 3) * 564) + 'px'; d.style.top = (330 + Math.floor(i / 3) * 186) + 'px'; d.innerHTML = `<div class="ic"><svg class="i" viewBox="0 0 24 24">${IC[ic]}</svg></div><div><b>${h}</b><small>${p}</small></div>`; $('svcs').appendChild(d); });
+const SV_T = i => 52.55 + i * .25;
+SV.forEach((_, i) => cue(SV_T(i), 'pop', .8)); cue(55.25, 'hit2'); cue(56.0, 'hit2');
+function s8(t) {
+  rev($('s8a'), t, 51.05, { st: .08 }); rev($('s8b'), t, 51.6, { st: .08 });
+  const up = eio(P(t, 52.2, 52.8));
+  $('s8t').style.transform = `translateY(${-up * 300}px) scale(${1 - up * .38})`;
+  $('s8t').style.opacity = 1 - P(t, 54.9, 55.2);
+  SV.forEach((_, i) => {
+    const a = SV_T(i), q = eb(P(t, a, a + .45)), o = ei(P(t, 54.85 + (i % 3) * .04 + Math.floor(i / 3) * .04, 55.25 + i * .02));
+    const e = $('sv' + i); e.style.opacity = cl(P(t, a, a + .15)) * (1 - o);
+    e.style.transform = `translateY(${(1 - q) * 60}px) scale(${(.8 + .2 * q) * (1 - o * .2)})`;
+  });
+  rev($('s8c'), t, 55.25, { st: .1, d: .5, t1: 56.65, od: .35 }); rev($('s8d'), t, 56.0, { st: .1, d: .5, t1: 56.75, od: .3 });
+  $('s8c').style.opacity = 1 - P(t, 55.9, 56.1) * .55;
+}
+
+/* ---------- S9 end card ---------- */
+const NET = [];
+(function () { // decorative network: branches converging to the logo
+  let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  let html = '';
+  for (let i = 0; i < 14; i++) {
+    const side = i % 2 ? 1 : -1; const y0 = 80 + r() * 920; const x0 = side < 0 ? -20 : 1940; const x1 = 960 + side * (380 + r() * 260); const y1 = 380 + (r() - .5) * 340;
+    const mx = (x0 + x1) / 2; const d = `M${x0} ${y0} C${mx} ${y0} ${mx} ${y1} ${x1} ${y1}`;
+    html += `<path id="nl${i}" d="${d}" fill="none" stroke="${i % 3 ? 'rgba(34,211,238,.22)' : 'rgba(244,63,94,.25)'}" stroke-width="2"/><circle id="nc${i}" cx="${x1}" cy="${y1}" r="5" fill="none" stroke="${i % 3 ? '#22D3EE' : '#F43F5E'}" stroke-width="2"/>`;
+    NET.push(i);
+  }
+  $('net').innerHTML = html;
+})();
+cue(57.25, 'logo'); cue(58.55, 'hit3'); cue(60.2, 'pop2');
+function s9(t) {
+  NET.forEach(i => { const pth = $('nl' + i), L0 = pth.getTotalLength(); const q = eio(P(t, 57.1 + i * .05, 58.6 + i * .05)); pth.style.strokeDasharray = L0; pth.style.strokeDashoffset = L0 * (1 - q); $('nc' + i).style.opacity = P(t, 58.4 + i * .05, 58.7 + i * .05) * (.7 + .3 * Math.sin(t * 3 + i)); });
+  ['lg1', 'lg2'].forEach((id, i) => { const p = $(id), L0 = p.getTotalLength(); p.style.strokeDasharray = L0; p.style.strokeDashoffset = L0 * (1 - eio(P(t, 57.3 + i * .1, 58.3 + i * .1))); });
+  ['lc1', 'lc2', 'lc3'].forEach((id, i) => { const q = eb(P(t, 57.3 + i * .12, 57.8 + i * .12)); const c = $(id); c.style.transformOrigin = 'center'; c.style.transformBox = 'fill-box'; c.style.transform = `scale(${q})`; c.style.opacity = cl(q); });
+  const m = eb(P(t, 58.45, 58.95)); $('lm').style.transformBox = 'fill-box'; $('lm').style.transformOrigin = 'center'; $('lm').style.transform = `scale(${m * (1 + .06 * Math.sin(t * 3))})`;
+  $('logo').style.filter = `drop-shadow(0 0 ${20 * P(t, 58.5, 59.2)}px rgba(244,63,94,.6))`;
+  const lk = eio(P(t, 57.0, 58.6)); $('lock').style.transform = `translateX(${(1 - P(t, 58.4, 59.3) * 1) * 0}px) scale(${L(1.25, 1, lk)})`;
+  $('wm').querySelectorAll('.wi').forEach((w, i) => { const q = eo(P(t, 58.5 + i * .06, 59.2 + i * .06)); w.style.transform = `translateY(${(1 - q) * 110}%)`; });
+  $('wm').style.width = (L(0, 1, eio(P(t, 58.3, 58.9))) * 540) + 'px'; $('wm').style.overflow = 'hidden';
+  const tq = eo(P(t, 59.3, 60.1)); $('tagl').style.opacity = tq; $('tagl').style.letterSpacing = L(.8, .42, tq) + 'em';
+  rev($('s9h'), t, 59.7, { st: .09 }); rev($('s9a'), t, 60.05, { st: .1 });
+  const cq = eb(P(t, 60.2, 60.8)); $('s9cta').style.opacity = cl(P(t, 60.2, 60.4)); $('s9cta').style.transform = `scale(${.8 + .2 * cq})`;
+  fade($('s9f'), t, 60.7, .8);
+  $('s9cta').firstChild.style.boxShadow = `0 20px ${60 + 20 * Math.sin(t * 3)}px -10px rgba(244,63,94,${.55 + .2 * Math.sin(t * 3)})`;
+}
+
+/* ---------- global ---------- */
+CUTS.forEach(c => { cue(c - .45, 'whoosh'); cue(c, 'hit'); });
+const GL = [[0, 300, 300, 1600, 900], [7, 1400, 400, 400, 900], [13, 1300, 700, 300, 200], [21, 960, 900, 300, 100], [27, 960, 500, 1600, 900], [37, 500, 500, 1500, 300], [46, 960, 600, 300, 900], [51, 400, 300, 1500, 800], [57, 760, 380, 1160, 420], [64, 760, 380, 1160, 420]];
+function render(t) {
+  SC.forEach(([id, a, b]) => { $(id).style.display = t >= a && t < b ? 'block' : 'none'; });
+  if (t < 7.15) s1(t); if (t >= 6.95 && t < 13.2) s2(t); if (t >= 12.85 && t < 21.2) s3(t); if (t >= 20.85 && t < 27.2) s4(t);
+  if (t >= 26.85 && t < 37.2) s5(t); if (t >= 36.85 && t < 46.2) s6(t); if (t >= 45.85 && t < 51.2) s7(t); if (t >= 50.85 && t < 57.2) s8(t); if (t >= 56.85) s9(t);
+  // glows drift between scene positions
+  let i = 0; while (i < GL.length - 2 && t >= GL[i + 1][0]) i++;
+  const A = GL[i], B = GL[i + 1], k = eio(P(t, B[0] - 1.2, B[0] + .3));
+  const w = Math.sin(t * .5) * 40;
+  $('glowA').style.transform = `translate(${L(A[1], B[1], k) + w}px,${L(A[2], B[2], k)}px)`;
+  $('glowB').style.transform = `translate(${L(A[3], B[3], k) - w}px,${L(A[4], B[4], k) + w * .5}px)`;
+  $('glowA').style.opacity = P(t, 0, 1.5) * .9 + .1; $('glowB').style.opacity = P(t, 0.5, 3);
+  $('grid').style.transform = `translate(${(t * 6) % 44}px,${(t * 3) % 44}px)`;
+  $('grid').style.opacity = .5 + .5 * P(t, 0, 2);
+  // sweep + flash on cuts
+  let sw = 0, sx = -600, fl = 0;
+  CUTS.forEach(c => { const q = P(t, c - .22, c + .22); if (q > 0 && q < 1) { sw = Math.sin(q * Math.PI); sx = L(-700, 2300, eio(q)); } const f = P(t, c - .06, c + .3); if (f > 0 && f < 1) fl = Math.max(fl, (1 - f) * (f < .2 ? f / .2 : 1)); });
+  $('sweep').style.opacity = sw * .8; $('sweep').style.left = sx + 'px';
+  $('flash').style.opacity = fl * (t < 7.5 ? .55 : .14);
+  $('bug').style.opacity = P(t, 8, 9) * (1 - P(t, 56.4, 56.8)) * .7;
+  $('stage').style.opacity = 1 - P(t, 63.3, 64) * 0;
+}
+window.render = render; window.CUES = CUES.sort((a, b) => a.t - b.t);
+Promise.all([fetch('code.txt').then(r => r.text()), document.fonts.load('600 40px Poppins'), document.fonts.load('400 40px Poppins'), document.fonts.load('500 40px Poppins'), document.fonts.load('700 40px Cairo', 'عربي'), document.fonts.load('500 40px Cairo', 'عربي'), document.fonts.load('400 20px Mono'), document.fonts.load('600 20px Mono')]).then(async ([code]) => {
+  const lines = code.split('\n'); let all = []; while (all.length < 260) all = all.concat(lines);
+  $('codeLines').innerHTML = all.map(hl).join('\n');
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+  render(0); window.READY = true;
+});
+</script>
+</body></html>

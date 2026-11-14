@@ -1,0 +1,89 @@
+  const saveCart = () => store.set("cart", state.cart);
+
+  function addToCart(code, btn) {
+    state.cart[code] = Math.min(20, (state.cart[code] || 0) + 1);
+    saveCart(); renderCart(); renderCounts();
+    toast(t("cart.added", { name: galTitle(byCode(code)) }));
+    $$("[data-count='cart']").forEach(el => { el.classList.remove("bump"); void el.offsetWidth; el.classList.a
+    if (btn) { btn.classList.add("is-done"); btn.querySelector("span").textContent = "✓ " + t("cart.addedSho
+  }
+  function setQty(code, qty) {
+    if (qty <= 0) delete state.cart[code]; else state.cart[code] = Math.min(20, qty);
+    saveCart(); renderCart(); renderCounts();
+  }
+  function clearCart() { state.cart = {}; saveCart(); renderCart(); renderCounts(); }
+
+  function renderCounts() {
+    const n = cartCount();
+    $$("[data-count='cart']").forEach(el => { el.textContent = n; el.hidden = !n; });
+  }
+  // returns the number as 01XXXXXXXXX, or "" if it is not an Egyptian mobile number.
+  function normalizePhone(v) {
+    let d = String(v || "").replace(/[٠-٩]/g, c => c.charCodeAt(0) - 0x660).replace(/[۰-۹]/g, c => c.charC
+      .replace(/[\s\-().\u200e\u200f\u202a-\u202e]/g, "").replace(/^00/, "+");
+    if (!PHONE_RE.test(d)) return "";
+    d = d.replace(/^\+?20/, "");
+    return d.startsWith("0") ? d : "0" + d;
+  }
+  const makeRef = () => { const d = new Date(); const p = n => String(n).padStart(2, "0"); return `ATR-${Strin
+
+  // Why card payment is not offered right now ("" = it is available).
+  function cardBlock(q, gov) {
+    if (!SHOP.PAYMENT.cardEnabled) return "co.cardSoon";
+    if (q.unpriced) return "co.cardUnpriced";
+    if (gov && q.total === null) return "co.cardDelivery";
+    if (!gov && q.subtotal < SHOP.DELIVERY.freeFrom && SHOP.DELIVERY.aswan === null && SHOP.DELIVERY.other ===
+    return "";
+  }
+
+  function checkout() {
+    if (!cartLines().length) return;
+    const field = (name, label, input) => `<label class="field" data-field="${name}"><span>${label}</span>${in
+    $("#modalContent").innerHTML = `<form class="co" id="coForm" novalidate>
+      <h3 id="modalTitle">${t("co.title")}</h3>
+      <div class="co__grid">
+  document.addEventListener("click", e => {
+    const el = e.target.closest("button, a");
+    if (!el) { if (e.target.id === "modal") closeLayer(); return; }
+    const d = el.dataset;
+
+    if ("close" in d) { if (el.tagName === "A") closeLayer(true); else closeLayer(); return; }
+    if (d.galLink) { setGalFilter(d.galLink); closeMenu(); if (el.tagName !== "A") $("#collection").scrollInto
+    if (d.galF) { setGalFilter(d.galF); return; }
+    if (d.gal) { galView(+d.gal); openLayer($("#modal")); return; }
+    if (el.id === "heroArch") { d.galCode = HERO_PHOTO; }
+    if (d.galCode) {
+      setGalFilter("all");
+      galView(GALLERY.findIndex(it => it.code === d.galCode));
+      openLayer($("#modal")); return;
+    }
+    if (d.galStep) { galView(state.gal.at + +d.galStep); el.focus(); return; }
+    if ("search" in d) { closeMenu(); openLayer($("#searchPop")); renderSearch($("#searchBig").value); return;
+    if (d.addCart) { addToCart(d.addCart, el); return; }
+    if ("cartOpen" in d) { closeMenu(); renderCart(); openLayer($("#cart")); return; }
+    if (d.qty) { setQty(d.qty, (state.cart[d.qty] || 0) + +d.d); return; }
+    if (d.remove) { setQty(d.remove, 0); return; }
+    if ("checkout" in d) { checkout(); return; }
+    if (d.copy) { // copy the InstaPay address
+      const done = () => { el.textContent = t("ip.copied"); setTimeout(() => { el.textContent = t("ip.copy"); 
+  // A product with no price here shows "Price on request": it can still go in the cart and be
+  // ordered on WhatsApp, but it cannot be paid by card until it has a price.
+  // Example:  B03: 1850,
+  // Prices: the price each brand's website sells at today (6 Nov 2026), converted to EGP and rounded to 10.
+  // Full list with sources: prices/price-list.csv. Change any number here to set your own price.
+  PRICES: {
+    // osma
+    OS01: 3320,   // Rouge, 100 ml: 231 SAR (regular 239)
+    OS02: 3320,   // Noir, 100 ml: 231 SAR (regular 239) (estimate)
+    OS03: 3720,   // Bonsoir, 150 ml: 259 SAR (estimate)
+    OS04: 3720,   // Positano, 150 ml: 259 SAR (estimate)
+    OS05: 3720,   // Bonjour, 150 ml: 259 SAR (estimate)
+    // dkhoon
+    DK01: 3800,   // Special Edition Collection, 6 x 50 ml: 50 JOD
+    DK02: 1370,   // Musk Toffee, 100 ml: 95 SAR (estimate)
+    DK03: 1370,   // Crown Black, 100 ml: 95 SAR
+    DK04: 1370,   // No One, 100 ml: 95 SAR
+    DK05: 1370,   // Gold Tears, 100 ml: 95 SAR
+    DK06: 1850,   // Kahilan, 100 ml: 129 SAR
+    DK07: 1370,   // Dkhoon Desert, 100 ml: 95 SAR (estimate)
+    // reef

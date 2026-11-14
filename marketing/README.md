@@ -40,3 +40,32 @@ home page. Built from `cinematic-source/web.html` with `render_web.js`, supersam
 (and `1280 1600` for phones), then scaled down with Lanczos while encoding: H.264 `-crf 18`, VP9 `-crf 27/28`, no audio,
 `+faststart`. The bottles are drawn from pre-filtered sizes in `b/mip/` (the ribbed Laverne bottles slightly softened at small
 sizes) so fine ribs do not shimmer, and there is no grain.
+
+# Nexus agency film (64 s, 4K)
+
+A promo film for **Nexus Software Development Company** (nexuscodes.tech) that uses this website as the case study.
+
+- `nexus-film-4k.mp4`: 3840×2160, 30 fps, H.264, original score (−14 LUFS, −1 dBTP), for YouTube, LinkedIn, the website and presentations
+- `nexus-film-1080p.mp4`: 1920×1080, smaller file for WhatsApp, email and quick sharing
+- `nexus-film-silent.mp4`: 1080p picture without sound, for adding a licensed track or a voice-over
+- `nexus-film-cover.jpg`: 4K end card, for thumbnails and covers
+
+Story (120 BPM, every cut lands on a beat): a typed hook and the site's real code compiling (0–7 s) → the Atr site revealed in a
+3D browser (7–13) → the page exploded into its layers (13–21) → Arabic ⇄ English wipe (21–27) → the phone journey: browse,
+product, search, cart, checkout (27–37) → the WhatsApp order assistant and payment flow (37–46) → launch numbers (46–51) →
+the nine Nexus services, then "Even this film? Written in code." (51–57) → Nexus logo end card and call to action (57–64).
+
+Source in `nexus-source/`. All screens are real captures of `public/`; the chat is a mock-up of the assistant's flow.
+
+```sh
+npm i @fontsource/poppins @fontsource/jetbrains-mono @fontsource/cairo     # in a work folder with the source files
+(cd public && python3 -m http.server 8090) &                               # the site, for the capture scripts
+node capture.js && node capture2.js && node capture3.js && python3 crops.py   # writes cap/*.png
+python3 -m http.server 8092 &                                              # the work folder, for the scene
+node render.js frames 30                                                   # 1920 frames at 3840×2160 (DSF=1 for 1080p previews)
+python3 music.py cues.json music.wav                                       # cues.json is written by render.js
+ffmpeg -framerate 30 -i frames/f%05d.jpg -i music.wav -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p \
+  -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k.mp4
+```
+
+Texts and timings are in `scene.html` (one `sN(t)` function per scene); the score follows the cue list the scene exports.
