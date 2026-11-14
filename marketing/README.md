@@ -49,6 +49,9 @@ A promo film for **Nexus Software Development Company** (nexuscodes.tech) that u
 - `nexus-film-1080p.mp4`: 1920×1080, smaller file for WhatsApp, email and quick sharing
 - `nexus-film-silent.mp4`: 1080p picture without sound, for adding a licensed track or a voice-over
 - `nexus-film-cover.jpg`: 4K end card, for thumbnails and covers
+- `nexus-film-vertical.mp4`: 1080×1920 (9:16) cut for Instagram Reels, TikTok, YouTube Shorts and WhatsApp Status, rendered at 1.5× and
+  scaled down for extra sharpness; titles stay clear of the top 220 px and bottom 380 px where the apps draw their buttons and captions
+- `nexus-film-vertical-silent.mp4` and `nexus-film-vertical-cover.jpg`: the same without sound, and its cover
 
 Story (120 BPM, every cut lands on a beat): a typed hook and the site's real code compiling (0–7 s) → the Atr site revealed in a
 3D browser (7–13) → the page exploded into its layers (13–21) → Arabic ⇄ English wipe (21–27) → the phone journey: browse,
@@ -63,6 +66,7 @@ npm i @fontsource/poppins @fontsource/jetbrains-mono @fontsource/cairo     # in 
 node capture.js && node capture2.js && node capture3.js && python3 crops.py   # writes cap/*.png
 python3 -m http.server 8092 &                                              # the work folder, for the scene
 node render.js frames 30                                                   # 1920 frames at 3840×2160 (DSF=1 for 1080p previews)
+VW=1080 VH=1920 SCENE='scene.html#v' DSF=1.5 node render.js framesv 30         # the vertical cut (same timing, same score)
 python3 music.py cues.json music.wav                                       # cues.json is written by render.js
 ffmpeg -framerate 30 -i frames/f%05d.jpg -i music.wav -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p \
   -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k.mp4

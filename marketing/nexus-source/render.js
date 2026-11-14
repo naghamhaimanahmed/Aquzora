@@ -5,7 +5,7 @@ const DSF = +(process.env.DSF || 2);
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const b = await chromium.launch();
-  const p = await b.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: DSF });
+  const p = await b.newPage({ viewport: { width: +(process.env.VW || 1920), height: +(process.env.VH || 1080) }, deviceScaleFactor: DSF });
   const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('console', m => m.type() === 'error' && errs.push(m.text()));
   await p.goto('http://localhost:8092/' + (process.env.SCENE || 'scene.html'));
   await p.waitForFunction(() => window.READY === true, null, { timeout: 120000 });
