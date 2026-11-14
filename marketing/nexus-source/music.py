@@ -1,9 +1,10 @@
-# Original score + sound design for the Nexus film: 120 BPM, D minor, 64 s, 48 kHz stereo.
+# Original score + sound design for the Nexus film: 120 BPM, D minor, 86 s, 48 kHz stereo.
+# Sections: 0 intro · 7 reveal · 13 brand chapter (half-time, warm) · 27 full groove · 71 build · 73 drop · 77.25 break · 79 end card
 # usage: python3 music.py cues.json out.wav
 import numpy as np, json, sys, wave
 from scipy.signal import fftconvolve, butter, sosfilt
 from scipy.ndimage import maximum_filter1d, uniform_filter1d
-SR = 48000; D = 64.0; N = int(SR * D)
+SR = 48000; D = 86.0; N = int(SR * D)
 rng = np.random.default_rng(11)
 cues = json.load(open(sys.argv[1]))
 MUS = np.zeros((2, N)); FX = np.zeros((2, N)); REV = np.zeros((2, N))
@@ -93,68 +94,80 @@ def chord_at(t): return int(((t - T0) // 2) % 4) if t >= T0 else 0
 put(MUS, saw_pad([hz(m) for m in [38, 50, 57, 60, 64]], 7.6, 900, 1.0), 0.0, .55, 0, .5)
 put(MUS, bq(saw_pad([hz(m) for m in [62, 69, 72, 76]], 4.5, 3000, 1.0), 400, 'high'), 2.8, .25, 0, .7)
 
-drums_on = lambda t: (T0 <= t < 55.25)
-full = lambda t: (13 <= t < 55.25)
+END = 77.25; brand = lambda t: (13 <= t < 27)
+drums_on = lambda t: (T0 <= t < END)
+full = lambda t: (27 <= t < END)
 kicks = []
-for b in range(int((64 - T0) / BEAT)):
+for b in range(int((D - T0) / BEAT)):
     t = T0 + b * BEAT; beat = b % 4
     if not drums_on(t): continue
-    if 49.0 <= t < 51.0 and t >= 50.5: continue  # gap before the drop
-    kg = .8 if full(t) else .55
+    if 72.5 <= t < 73.0 or 26.5 <= t < 27.0: continue  # gaps before the drops
+    if brand(t) and beat in (1, 3):  # half-time in the brand chapter: rim tick instead of a kick
+        put(MUS, click(.8, 1800), t, .28, .2, .5); put(MUS, hat(.5, True), t + .25, .3, .25); continue
+    kg = .8 if full(t) else .5
     put(MUS, kick(), t, kg); kicks.append(t)
     if full(t) and beat in (1, 3): put(MUS, clap(), t, .8, .05, .25)
     # hats
     put(MUS, hat(1, True), t + .25, .55 if full(t) else .35, .25)
     if full(t):
         for s16 in (.125, .375): put(MUS, hat(.6 + .3 * rng.random()), t + s16, .6, -.2)
-# snare build 49-51
-for i, t in enumerate(np.concatenate([np.arange(49.0, 50.0, .25), np.arange(50.0, 50.5, .125), np.arange(50.5, 51.0, .0625)])):
-    put(MUS, clap(), t, .25 + .5 * (t - 49) / 2, 0, .2)
-put(MUS, riser(2.0), 49.0, .9)
+# snare build 71-73
+for i, t in enumerate(np.concatenate([np.arange(71.0, 72.0, .25), np.arange(72.0, 72.5, .125), np.arange(72.5, 73.0, .0625)])):
+    put(MUS, clap(), t, .25 + .5 * (t - 71) / 2, 0, .2)
+put(MUS, riser(2.0), 71.0, .9); put(MUS, riser(1.5), 25.5, .7)
 # drop accents
-for t in (51.0, 57.0): put(MUS, boom(1.0, 3.0), t, .7, 0, .35)
+for t in (27.0, 73.0, 79.0): put(MUS, boom(1.0, 3.0), t, .7, 0, .35)
 
 # bass: 8ths with sidechain feel
-for b in range(int((57 - T0) / (BEAT / 2))):
+for b in range(int((79 - T0) / (BEAT / 2))):
     t = T0 + b * BEAT / 2
-    if t >= 55.25 or (50.5 <= t < 51): continue
+    if t >= END or (72.5 <= t < 73) or (26.5 <= t < 27): continue
+    if brand(t) and b % 4 not in (0, 3): continue
     c = chord_at(t); f = hz(ROOT[c] + (12 if b % 4 == 3 else 0))
-    put(MUS, bass(f, .24), t + (0.0), (.33 if t >= 13 else .22) * (.6 if b % 2 == 0 else 1.0), 0)
+    put(MUS, bass(f, .24), t + (0.0), (.33 if t >= 27 else .24) * (.6 if b % 2 == 0 else 1.0), 0)
 
 # pads per bar (sidechained later)
 PADBUS = np.zeros((2, N))
-for bar in range(int((57 - T0) / 2)):
+for bar in range(int((79 - T0) / 2)):
     t = T0 + bar * 2; c = bar % 4
-    if t >= 55.25: break
-    d = min(2.3, 55.4 - t)
-    put(PADBUS, saw_pad([hz(m) for m in PROG[c]], d, 1500 if t < 46 else 2400, 1.0), t, .5, 0, .35)
+    if t >= END: break
+    d = min(2.3, END + .15 - t)
+    put(PADBUS, saw_pad([hz(m) for m in PROG[c]], d, 1100 if brand(t) else 1500 if t < 68 else 2400, 1.0), t, .5, 0, .35)
 # 55.25-57 breakdown pad + end chord
-put(PADBUS, saw_pad([hz(m) for m in [50, 53, 57, 62, 64]], 1.9, 2000), 55.25, .55, 0, .6)
-put(MUS, saw_pad([hz(m) for m in [38, 50, 57, 62, 64, 69]], 7.0, 2200), 57.0, .6, 0, .6)
-put(MUS, bq(saw_pad([hz(m) for m in [74, 76, 81]], 6.5, 6000), 1500, 'high'), 57.3, .22, 0, .8)
+put(PADBUS, saw_pad([hz(m) for m in [50, 53, 57, 62, 64]], 1.9, 2000), 77.25, .55, 0, .6)
+put(MUS, saw_pad([hz(m) for m in [38, 50, 57, 62, 64, 69]], 7.0, 2200), 79.0, .6, 0, .6)
+put(MUS, bq(saw_pad([hz(m) for m in [74, 76, 81]], 6.5, 6000), 1500, 'high'), 79.3, .22, 0, .8)
 
 # arpeggio (16ths) from 13 s, plus a softer 8th arp in 7-13
 ARP = [0, 2, 1, 3, 2, 4, 3, 1]
-for s in range(int((55.25 - T0) / .125)):
+for s in range(int((END - T0) / .125)):
     t = T0 + s * .125
-    if t < 13 and s % 2: continue
-    if 50.5 <= t < 51: continue
+    if t < 27 and s % 2: continue
+    if brand(t) and s % 4: continue
+    if 72.5 <= t < 73 or 26.5 <= t < 27: continue
     c = chord_at(t); notes = PROG[c]; m = notes[ARP[s % 8] % len(notes)] + 12
-    if t >= 51: m += 12 if s % 4 == 0 else 0
-    g = (.5 if t < 13 else .62) * (1.0 if s % 4 == 0 else .7)
+    if t >= 73: m += 12 if s % 4 == 0 else 0
+    g = (.5 if t < 27 else .62) * (1.0 if s % 4 == 0 else .7)
     pan = .35 * np.sin(s * .7)
-    put(MUS, pluck(hz(m), .45, g, 1.6 if t >= 51 else 1.0), t, .55, pan, .3)
+    put(MUS, pluck(hz(m), .9 if brand(t) else .45, g, 1.6 if t >= 73 else .7 if brand(t) else 1.0), t, .55, pan, .55 if brand(t) else .3)
     put(MUS, pluck(hz(m), .45, g * .35, 1.0), t + .375, .55, -pan, .2)  # dotted-8th echo
 
 # bell motif in the automation and services sections
 MOT = [(0, 74), (.75, 72), (1.5, 69), (2.0, 76), (3.0, 74), (3.5, 72), (4.0, 69), (5.5, 67)]
-for base in (37.0, 43.0):
+for base in (51.0, 57.0):
     for dt, m in MOT:
-        if base + dt < 46: put(MUS, bell(hz(m), 1.4), base + dt, .55, .2, .5)
-for i, m in enumerate([69, 72, 74, 76, 79, 81, 84, 86, 88]): put(MUS, bell(hz(m), 1.0), 52.55 + i * .25, .32, -.3 + .075 * i, .5)
+        if base + dt < 60: put(MUS, bell(hz(m), 1.4), base + dt, .55, .2, .5)
+# brand chapter: a slow, warm lead (D harmonic minor colour) over the half-time groove
+LEAD = [(0, 62, 1.5), (1.5, 65, .5), (2, 69, 1.5), (3.5, 67, .5), (4, 65, 1), (5, 64, 1), (6, 62, 2),
+        (8, 69, 1.5), (9.5, 72, .5), (10, 74, 1.5), (11.5, 73, .5), (12, 74, 1), (13, 69, .9)]
+for dt, m, d in LEAD:
+    put(MUS, bell(hz(m), d + 1.2), 13.0 + dt, .5, -.15, .75); put(MUS, pluck(hz(m - 12), d + .4, .9, .6), 13.0 + dt, .5, .2, .6)
+# details chapter: one soft bell per spotlighted card
+for k, m in enumerate([74, 76, 77, 81, 79, 77, 76, 74]): put(MUS, bell(hz(m), 1.0), 63.0 + k * .5, .3, -.35 + .1 * k, .5)
+for i, m in enumerate([69, 72, 74, 76, 79, 81, 84, 86, 88]): put(MUS, bell(hz(m), 1.0), 74.55 + i * .25, .32, -.3 + .075 * i, .5)
 # end card: logo shimmer + final motif
-for i, m in enumerate([62, 69, 74, 76, 81, 86]): put(MUS, bell(hz(m), 2.4), 57.25 + i * .12, .4, -.4 + .16 * i, .8)
-for dt, m in [(2.0, 74), (2.75, 76), (3.5, 81), (4.25, 79), (5.0, 74)]: put(MUS, bell(hz(m), 2.2), 57.0 + dt, .45, 0, .7)
+for i, m in enumerate([62, 69, 74, 76, 81, 86]): put(MUS, bell(hz(m), 2.4), 79.25 + i * .12, .4, -.4 + .16 * i, .8)
+for dt, m in [(2.0, 74), (2.75, 76), (3.5, 81), (4.25, 79), (5.0, 74)]: put(MUS, bell(hz(m), 2.2), 79.0 + dt, .45, 0, .7)
 
 # sidechain on pads + bass bus
 sc = np.ones(N)
@@ -184,6 +197,11 @@ for c in cues:
     elif ty == 'ding': put(FX, bell(hz(88), 1.5), t, .5, .4, .5); put(FX, bell(hz(93), 1.5), t + .1, .4, .4, .5)
     elif ty == 'hit2': put(FX, boom(.8, 1.8), t, .6, 0, .5)
     elif ty == 'logo': put(FX, riser(1.2, .6), t - .1, .5)
+    elif ty == 'scramble':
+        for q in range(9): put(FX, click(.5 + .3 * rng.random(), 3000 + 2500 * rng.random()), t + q * .075, .16, .5 * (rng.random() - .5))
+    elif ty == 'draw': put(FX, bq(whoosh(1.3, 1.0), 1800, 'high'), t, .3, -.3, .5)
+    elif ty == 'shine': put(FX, bell(hz(86), 1.8), t, .35, .2, .8); put(FX, bell(hz(93), 1.8), t + .09, .28, .3, .8); put(FX, bell(hz(98), 2.0), t + .18, .22, .4, .8)
+    elif ty == 'morph': put(FX, whoosh(.8, 1.0), t, .5, 0, .5); put(FX, blip(300, 1400, .7), t, .25, 0, .4)
     elif ty == 'hit3': put(FX, boom(1.0, 3.2), t, .5, 0, .5); put(FX, bell(hz(62), 3.0), t, .5, 0, .6)
 
 # ---------- reverb ----------
@@ -198,7 +216,7 @@ mix = np.stack([bq(m, 28, 'high') for m in mix])
 fi = np.clip(np.arange(N) / (SR * .05), 0, 1); fo = np.clip((N - np.arange(N)) / (SR * 1.6), 0, 1)
 mix *= fi * fo ** 1.5
 # loudness then lookahead limiter
-rms = np.sqrt(np.mean(mix[:, int(7 * SR):int(55 * SR)] ** 2)); mix *= 10 ** (-14 / 20) / rms
+rms = np.sqrt(np.mean(mix[:, int(27 * SR):int(77 * SR)] ** 2)); mix *= 10 ** (-14 / 20) / rms
 thr = 10 ** (-1.2 / 20); peak = maximum_filter1d(np.abs(mix).max(axis=0), int(.006 * SR))
 g = np.minimum(1, thr / np.maximum(peak, 1e-9)); g = uniform_filter1d(np.minimum.accumulate(g[::-1])[::-1] if False else g, int(.004 * SR))
 g = np.minimum(g, 1); g = -maximum_filter1d(-g, int(.008 * SR)); g = uniform_filter1d(g, int(.008 * SR))
