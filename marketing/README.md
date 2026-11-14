@@ -41,35 +41,59 @@ home page. Built from `cinematic-source/web.html` with `render_web.js`, supersam
 `+faststart`. The bottles are drawn from pre-filtered sizes in `b/mip/` (the ribbed Laverne bottles slightly softened at small
 sizes) so fine ribs do not shimmer, and there is no grain.
 
-# Nexus agency film (64 s, 4K)
+# Nexus agency film (86 s, 4K)
 
-A promo film for **Nexus Software Development Company** (nexuscodes.tech) that uses this website as the case study.
+A promo film for **Nexus Software Development Company** (nexuscodes.tech) that uses this website as the case study:
+the brand identity, the build, and the details.
 
-- `nexus-film-4k.mp4`: 3840×2160, 30 fps, H.264, original score (−14 LUFS, −1 dBTP), for YouTube, LinkedIn, the website and presentations
+- `nexus-film-4k.mp4`: 3840×2160, 30 fps, H.264, original score (−14.5 LUFS, −1 dBTP), for YouTube, LinkedIn, the website and
+  presentations. Encoded at about 8.5 Mbit/s to stay under GitHub's 100 MB file limit; a higher-bitrate master can be re-encoded
+  from the frames with the command below.
 - `nexus-film-1080p.mp4`: 1920×1080, smaller file for WhatsApp, email and quick sharing
-- `nexus-film-silent.mp4`: 1080p picture without sound, for adding a licensed track or a voice-over
+- `nexus-film-silent.mp4`: 1080p picture without sound, for a voice-over or a licensed track
 - `nexus-film-cover.jpg`: 4K end card, for thumbnails and covers
 - `nexus-film-vertical.mp4`: 1080×1920 (9:16) cut for Instagram Reels, TikTok, YouTube Shorts and WhatsApp Status, rendered at 1.5× and
-  scaled down for extra sharpness; titles stay clear of the top 220 px and bottom 380 px where the apps draw their buttons and captions
+  scaled down; titles stay clear of the top 220 px and bottom 380 px where the apps draw their buttons and captions
 - `nexus-film-vertical-silent.mp4` and `nexus-film-vertical-cover.jpg`: the same without sound, and its cover
+- `nexus-film-script-ar.md`: the Arabic scripts (a voice-over timed to the film, and a detailed walkthrough of the site's features);
+  `nexus-film-voiceover-ar.txt` is the voice-over alone, as plain text for recording
 
-Story (120 BPM, every cut lands on a beat): a typed hook and the site's real code compiling (0–7 s) → the Atr site revealed in a
-3D browser (7–13) → the page exploded into its layers (13–21) → Arabic ⇄ English wipe (21–27) → the phone journey: browse,
-product, search, cart, checkout (27–37) → the WhatsApp order assistant and payment flow (37–46) → launch numbers (46–51) →
-the nine Nexus services, then "Even this film? Written in code." (51–57) → Nexus logo end card and call to action (57–64).
+Story (120 BPM, every cut lands on a beat):
 
-Source in `nexus-source/`. All screens are real captures of `public/`; the chat is a mock-up of the assistant's flow.
+| Time | Chapter |
+|---|---|
+| 0–7 s | A typed hook, then the site's real code compiling |
+| 7–13 | 01 The project: the Atr site revealed in a 3D browser |
+| 13–27 | 02 Brand identity: the «عطر» mark drawn on its construction lines (outlines taken from the logo font with `glyphs.py`), the five named colours, the four typefaces, the lattice and arch, the WhatsApp profile images and app icon |
+| 27–35 | 03 Design & build: the page exploded into its layers |
+| 35–41 | 04 Bilingual: Arabic ⇄ English wipe |
+| 41–51 | 05 Mobile first: browse, product, search, cart, checkout |
+| 51–60 | 06 Automation: the WhatsApp order assistant and payment flow |
+| 60–68 | 07 Every detail: eight close-ups (notes, free-delivery bar, search, filters, Arabic digits, welcome offer, legal pages, brand film) |
+| 68–73 | 08 Delivered: launch numbers |
+| 73–79 | The nine Nexus services, then "Even this film? Written in code." |
+| 79–86 | `</>` morphs into the Nexus logo; end card and call to action |
+
+All screens are real captures of `public/`; the chat is a mock-up of the assistant's flow (the assistant and card payment are built
+but switched off in `shop.js` at the time of filming).
+
+## Rebuilding it
+
+Source in `nexus-source/`. `scene.html` holds the nine original scenes (one `sN(t)` function each); `v2.js` adds the brand and detail
+chapters and drives all text, cuts, flares and the logo morph from one paused **GSAP** timeline (SplitText, ScrambleText, DrawSVG,
+MorphSVG) that `render.js` seeks frame by frame. `render.js` also blends 2–4 sub-frames on cuts and fast moves for real motion blur
+(`MB=0` switches it off). `music.py` composes the score from the cue list the scene exports.
 
 ```sh
-npm i @fontsource/poppins @fontsource/jetbrains-mono @fontsource/cairo     # in a work folder with the source files
-(cd public && python3 -m http.server 8090) &                               # the site, for the capture scripts
-node capture.js && node capture2.js && node capture3.js && python3 crops.py   # writes cap/*.png
-python3 -m http.server 8092 &                                              # the work folder, for the scene
-node render.js frames 30                                                   # 1920 frames at 3840×2160 (DSF=1 for 1080p previews)
-VW=1080 VH=1920 SCENE='scene.html#v' DSF=1.5 node render.js framesv 30         # the vertical cut (same timing, same score)
-python3 music.py cues.json music.wav                                       # cues.json is written by render.js
+npm i gsap sharp @fontsource/poppins @fontsource/jetbrains-mono @fontsource/cairo   # in a work folder with the source files
+mkdir fonts img && cp public/assets/fonts/*.woff2 fonts/                             # plus img/os01.jpg, the Atr icon and brand/whatsapp-profile/*.png
+(cd public && python3 -m http.server 8090) &                                         # the site, for the capture scripts
+node capture.js && node capture2.js && node capture3.js && node capture4.js && python3 crops.py   # writes cap/*.png
+python3 glyphs.py                                                                    # writes atr-mark.json (goes into v2data.js as window.MARK)
+python3 -m http.server 8092 &                                                        # the work folder, for the scene
+node render.js frames 30                                                             # 2580 frames at 3840×2160 (DSF=1 for 1080p previews)
+VW=1080 VH=1920 SCENE='scene.html#v' DSF=1.5 node render.js framesv 30               # the vertical cut (same timing, same score)
+python3 music.py cues.json music.wav                                                 # cues.json is written by render.js
 ffmpeg -framerate 30 -i frames/f%05d.jpg -i music.wav -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p \
-  -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k.mp4
+  -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k-master.mp4         # about 128 MB
 ```
-
-Texts and timings are in `scene.html` (one `sN(t)` function per scene); the score follows the cue list the scene exports.
