@@ -1,5 +1,5 @@
 // Renders scene.html frame by frame (deterministic time) with real motion blur.
-// usage: node render.js <outDir> <fps> [times|start:end]
+// usage: node render.js <outDir> <fps> [times | start:end[,start:end…]]
 // env: DSF (default 2), VW/VH (viewport, default 1920x1080), SCENE (default scene.html), MB=0 to switch motion blur off
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
 const sharp = require('sharp');
@@ -15,7 +15,7 @@ const DSF = +(process.env.DSF || 2), MB = process.env.MB !== '0', SHUTTER = 0.55
   const D = await p.evaluate(() => window.DURATION);
   fs.writeFileSync(path.join(out, '..', 'cues.json'), JSON.stringify(await p.evaluate(() => window.CUES)));
   let frames;
-  if (arg.includes(':')) { const [a, z] = arg.split(':').map(Number); frames = []; for (let i = a; i < Math.min(z, Math.round(D * fps)); i++) frames.push([i, i / fps]); }
+  if (arg.includes(':')) { frames = []; arg.split(',').forEach(r => { const [a, z] = r.split(':').map(Number); for (let i = a; i < Math.min(z, Math.round(D * fps)); i++) frames.push([i, i / fps]); }); }  // one or more frame ranges: 0:645 or 220:260,390:410
   else if (arg) frames = arg.split(',').map(Number).map(t => [null, t]);
   else frames = Array.from({ length: Math.round(D * fps) }, (_, i) => [i, i / fps]);
   let shots = 0;

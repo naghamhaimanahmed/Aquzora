@@ -210,8 +210,16 @@
       if (kind === 'chap') {
         const b = el.querySelector('b'); const num = b.textContent; const label = el.textContent.replace(num, '').trim();
         el.innerHTML = `<b>${num}</b> <span class="sx"></span>`;
+        if (ARB) { // Arabic: no letter scramble (random letters join into nonsense words); the label wipes in from the right
+          const sx = el.querySelector('.sx'); sx.textContent = label; sx.style.display = 'inline-block';
+          TL.fromTo(el, { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: .5, ease: 'power3.out' }, t0);
+          TL.fromTo(sx, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: .7, ease: 'power2.out' }, t0 + .1);
+          cue2(t0, 'scramble');
+          if (t1 != null) TL.to(el, { opacity: 0, x: -24, duration: .35, ease: 'power2.in' }, t1);
+          return;
+        }
         TL.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .5, ease: 'power3.out' }, t0);
-        TL.fromTo(el.querySelector('.sx'), { text: '' }, { duration: .85, scrambleText: ARB ? { text: label, chars: 'ابتثجحخدذرزسشصضطظعغ', revealDelay: .2, speed: .7, rightToLeft: true } : { text: label, chars: '01<>/{}#=+_', revealDelay: .2, speed: .7 }, ease: 'none' }, t0);
+        TL.fromTo(el.querySelector('.sx'), { text: '' }, { duration: .85, scrambleText: { text: label, chars: '01<>/{}#=+_', revealDelay: .2, speed: .7 }, ease: 'none' }, t0);
         cue2(t0, 'scramble');
         if (t1 != null) TL.to(el, { opacity: 0, x: 24, duration: .35, ease: 'power2.in' }, t1);
         return;
