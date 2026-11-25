@@ -46,7 +46,7 @@ sizes) so fine ribs do not shimmer, and there is no grain.
 A promo film for **Nexus Software Development Company** (nexuscodes.tech) that uses this website as the case study:
 the brand identity, the build, and the details.
 
-- `nexus-film-4k.mp4`: 3840×2160, 30 fps, H.264, original score (−14.5 LUFS, −1 dBTP), for YouTube, LinkedIn, the website and
+- `nexus-film-4k.mp4`: 3840×2160, 30 fps, H.264, calm piano score (−17 LUFS, −1.5 dBTP), for YouTube, LinkedIn, the website and
   presentations. Encoded at about 8.5 Mbit/s to stay under GitHub's 100 MB file limit; a higher-bitrate master can be re-encoded
   from the frames with the command below.
 - `nexus-film-1080p.mp4`: 1920×1080, smaller file for WhatsApp, email and quick sharing
@@ -72,7 +72,11 @@ lines (the services stay on screen until the end card), and nothing pulses with 
 - `nexus-film-ar-vertical.mp4`, `nexus-film-ar-vertical-silent.mp4`, `nexus-film-ar-vertical-cover.jpg`: vertical 9:16
 - `nexus-film-voiceover-ar-ae.txt`: the voice-over in Emirati dialect
 
-Story (120 BPM, every cut lands on a beat):
+The English edition's soundtrack is a calm piano score with no percussion (`nexus-source/music_calm_en.py`: felt piano, soft
+strings, a warm pad and a few glass notes, in D major). The first, beat-driven score is still in `nexus-source/music.py`.
+Neither edition shows chapter labels or the "Even this film? Written in code." lines any more, and nothing pulses to a beat.
+
+Story:
 
 | Time | Chapter |
 |---|---|
@@ -85,7 +89,7 @@ Story (120 BPM, every cut lands on a beat):
 | 51–60 | 06 Automation: the WhatsApp order assistant and payment flow |
 | 60–68 | 07 Every detail: eight close-ups (notes, free-delivery bar, search, filters, Arabic digits, welcome offer, legal pages, brand film) |
 | 68–73 | 08 Delivered: launch numbers |
-| 73–79 | The nine Nexus services, then "Even this film? Written in code." |
+| 73–79 | The nine Nexus services, on screen until the end card |
 | 79–86 | `</>` morphs into the Nexus logo; end card and call to action |
 
 All screens are real captures of `public/`; the chat is a mock-up of the assistant's flow (the assistant and card payment are built
@@ -109,7 +113,7 @@ node render.js frames 30                                                        
 VW=1080 VH=1920 SCENE='scene.html#v' DSF=1.5 node render.js framesv 30               # the vertical cut (same timing, same score)
 SCENE='scene.html#ar' node render.js frames_ar 30                                    # Arabic edition (strings and RTL styling in ar.js;
 VW=1080 VH=1920 SCENE='scene.html#v-ar' DSF=1.5 node render.js framesv_ar 30         #   run capture4ar.js before crops.py)
-python3 music.py cues.json music.wav                                                 # cues.json is written by render.js
+python3 music_calm_en.py music_calm_en.wav                                           # the calm piano score (English edition)
 python3 music_calm.py music_calm.wav                                                 # the calm Arabic score (used for the Arabic edition)
 ffmpeg -framerate 30 -i frames/f%05d.jpg -i music.wav -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p \
   -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k-master.mp4         # about 128 MB
