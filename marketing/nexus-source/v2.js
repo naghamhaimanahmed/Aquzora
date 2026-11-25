@@ -174,7 +174,7 @@
   const PF = Array.from({ length: 7 }, () => ({ x: rnd() * W_, y: rnd() * H_, r: 120 + rnd() * 160, vx: (rnd() - .5) * 18, vy: (rnd() - .5) * 10, ph: rnd() * 6.28, c: rnd() < .6 ? '34,211,238' : '244,63,94' }));
   let ctxB, ctxF, dpr;
   function sizeFx() { dpr = window.devicePixelRatio || 1; [fxb, fxf].forEach(c => { c.width = W_ * dpr; c.height = H_ * dpr; c.style.width = W_ + 'px'; c.style.height = H_ + 'px'; }); ctxB = fxb.getContext('2d'); ctxF = fxf.getContext('2d'); }
-  const beat = t => ARB ? 0 : t >= 7 && t < 77.25 && !(t >= 72.5 && t < 73) ? Math.exp(-((t - 7) % .5) * 7) : 0;   // the Arabic edition has a calm score: nothing pulses
+  const beat = t => 0;   // both editions have calm scores without a pulse (was: Math.exp(-((t - 7) % .5) * 7) between 7 s and 77.25 s)
   const wrap = (v, m) => ((v % m) + m) % m;
   function drawFx(t) {
     const b = beat(t), gold = cl(P(t, 12.9, 13.4)) * (1 - P(t, 26.6, 27.1));
