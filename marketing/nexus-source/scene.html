@@ -589,9 +589,10 @@ SV.forEach((_, i) => cue(SV_T(i), 'pop', .8)); cue(55.25, 'hit2'); cue(56.0, 'hi
 function s8(t) {
   const up = eio(P(t, 52.2, 52.8));
   $('s8t').style.transform = `translateY(${-up * (V ? 560 : 300)}px) scale(${1 - up * .38})`;
-  $('s8t').style.opacity = 1 - P(t, 54.9, 55.2);
+  const X8 = ARB ? 1.6 : 0;   // the Arabic edition has no "Even this film?" lines: the services stay until the end card
+  $('s8t').style.opacity = 1 - P(t, 54.9 + X8, 55.2 + X8);
   SV.forEach((_, i) => {
-    const a = SV_T(i), q = eb(P(t, a, a + .45)), o = ei(P(t, 54.85 + (i % 3) * .04 + Math.floor(i / 3) * .04, 55.25 + i * .02));
+    const a = SV_T(i), q = eb(P(t, a, a + .45)), o = ei(P(t, 54.85 + X8 + (i % 3) * .04 + Math.floor(i / 3) * .04, 55.25 + X8 + i * .02));
     const e = $('sv' + i); e.style.opacity = cl(P(t, a, a + .15)) * (1 - o);
     e.style.transform = `translateY(${(1 - q) * 60}px) scale(${(.8 + .2 * q) * (1 - o * .2)})`;
   });

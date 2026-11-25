@@ -61,7 +61,12 @@ the brand identity, the build, and the details.
 **Arabic edition** (same timing, so one voice-over recording fits both): every on-screen title, label and caption in
 Arabic, the Arabic side of the site in the browser, phone and detail cards, the chat right to left, and the bilingual scene
 starting from Arabic. Its soundtrack is a separate calm score with no percussion (`nexus-source/music_calm.py`): oud, qanun and
-ney over a soft drone in maqam Hijaz, at about −17 LUFS; chapter labels wipe in instead of using the letter-scramble effect.
+ney over a soft drone in maqam Hijaz, at about −17 LUFS. The Arabic edition has no chapter labels and no "Even this film?"
+lines (the services stay on screen until the end card), and nothing pulses with a beat.
+
+- `nexus-film-ar-vo-1080p.mp4`, `nexus-film-ar-vo-vertical.mp4`, `nexus-film-ar-vo-4k.mp4`: the Arabic edition with the voice-over
+  (ElevenLabs, light Emirati dialect). `nexus-source/vo_mix.py` cuts the recording into phrases, places each on its moment in
+  the film (the first three lines run 12% faster to fit the brand chapter) and lowers the music 9 dB under the voice.
 
 - `nexus-film-ar-4k.mp4`, `nexus-film-ar-1080p.mp4`, `nexus-film-ar-silent.mp4`, `nexus-film-ar-cover.jpg`: landscape
 - `nexus-film-ar-vertical.mp4`, `nexus-film-ar-vertical-silent.mp4`, `nexus-film-ar-vertical-cover.jpg`: vertical 9:16

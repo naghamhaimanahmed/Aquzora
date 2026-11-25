@@ -55,6 +55,7 @@ window.arApply = function () {
   .arx .dc .tx{direction:rtl;text-align:right}.arx .dc .no{right:auto;left:16px}.arx .dc b{font-weight:700}
   .arx.v .sw .nm{font-size:22px}
   .arx .chap,.arx .bchap{visibility:hidden!important}   /* no chapter labels in the Arabic edition */
+  .arx #s8c,.arx #s8d{display:none!important}            /* nor the "Even this film? Written in code." lines */
   .arx.v #s9h{font-size:72px!important}
   .arx:not(.v) #s2h{font-size:84px!important}.arx:not(.v) #s3txt{width:440px!important}.arx:not(.v) #s3h{font-size:62px!important}.arx:not(.v) #s3s{font-size:24px!important}`;
   document.head.appendChild(st);
