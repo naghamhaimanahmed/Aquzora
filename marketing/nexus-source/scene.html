@@ -311,6 +311,7 @@ Your order is confirmed and arrives in 2–4 days. Thank you! 🌹<span class="t
 <div id="bug"><svg viewBox="-8 -8 56 76" width="20" height="27"><g fill="none" stroke="#0891B2" stroke-linecap="round"><path d="M0 52V44C0 30 20 32 20 18V8" stroke-width="5"/><path d="M40 52V44C40 30 20 32 20 18" stroke-width="5"/><circle cx="0" cy="60" r="5.5" stroke-width="4"/><circle cx="40" cy="60" r="5.5" stroke-width="4"/><circle cx="20" cy="0" r="5.5" stroke-width="4"/></g><circle cx="20" cy="18" r="7.5" fill="#F43F5E"/></svg>Nexus<span>nexuscodes.tech</span></div>
 <div id="vig"></div><div id="sweep"></div><div id="flash"></div>
 </div>
+<script src="ar.js"></script>
 <script src="node_modules/gsap/dist/gsap.min.js"></script>
 <script src="node_modules/gsap/dist/SplitText.min.js"></script>
 <script src="node_modules/gsap/dist/MorphSVGPlugin.min.js"></script>
@@ -318,7 +319,8 @@ Your order is confirmed and arrives in 2–4 days. Thank you! 🌹<span class="t
 <script src="node_modules/gsap/dist/ScrambleTextPlugin.min.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const V = location.hash === '#v'; const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+const V = /^#v/.test(location.hash), ARB = /ar$/.test(location.hash); const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+if (ARB) window.arApply();
 if (V) { document.documentElement.classList.add('v'); document.documentElement.style.cssText = document.body.style.cssText = 'width:1080px;height:1920px'; }
 const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const P = (t, a, b) => cl((t - a) / (b - a));
@@ -370,7 +372,7 @@ function hl(line) {
   out += plain(code.slice(last));
   return out + (com ? '<span class="c">' + esc(com) + '</span>' : '');
 }
-const T1 = 'Every brand has a story.';
+const T1 = ARB ? ARS.t1 : 'Every brand has a story.';
 const TY0 = .55, TYS = .062;
 for (let i = 0; i < T1.length; i++) if (T1[i] !== ' ') cue(TY0 + i * TYS, 'key');
 function s1(t) {
@@ -395,7 +397,7 @@ function s1(t) {
   $('compile').style.opacity = eo(P(t, 5.4, 5.7)) * (1 - P(t, 6.85, 7.0));
   $('compile').style.transform = `scale(${1 + ei(P(t, 6.75, 7.05)) * .3})`;
   const pct = Math.round(eio(c) * 100); $('cpPct').textContent = pct + '%'; $('cpBar').style.width = pct + '%';
-  $('cpTxt').textContent = pct < 100 ? 'building atr.store' : '✓ ready to sell';
+  $('cpTxt').textContent = pct < 100 ? 'building atr.store' : ARB ? '✓ جاهز للبيع' : '✓ ready to sell';
   $('cpTxt').style.color = pct < 100 ? '#C8D3E6' : '#5EEAD4';
 }
 cue(3.25, 'swell'); cue(5.45, 'riser', 1.6); cue(6.72, 'ding2');
@@ -419,7 +421,7 @@ function s2(t) {
 }
 
 /* ---------- S3 exploded ---------- */
-const LH = [217, 660, 376, 525, 57];
+const LH = ARB ? [229, 660, 382, 528, 57] : [217, 660, 376, 525, 57];
 [[14.6, 4], [14.9, 3], [15.2, 2], [15.5, 1], [15.8, 0]].forEach(([a]) => cue(a, 'tick'));
 function s3(t) {
   const k = eio(P(t, 13.0, 14.6)), sp = eo(P(t, 13.6, 15.4)), ko = ei(P(t, 20.4, 21.1));
@@ -430,7 +432,7 @@ function s3(t) {
   let y = 0; const tot = LH.reduce((a, b) => a + b, 0) * (1 - sp);
   for (let i = 0; i < 5; i++) {
     // collapsed: stacked as a page (y offset); exploded: same centre, separated in z
-    const pageY = [5627, 2781, 1149, 121, 40][i];
+    const pageY = (ARB ? [5696, 2808, 1158, 127, 46] : [5627, 2781, 1149, 121, 40])[i];
     const cy = L((pageY / 2880 * 1000) * 0.5 - 600, -LH[i] / 2, sp);
     const el = $('L' + i);
     el.style.top = (L(cy, -LH[i] / 2, sp)) + 'px';
@@ -462,6 +464,7 @@ function s4(t) {
   let x = 1;
   x = L(1, 0, eio(P(t, 22.3, 23.8)));
   x = L(x, .5, eio(P(t, 24.4, 25.4)));
+  if (ARB) x = 1 - x;
   x += Math.sin((t - 25.4) * 1.6) * .03 * P(t, 25.4, 25.9);
   const pct = x * 100;
   $(V ? 'arImgM' : 'arImg').style.clipPath = `inset(0 0 0 ${pct}%)`;
@@ -470,10 +473,10 @@ function s4(t) {
 }
 
 /* ---------- S5 mobile ---------- */
-const STEPS = [['Browse', 'The whole collection, house by house'], ['Discover', 'Notes, sizes and prices in EGP'], ['Search', 'In Arabic or English'], ['Cart', 'Free-delivery progress bar'], ['Checkout', 'Order sent in one tap']];
+const STEPS = ARB ? ARS.steps : [['Browse', 'The whole collection, house by house'], ['Discover', 'Notes, sizes and prices in EGP'], ['Search', 'In Arabic or English'], ['Cart', 'Free-delivery progress bar'], ['Checkout', 'Order sent in one tap']];
 const ST_T = [27.3, 29.6, 31.2, 32.7, 34.4];
 STEPS.forEach(([h, p], i) => { const d = document.createElement('div'); d.className = 'step'; d.id = 'st' + i; d.style.top = (V ? 0 : i * 118) + 'px'; d.innerHTML = `<div class="num">0${i + 1}</div><div><h4>${h}</h4><p>${p}</p></div>`; $('steps').appendChild(d); });
-const TAPS = [[29.35, 190, 470], [31.0, 336, 60], [32.5, 243, 785], [34.2, 195, 748]];
+const TAPS = ARB ? [[29.35, 190, 470], [31.0, 44, 60], [32.5, 142, 783], [34.2, 195, 748]] : [[29.35, 190, 470], [31.0, 336, 60], [32.5, 243, 785], [34.2, 195, 748]];
 TAPS.forEach(([a]) => cue(a, 'tap')); ST_T.forEach(a => cue(a + .05, 'blip'));
 function s5(t) {
   const k = eo(P(t, 27.0, 28.2)), ko = ei(P(t, 36.5, 37.1));
@@ -489,8 +492,8 @@ function s5(t) {
     e.style.filter = nx ? `brightness(${1 - .5 * P(t, nx, nx + .4)})` : 'none';
     e.style.display = (t >= a - .01 && (!nx || t < nx + .45)) || i === 0 && t < at[1] + .45 ? 'block' : 'none';
   });
-  const sy = eio(P(t, 27.6, 28.9)) * 1950 + eio(P(t, 28.9, 29.3)) * 760;
-  $('v5full').style.transform = `translateY(${-sy}px)`; $('v5hdr').style.opacity = sy > 62 ? 1 : 0;
+  const sy = eio(P(t, 27.6, 28.9)) * (ARB ? 1830 : 1950) + eio(P(t, 28.9, 29.3)) * (ARB ? 670 : 760);
+  $('v5full').style.transform = `translateY(${-sy}px)`; $('v5hdr').style.opacity = sy > (ARB ? 46 : 62) ? 1 : 0;
   // tap ripple
   const tp = $('tap5'); let tv = 0;
   TAPS.forEach(([a, x, y]) => { const q = P(t, a - .12, a + .35); if (q > 0 && q < 1) { tv = 1; tp.style.left = x + 'px'; tp.style.top = (y) + 'px'; tp.style.opacity = Math.sin(q * Math.PI); tp.style.transform = `scale(${.6 + q * .7})`; } });
@@ -577,7 +580,7 @@ const IC = {
   cloud: '<path d="M18 10h-1.3A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>'
 };
-const SV = [['phone', 'Mobile apps', 'iOS & Android, sketch to store'], ['web', 'Websites & platforms', 'Fast, searchable, easy to edit'], ['cart', 'E-commerce', 'Stores with a checkout people finish'],
+const SV = ARB ? ARS.sv : [['phone', 'Mobile apps', 'iOS & Android, sketch to store'], ['web', 'Websites & platforms', 'Fast, searchable, easy to edit'], ['cart', 'E-commerce', 'Stores with a checkout people finish'],
   ['sys', 'Custom software', 'ERP, CRM, dashboards, internal tools'], ['ai', 'AI solutions', 'Features that answer and predict'], ['bot', 'Automation & chatbots', 'WhatsApp bots that work 24/7'],
   ['pen', 'UI & UX design', 'Clear interfaces, tested with users'], ['cloud', 'Cloud & DevOps', 'Hosting and releases that stay up'], ['shield', 'Testing & care', 'Quality before and after launch']];
 SV.forEach(([ic, h, p], i) => { const d = document.createElement('div'); d.className = 'svc glass'; d.id = 'sv' + i; if (V) { d.style.left = (i === 8 ? 310 : 70 + (i % 2) * 480) + 'px'; d.style.top = (520 + Math.floor(i / 2) * 166) + 'px'; } else { d.style.left = (130 + (i % 3) * 564) + 'px'; d.style.top = (330 + Math.floor(i / 3) * 186) + 'px'; } d.innerHTML = `<div class="ic"><svg class="i" viewBox="0 0 24 24">${IC[ic]}</svg></div><div><b>${h}</b><small>${p}</small></div>`; $('svcs').appendChild(d); });
@@ -666,7 +669,7 @@ const VPOS = {
   s9h: { top: '880px', fontSize: '88px' }, s9a: { top: '995px', fontSize: '56px' }, s9cta: { top: '1130px' }, s9f: { top: '1290px', left: '100px', right: '100px', lineHeight: '1.7', fontSize: '22px' },
   bug: { right: 'auto', bottom: 'auto', left: '64px', top: '130px' }, steps_: {}
 };
-if (V) { Object.entries(VPOS).forEach(([id, css]) => { const e = $(id); if (e) Object.assign(e.style, css); }); $('s9f').innerHTML = 'Mobile apps · Websites · E-commerce · Custom software · AI &amp; automation<br>UAE-licensed · Ajman Free Zone'; }
+if (V) { Object.entries(VPOS).forEach(([id, css]) => { const e = $(id); if (e) Object.assign(e.style, css); }); $('s9f').innerHTML = ARB ? ARS.s9fV : 'Mobile apps · Websites · E-commerce · Custom software · AI &amp; automation<br>UAE-licensed · Ajman Free Zone'; }
 window.render = render; window.CUES = CUES.sort((a, b) => a.t - b.t);
 Promise.all([fetch('code.txt').then(r => r.text()), document.fonts.load('600 40px Poppins'), document.fonts.load('400 40px Poppins'), document.fonts.load('500 40px Poppins'), document.fonts.load('700 40px Cairo', 'عربي'), document.fonts.load('500 40px Cairo', 'عربي'), document.fonts.load('400 20px Mono'), document.fonts.load('600 20px Mono')]).then(async ([code]) => {
   const lines = code.split('\n'); let all = []; while (all.length < 260) all = all.concat(lines);

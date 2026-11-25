@@ -99,26 +99,26 @@
     <div id="bMini"><span class="m">عطر</span><span class="n">ATR</span></div>
     <svg id="latt"></svg><div id="bArch"><img src="img/os01.jpg"></div>`;
   $('s3').before(sB);
-  const SW = [['Oud Black', '#15110E', 'Primary · text', '#EDE6DA'], ['Antique Gold', '#D4AF6A', 'Logo · accents', '#15110E'], ['Gift Burgundy', '#5E1F24', 'Ribbons · offers', '#EDE6DA'], ['Bronze', '#8A6A2E', 'Accent text', '#F5F1E9'], ['Smoke Ivory', '#EDE6DA', 'Page ground', '#15110E']];
+  const SW = ARB ? ARS.sw : [['Oud Black', '#15110E', 'Primary · text', '#EDE6DA'], ['Antique Gold', '#D4AF6A', 'Logo · accents', '#15110E'], ['Gift Burgundy', '#5E1F24', 'Ribbons · offers', '#EDE6DA'], ['Bronze', '#8A6A2E', 'Accent text', '#F5F1E9'], ['Smoke Ivory', '#EDE6DA', 'Page ground', '#15110E']];
   SW.forEach(([n, c, r, ink], i) => { const d = document.createElement('div'); d.className = 'sw'; d.id = 'sw' + i; d.style.background = c; d.style.color = ink; if (i === 0) d.style.boxShadow = 'inset 0 0 0 1px rgba(212,175,106,.45),0 40px 80px -20px rgba(0,0,0,.7)'; d.innerHTML = `<div class="lbl"><div class="nm">${n}</div><div class="hx">${c}</div><div class="rl">${r}</div></div>`; sB.appendChild(d); });
-  const TY = [['Cinzel', 'Aa', 'font-family:Cinzel;font-weight:500', 'Titles · Latin', 'Heritage in every drop.', 'font-family:Cinzel'],
+  const TY = ARB ? ARS.ty : [['Cinzel', 'Aa', 'font-family:Cinzel;font-weight:500', 'Titles · Latin', 'Heritage in every drop.', 'font-family:Cinzel'],
     ['Tenor Sans', 'Aa', 'font-family:Tenor', 'Body · Latin', 'Genuine perfumes from the great Arabian houses.', 'font-family:Tenor'],
     ['Amiri', 'أب', 'font-family:Amiri;font-weight:700;direction:rtl', 'Titles & body · Arabic', 'إرثٌ في كل قطرة.', 'font-family:Amiri;direction:rtl;font-size:28px'],
     ['Aref Ruqaa', 'عطر', 'font-family:Ruqaa;font-weight:700;direction:rtl', 'Logo mark', 'Used for the mark only.', '']];
   TY.forEach(([n, g, gs, r, smp, ss], i) => { const d = document.createElement('div'); d.className = 'tc'; d.id = 'tc' + i; d.innerHTML = `<div class="g" style="${gs}">${g}</div><div class="nm">${n}</div><div class="rl">${r}</div><div class="sm" style="${ss}">${smp}</div>`; sB.appendChild(d); });
-  const TP = [['img/atr-whatsapp-1-gold-on-black.png', 'WhatsApp', 'Gold on black'], ['img/atr-whatsapp-2-with-atr.png', 'WhatsApp', 'With wordmark'], ['img/atr-whatsapp-3-black-on-ivory.png', 'WhatsApp', 'Black on ivory'], ['img/atr-whatsapp-4-lattice.png', 'WhatsApp', 'Lattice'], ['img/atr-icon-512.png', 'App icon', 'Home screen & favicon']];
+  const TP = ARB ? ARS.tp : [['img/atr-whatsapp-1-gold-on-black.png', 'WhatsApp', 'Gold on black'], ['img/atr-whatsapp-2-with-atr.png', 'WhatsApp', 'With wordmark'], ['img/atr-whatsapp-3-black-on-ivory.png', 'WhatsApp', 'Black on ivory'], ['img/atr-whatsapp-4-lattice.png', 'WhatsApp', 'Lattice'], ['img/atr-icon-512.png', 'App icon', 'Home screen & favicon']];
   TP.forEach(([src, k, t], i) => { const d = document.createElement('div'); d.className = 'tp'; d.id = 'tp' + i; d.innerHTML = `<div class="im" style="${i === 4 ? 'border-radius:22%' : ''}"><img src="${src}"></div><div class="k">${k}</div><div class="t">${t}</div>`; sB.appendChild(d); });
 
   /* ---------- details chapter (sD) ---------- */
   const sD = document.createElement('div'); sD.className = 'sc'; sD.id = 'sD';
   sD.innerHTML = `<div class="abs" id="sDtxt"><div class="chap" id="sDc"><b>07</b> — Every detail</div><div class="h1" id="sDh" style="margin-top:18px">Every detail, considered.</div></div><div class="abs" id="dwall" style="inset:0;perspective:2200px"><div id="dwin" style="position:absolute;inset:0;transform-style:preserve-3d"></div></div>`;
   $('s7').before(sD);
-  const DC = [['x-notes', 'Fragrance notes', 'Top, heart and base for every bottle', 'center'], ['x-ship', 'Free-delivery bar', 'Shows how close the cart is to free delivery', 'center 75%'],
+  const DC = ARB ? ARS.dc : [['x-notes', 'Fragrance notes', 'Top, heart and base for every bottle', 'center'], ['x-ship', 'Free-delivery bar', 'Shows how close the cart is to free delivery', 'center 75%'],
     ['x-search', 'Instant search', 'By name, house or type, in Arabic or English', 'center top'], ['x-chips', 'Filter by house', 'Assaf, Laverne, Reef, Dkhoon, Osma', '18% center'],
     ['x-digits', 'Arabic digits accepted', '٠١٠ or 010: the checkout reads both', 'center'], ['x-news', 'Welcome offer', 'Sign up, get 10% off the first order', '12% center'],
     ['x-terms', 'Terms & privacy', 'Bilingual legal pages, linked at checkout', '78% 22%'], ['x-film', 'Brand film', 'A looping film on the home page', 'center 40%']];
   const YC = {"notes": "#ede6da", "ship": "#ede6da", "search": "#ede6da", "chips": "#f5f1e9", "digits": "#ede6da", "news": "#5e1f24", "terms": "#ede6da", "film": "#14100d"};
-  DC.forEach(([f, b, sm, op], i) => { const d = document.createElement('div'); d.className = 'dc'; d.id = 'dc' + i; const n = f.slice(2); d.innerHTML = `<div class="no">0${i + 1}</div><div class="im" style="background:${YC[n]}"><img src="cap/y-${n}.png" style="object-fit:${n === 'film' ? 'cover' : 'contain'}"></div><div class="tx"><b>${b}</b><small>${sm}</small></div>`; $('dwin').appendChild(d); });
+  DC.forEach(([f, b, sm, op], i) => { const d = document.createElement('div'); d.className = 'dc'; d.id = 'dc' + i; const n = f.slice(2); d.innerHTML = `<div class="no">0${i + 1}</div><div class="im" style="background:${YC[n]}"><img src="cap/${ARB ? 'ya' : 'y'}-${n}.png" style="object-fit:${n === 'film' ? 'cover' : 'contain'}"></div><div class="tx"><b>${b}</b><small>${sm}</small></div>`; $('dwin').appendChild(d); });
 
   /* ---------- layout (landscape / vertical) ---------- */
   const S = (id, o) => Object.assign($(id).style, o);
@@ -154,6 +154,7 @@
     $('sD').querySelectorAll('.dc b').forEach(e => e.style.fontSize = '20px'); $('sD').querySelectorAll('.dc small').forEach(e => e.style.fontSize = '14px'); $('sD').querySelectorAll('.dc .tx').forEach(e => e.style.padding = '12px 18px 14px');
   }
   function S2(sel, o) { Object.assign(document.querySelector(sel).style, o); }
+  if (ARB) window.arBrand(V);
   // lattice: diamonds like the site's --lattice tile, scaled up
   (function () {
     const cell = V ? 84 : 76, cols = Math.ceil(W_ / cell) + 1, rows = Math.ceil(H_ / cell) + 1; let h = '';
@@ -205,11 +206,12 @@
     TL.set(ids, { scale: 1, filter: 'blur(0px)', transformOrigin: '50% 50%' }, 0);
     const AR = new Set(['s4a', 's9a']), SUB = new Set(['s2s', 's3s', 's5s', 's6s']);
     const textIn = (el, t0, t1, od, kind) => {
+      if (ARB && kind === 'h') kind = 'ar';
       if (kind === 'chap') {
         const b = el.querySelector('b'); const num = b.textContent; const label = el.textContent.replace(num, '').trim();
         el.innerHTML = `<b>${num}</b> <span class="sx"></span>`;
         TL.fromTo(el, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .5, ease: 'power3.out' }, t0);
-        TL.fromTo(el.querySelector('.sx'), { text: '' }, { duration: .85, scrambleText: { text: label, chars: '01<>/{}#=+_', revealDelay: .2, speed: .7 }, ease: 'none' }, t0);
+        TL.fromTo(el.querySelector('.sx'), { text: '' }, { duration: .85, scrambleText: ARB ? { text: label, chars: 'ابتثجحخدذرزسشصضطظعغ', revealDelay: .2, speed: .7, rightToLeft: true } : { text: label, chars: '01<>/{}#=+_', revealDelay: .2, speed: .7 }, ease: 'none' }, t0);
         cue2(t0, 'scramble');
         if (t1 != null) TL.to(el, { opacity: 0, x: 24, duration: .35, ease: 'power2.in' }, t1);
         return;
