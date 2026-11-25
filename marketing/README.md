@@ -58,9 +58,10 @@ the brand identity, the build, and the details.
 - `nexus-film-script-ar.md`: the Arabic scripts (a voice-over timed to the film, and a detailed walkthrough of the site's features);
   `nexus-film-voiceover-ar.txt` is the voice-over alone, as plain text for recording
 
-**Arabic edition** (same timing and score, so one voice-over recording fits both): every on-screen title, label and caption in
+**Arabic edition** (same timing, so one voice-over recording fits both): every on-screen title, label and caption in
 Arabic, the Arabic side of the site in the browser, phone and detail cards, the chat right to left, and the bilingual scene
-starting from Arabic.
+starting from Arabic. Its soundtrack is a separate calm score with no percussion (`nexus-source/music_calm.py`): oud, qanun and
+ney over a soft drone in maqam Hijaz, at about −17 LUFS; chapter labels wipe in instead of using the letter-scramble effect.
 
 - `nexus-film-ar-4k.mp4`, `nexus-film-ar-1080p.mp4`, `nexus-film-ar-silent.mp4`, `nexus-film-ar-cover.jpg`: landscape
 - `nexus-film-ar-vertical.mp4`, `nexus-film-ar-vertical-silent.mp4`, `nexus-film-ar-vertical-cover.jpg`: vertical 9:16
@@ -104,6 +105,7 @@ VW=1080 VH=1920 SCENE='scene.html#v' DSF=1.5 node render.js framesv 30          
 SCENE='scene.html#ar' node render.js frames_ar 30                                    # Arabic edition (strings and RTL styling in ar.js;
 VW=1080 VH=1920 SCENE='scene.html#v-ar' DSF=1.5 node render.js framesv_ar 30         #   run capture4ar.js before crops.py)
 python3 music.py cues.json music.wav                                                 # cues.json is written by render.js
+python3 music_calm.py music_calm.wav                                                 # the calm Arabic score (used for the Arabic edition)
 ffmpeg -framerate 30 -i frames/f%05d.jpg -i music.wav -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p \
   -c:a aac -b:a 256k -shortest -movflags +faststart nexus-film-4k-master.mp4         # about 128 MB
 ```
