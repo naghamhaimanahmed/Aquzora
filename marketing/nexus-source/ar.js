@@ -54,6 +54,7 @@ window.arApply = function () {
   .arx .tp .k{font-family:Cairo,sans-serif;letter-spacing:0;font-size:17px}
   .arx .dc .tx{direction:rtl;text-align:right}.arx .dc .no{right:auto;left:16px}.arx .dc b{font-weight:700}
   .arx.v .sw .nm{font-size:22px}
+  .arx .chap,.arx .bchap{visibility:hidden!important}   /* no chapter labels in the Arabic edition */
   .arx.v #s9h{font-size:72px!important}
   .arx:not(.v) #s2h{font-size:84px!important}.arx:not(.v) #s3txt{width:440px!important}.arx:not(.v) #s3h{font-size:62px!important}.arx:not(.v) #s3s{font-size:24px!important}`;
   document.head.appendChild(st);
@@ -97,5 +98,5 @@ window.arBrand = function (V) {
   Object.entries(B).forEach(([id, h]) => { $(id).innerHTML = h; });
   ['sBc', 'bt1', 'bt2', 'bt3', 'bt4', 'bt5', 'bc1', 'bc2', 'bc3', 'bc4', 'bc5'].forEach(id => Object.assign($(id).style, { left: 'auto', right: m }));
   ['bt1', 'bt2', 'bt3', 'bt4', 'bt5'].forEach(id => { $(id).style.fontSize = V ? '76px' : '70px'; $(id).style.top = V ? '290px' : '128px'; });
-  Object.assign($('bMini').style, { right: 'auto', left: m });
+  if (V) Object.assign($('bMini').style, { top: '128px' }); else Object.assign($('bMini').style, { right: 'auto', left: m });   // vertical: stay right, clear of the Nexus mark top left
 };
